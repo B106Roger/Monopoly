@@ -18,7 +18,7 @@ public:
 	int bankBalance;
 	vector<stockHolderRecord> stockRecord;
 	vector<realEstateHolderRecord> realEstateRecord;
-
+	int stopRound;
 	int withdraw(int dollars);
 	int deposit(int dollars);
 	// int buyStock(Stock & stock, int number);

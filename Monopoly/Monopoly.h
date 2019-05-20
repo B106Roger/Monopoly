@@ -14,15 +14,6 @@ public:
 	~Monopoly();
 	void monopolyInit();       // 初始化遊戲參數 (地圖、聲音.....)
 	void monopolyLoop();       // 遊戲流程迴圈
-	
-
-
-
-
-
-
-
-
 
 
 
