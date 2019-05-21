@@ -1,7 +1,11 @@
 #pragma once
 #include "Player.h"
 #include"Bank.h"
+#include"GameBoard.h"
+#include"ConsoleBoard.h"
+#include"ActionBoard.h"
 struct RealEstate;
+struct Chance;
 class GameWorld
 {
 public:
@@ -9,13 +13,19 @@ public:
 	~GameWorld();
 	void gmaeStart();
 
-
+	
 	static vector<Player> playerList;
 	static Bank bank;               // PlayerId = -1
 	static vector<RealEstate> gameMap;
 	static int playerState;         // 目前倫到哪個玩家
+	static vector<Chance> chanceList;
+	static vector<Chance> destinyList;
 	int round;                      // 第幾回合
-	// StockDepartment   Stock
+	int obstaclePosition;     // 為路障位置 
+	//display static data member
+	static GameBoard gameBoard;
+	static ActionBoard actionBoard;
+	static ConsoleBoard consoleBoard;
 
 };
 
@@ -32,6 +42,7 @@ struct RealEstate
 	int ownerId;       // Player1
 	wstring name;      // 地產名稱
 	int buyCost;       // 土地價格
+	
 	vector<int> tolls; // 過路費(一律給現金)
 	int level;         // 物產等級 0 ~ 3
 	string playerPosition;
@@ -48,4 +59,11 @@ struct RealEstate
 		}
 		return returnVal * 0.8;
 	}
+};
+
+struct Chance
+{
+	string message;
+	int type;     // 0: +-$, 1: 遙控色子, 2:暫停回合
+	int number;   // 依據type有不同的效果
 };

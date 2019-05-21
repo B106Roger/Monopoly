@@ -115,12 +115,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ActionBoard.cpp" />
+    <ClCompile Include="Bank.cpp" />
+    <ClCompile Include="ConsoleBoard.cpp" />
+    <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="GameWorld.cpp" />
     <ClCompile Include="Monopoly.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ActionBoard.h" />
+    <ClInclude Include="Bank.h" />
+    <ClInclude Include="ConsoleBoard.h" />
+    <ClInclude Include="GameBoard.h" />
     <ClInclude Include="GameWorld.h" />
     <ClInclude Include="Monopoly.h" />
     <ClInclude Include="Player.h" />
