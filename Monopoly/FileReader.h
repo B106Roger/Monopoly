@@ -9,6 +9,7 @@ class FileReader
 public:
 	FileReader();
 	~FileReader();
-	void readAndSetMap();
+	void readAndSetData();        // 讀取Monopoly::gameMapFileName 內的檔案到GameWorld
+	void resetAllData();          // reset所有gameWorld的參數
 };
 

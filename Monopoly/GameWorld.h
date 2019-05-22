@@ -22,12 +22,12 @@ public:
 	static int playerState;           // 目前倫到哪個玩家
 	static vector<Chance> chanceList; // 機會列表  
 	static vector<Chance> destinyList;// 命運列表
-	int round;                        // 第幾回合
-	int obstaclePosition;             // 為路障位置 
+	static int reamainRound;          // 剩餘回合數
+	static int obstaclePosition;      // 為路障位置 
 	//display static data member
-	static GameBoard gameBoard;
-	static ActionBoard actionBoard;
-	static ConsoleBoard consoleBoard;
+	static GameBoard gameBoard;       // 負責地圖的顯示
+	static ActionBoard actionBoard;   // 負責玩家操作介面的顯示
+	static ConsoleBoard consoleBoard; // 負責console文字的顯示
 
 };
 
@@ -42,9 +42,9 @@ struct RealEstate
 	}
 	int type;          // 類型 1地產, -1 機會
 	int position;      // 0~27
-	int ownerId;       // Player1
+	int ownerId;       // 持有者id(玩家id)
 	wstring name;      // 地產名稱
-	int buyCost;       // 土地價格
+	int buyCost;       // 地產價格
 	vector<int> tolls; // 過路費(一律給現金)
 	int level;         // 物產等級 0 ~ 3
 	

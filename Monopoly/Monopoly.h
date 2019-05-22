@@ -27,7 +27,7 @@ public:
 	static GameWorld gameWorld;         // 遊戲世界
 
 
-	static FileReader fileReader;
+	static FileReader fileReader;       // 讀取檔案class 
 	// 以下皆為console視窗設定函數
 	// 0 黑, 1 藍, 2 綠, 3淺藍, 4 紅, 5 紫, 6土黃, 7 白灰, 8 灰, 9 亮藍,10亮綠, 11亮淺藍, 12淺紅, 13淺粉, 14淺黃 15 白
 	static void setColor(int fontColor = 7, int backgroundColor = 0);

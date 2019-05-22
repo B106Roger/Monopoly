@@ -1,6 +1,8 @@
 #include"FileReader.h"
 #include"Monopoly.h"
 #include"GameWorld.h"
+#include<codecvt>
+#include<locale>
 #include <sstream>
 
 
@@ -8,28 +10,29 @@ FileReader::FileReader()
 {
 }
 
-
 FileReader::~FileReader()
 {
 }
 
-void FileReader::readAndSetMap()
+void FileReader::readAndSetData()
 {
+	resetAllData();
 	wifstream in;
 	wstring fileName = Monopoly::gameMapFileName,tmpWstr;
 	if (fileName.size() != 0u)
 	{
-		cout << 123;
+		cout << "file name isn't empty" << endl;
 		in.open(fileName);
+		//in.imbue(loc);
 		if (in.is_open() == true)
 		{
-			cout << 123;
+			cout << "open file" << endl;
 
-			int numberOfRealEstate = 0;
+			int numberOfRealEstate = 28;
 			int numberOfPlayer = 0;
 			// 取得地產資訊
 			in >> GameWorld::mapName;
-			in >> numberOfRealEstate;
+			in >> GameWorld::reamainRound;
 			in >> numberOfPlayer;
 			while (numberOfRealEstate--)
 			{
@@ -37,16 +40,21 @@ void FileReader::readAndSetMap()
 				in >> tmp.position;
 				in >> tmp.name;
 				in >> tmp.type;
-				in >> tmp.buyCost;
-				in >> tmp.tolls[0];
-				in >> tmp.tolls[1];
-				in >> tmp.tolls[2];
-				in >> tmp.tolls[3];
+				wcout << tmp.name << endl;
+				if (tmp.type == 1)
+				{
+					in >> tmp.buyCost;
+					in >> tmp.tolls[0];
+					in >> tmp.tolls[1];
+					in >> tmp.tolls[2];
+					in >> tmp.tolls[3];
+				}
 				GameWorld::gameMap.push_back(tmp);
 			}
 			in >> tmpWstr;
 			in >> GameWorld::playerState;
 			// 取得玩家現金地產資訊
+			in.get(); //去除\n 字元
 			wstring line;
 			wstringstream ss;
 			for (int i = 0; i < numberOfPlayer; i++)
@@ -92,4 +100,15 @@ void FileReader::readAndSetMap()
 		}
 	}
 	
+}
+
+void FileReader::resetAllData()
+{
+	GameWorld::mapName = L"";
+	GameWorld::playerList.resize(0);
+	GameWorld::bank.stockOwnerList.resize(0);
+	GameWorld::gameMap.resize(0);
+	GameWorld::playerState = -1;
+	GameWorld::reamainRound = 0;
+	GameWorld::obstaclePosition = -1;
 }

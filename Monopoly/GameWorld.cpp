@@ -10,7 +10,8 @@ GameBoard GameWorld::gameBoard;
 ActionBoard GameWorld::actionBoard;
 ConsoleBoard GameWorld::consoleBoard;
 wstring GameWorld::mapName;
-
+int GameWorld::reamainRound;
+int GameWorld::obstaclePosition;
 
 GameWorld::GameWorld()
 {

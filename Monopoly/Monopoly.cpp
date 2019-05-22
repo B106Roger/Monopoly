@@ -21,17 +21,19 @@ void Monopoly::monopolyInit()
 	gameMapFileName = L"map//basemap.txt";
 	settingFileName = L"";
 	gameRecordFileName = L"";
+	mode = 0;
 }
 
 void Monopoly::monopolyLoop()
 {
 	mode = 0;
 	monopolyInit();
+	fileReader.readAndSetData();
 	while (mode != 3)
 	{
 		if (mode == 0)
 		{
-			fileReader.readAndSetMap();
+			
 			gameWorld.gameStart();
 		}
 		else if (mode == 1)
