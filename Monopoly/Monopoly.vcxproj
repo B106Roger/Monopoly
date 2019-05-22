@@ -118,6 +118,7 @@
     <ClCompile Include="ActionBoard.cpp" />
     <ClCompile Include="Bank.cpp" />
     <ClCompile Include="ConsoleBoard.cpp" />
+    <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="GameWorld.cpp" />
     <ClCompile Include="Monopoly.cpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="ActionBoard.h" />
     <ClInclude Include="Bank.h" />
     <ClInclude Include="ConsoleBoard.h" />
+    <ClInclude Include="FileReader.h" />
     <ClInclude Include="GameBoard.h" />
     <ClInclude Include="GameWorld.h" />
     <ClInclude Include="Monopoly.h" />
