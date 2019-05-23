@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include<string>
 #include<vector>
 #include"Player.h"
@@ -10,14 +10,13 @@ class Bank
 public:
 	Bank();
 	~Bank();
-	vector<Stock> stockList;                   // ªÑ²¼¦Cªí
-	vector<vector<StockRecord>> stockOwnerList;// ª±®a«ù¦³ªÑ²¼
-	int computeAsset(Player & p1);             // ­pºâª±®aÁ`¸ê²£
-	void stockUpate();                         // §ó·sªÑ²¼³æ»ù
+	vector<Stock> stockList;                   // è‚¡ç¥¨åˆ—è¡¨
+	vector<vector<StockRecord>> stockOwnerList;// ç©å®¶æŒæœ‰è‚¡ç¥¨
+	int computeAsset(Player & p1);             // è¨ˆç®—ç©å®¶ç¸½è³‡ç”¢
+	void stockUpate();                         // æ›´æ–°è‚¡ç¥¨å–®åƒ¹
 };
 
-
-struct Stock                 // ¦sªÑ²¼¸ê®Æ
+struct Stock                 // å­˜è‚¡ç¥¨è³‡æ–™
 {
 	int stockId;
 	int currentDollars;
@@ -25,7 +24,7 @@ struct Stock                 // ¦sªÑ²¼¸ê®Æ
 	wstring name;
 };
 
-struct StockRecord           // ¦sª±®a©Ò«ù¦³ªÑ²¼»P¹ï¬M±i¼Æ
+struct StockRecord           // å­˜ç©å®¶æ‰€æŒæœ‰è‚¡ç¥¨èˆ‡å°æ˜ å¼µæ•¸
 {
 	int player_id;
 	int stockId;
