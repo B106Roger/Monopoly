@@ -6,23 +6,23 @@ ActionBoard::ActionBoard()
 {
 }
 
-void ActionBoard::printStock(vector<Stock> stockList)
+void ActionBoard::printStock()
 {
-	wcout << setw(4) << L"そ" << setw(5) << L"Ω基" << setw(5) << L"セら基" << setw(3) << L"眀/禴" << endl;
-	for (int i = 0; i < stockList.size(); i++) {
-		wcout << setw(4) << stockList[i].name << L"|";
-		wcout << setw(5) << stockList[i].previousDollars << L"|";
-		wcout << setw(5) << stockList[i].currentDollars << L"|";		
-		if (stockList[i].currentDollars > stockList[i].previousDollars) {
+	wcout << setw(6) << L"そ" << setw(6) << L"Ω基" << setw(6) << L"セら基" << setw(5) << L"等/禴" << endl;
+	for (int i = 0; i < Bank::stockList.size(); i++) {
+		wcout << setw(4) << Bank::stockList[i].name << L"|";
+		wcout << setw(9) << Bank::stockList[i].previousDollars << L"|";
+		wcout << setw(9) << Bank::stockList[i].currentDollars << L"|";		
+		if (Bank::stockList[i].currentDollars > Bank::stockList[i].previousDollars) {
 			SetColor(2, 0);
-			wcout << setw(3) << "◆" << endl;
+			wcout << setw(5) << L"◆" << endl;
 		}
-		else if (stockList[i].currentDollars < stockList[i].previousDollars) {
+		else if (Bank::stockList[i].currentDollars < Bank::stockList[i].previousDollars) {
 			SetColor(4, 0);
-			wcout << setw(3) << "□" << endl;
+			wcout << setw(5) << L"□" << endl;
 		}
 		else
-			wcout << setw(3) << L"-" << endl;
+			wcout << setw(5) << L"-" << endl;
 		SetColor();
 	}
 }
