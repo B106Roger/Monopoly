@@ -55,6 +55,7 @@ void Monopoly::monopolyLoop()
 	printBoard(boardX, boardY);
 	isFirstStart = false;
 	// Step3 : 讓玩家選擇
+
 	while (true) {
 		if (_kbhit())
 		{
@@ -67,11 +68,16 @@ void Monopoly::monopolyLoop()
 				{
 					// 玩家人數選單
 					clearFrame();
+					fileReader.resetAllData();     // 重置遊戲參數
+					fileReader.readAndSetData();   // 讀取遊戲
 					gameWorld.gameStart(/*playerAmount*/); // 進入遊戲，打算傳入遊玩人數
 				}
 				else if (mode == 1)
 				{
 					// Continue，進入選單(another loop)
+					fileReader.resetAllData();     // 重置遊戲參數
+					fileReader.readAndSetData();   // 讀取遊戲
+					mode = 0;
 				}
 				else if (mode == 2)
 				{
