@@ -33,7 +33,6 @@ void Monopoly::monopolyLoop()
 	{
 		if (mode == 0)
 		{
-			
 			gameWorld.gameStart();
 		}
 		else if (mode == 1)

@@ -21,13 +21,10 @@ void FileReader::readAndSetData()
 	wstring fileName = Monopoly::gameMapFileName,tmpWstr;
 	if (fileName.size() != 0u)
 	{
-		cout << "file name isn't empty" << endl;
 		in.open(fileName);
 		//in.imbue(loc);
 		if (in.is_open() == true)
 		{
-			cout << "open file" << endl;
-
 			int numberOfRealEstate = 28;
 			int numberOfPlayer = 0;
 			// 取得地產資訊
@@ -40,7 +37,6 @@ void FileReader::readAndSetData()
 				in >> tmp.position;
 				in >> tmp.name;
 				in >> tmp.type;
-				wcout << tmp.name << endl;
 				if (tmp.type == 1)
 				{
 					in >> tmp.buyCost;
