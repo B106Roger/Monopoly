@@ -24,6 +24,10 @@ GameWorld::~GameWorld()
 
 void GameWorld::gameStart()
 {
-	
+	gameBoard.printMap();
+	while (true)
+	{
+
+	}
 }
 

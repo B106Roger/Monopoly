@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include<Windows.h>
 #include<conio.h>
 #include<string>
@@ -13,23 +13,47 @@ public:
 	
 	Monopoly();
 	~Monopoly();
-	void monopolyInit();       // ªì©l¤Æ¹CÀ¸°Ñ¼Æ (¦a¹Ï¡BÁn­µ.....)
-	void monopolyLoop();       // ¹CÀ¸¬yµ{°j°é
+	void monopolyInit();       // åˆå§‹åŒ–éŠæˆ²åƒæ•¸ (åœ°åœ–ã€è²éŸ³.....)
+	void monopolyLoop();       // éŠæˆ²æµç¨‹è¿´åœˆ
 
+	void printFrame(int xpos, int ypos, int xsize, int ysize, wstring title);// å°å¤§å¤–æ¡†
+	void printBoard(int xpos, int ypos);     // å°ä¸»é¸å–®
+	void printWord(int xpos, int ypos, int width, int height);   // å°ä¸»é¸å–®çš„å­—
 
+	void printArt();
+	void printArtSleep();
+	void clearFrame();
 
-	// 0 GameMode;  1 SettingMode; 2 DetailMode; 3 ExitMode
+	int isFirstStart = true;
+	const int startX = 0;     // è¦–çª—å·¦ä¸Šè§’x,yè¦–çª—
+	const int startY = 0;
+	const int width = 64;     // è¦–çª—é•·å¯¬
+	const int height = 36;
+
+	int boardX = 30;
+	int boardY = 0;
+	int boardWidth = 20;
+	int boardHeight = 31;
+
+	int wordX;
+	int wordY;
+	int wordWidth;
+	int wordHeight;
+	
+
+	// 0 GameMode; 1 ContinueMode; 2 RuleMode; 3 SettingMode; 4 ExitMode
 	int mode;
-	static wstring settingFileName;     // ³]©wÀÉÀÉ¦W
-	static wstring gameMapFileName;     // ¹CÀ¸¦a¹ÏÀÉ¦W
-	static wstring musicFileName;       // ¹CÀ¸­µ¼ÖÀÉ¦W
-	static wstring gameRecordFileName;  // ¹CÀ¸°O¿ıÀÉ¦W
-	static GameWorld gameWorld;         // ¹CÀ¸¥@¬É
+	int modeAmount = 5;
+	static wstring settingFileName;     // è¨­å®šæª”æª”å
+	static wstring gameMapFileName;     // éŠæˆ²åœ°åœ–æª”å
+	static wstring musicFileName;       // éŠæˆ²éŸ³æ¨‚æª”å
+	static wstring gameRecordFileName;  // éŠæˆ²è¨˜éŒ„æª”å
+	static GameWorld gameWorld;         // éŠæˆ²ä¸–ç•Œ
 
 
-	static FileReader fileReader;       // Åª¨úÀÉ®×class 
-	// ¥H¤U¬Ò¬°consoleµøµ¡³]©w¨ç¼Æ
-	// 0 ¶Â, 1 ÂÅ, 2 ºñ, 3²LÂÅ, 4 ¬õ, 5 µµ, 6¤g¶À, 7 ¥Õ¦Ç, 8 ¦Ç, 9 «GÂÅ,10«Gºñ, 11«G²LÂÅ, 12²L¬õ, 13²L¯», 14²L¶À 15 ¥Õ
+	static FileReader fileReader;       // è®€å–æª”æ¡ˆclass 
+	// ä»¥ä¸‹çš†ç‚ºconsoleè¦–çª—è¨­å®šå‡½æ•¸
+	// 0 é»‘, 1 è—, 2 ç¶ , 3æ·ºè—, 4 ç´…, 5 ç´«, 6åœŸé»ƒ, 7 ç™½ç°, 8 ç°, 9 äº®è—,10äº®ç¶ , 11äº®æ·ºè—, 12æ·ºç´…, 13æ·ºç²‰, 14æ·ºé»ƒ 15 ç™½
 	static void setColor(int fontColor = 7, int backgroundColor = 0);
 	static void setCursor(int x, int y);
 	static void getCursor(int &x, int &y);
