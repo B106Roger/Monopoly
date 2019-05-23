@@ -1,4 +1,4 @@
-#include "Monopoly.h"
+﻿#include "Monopoly.h"
 
 wstring Monopoly::musicFileName;
 wstring Monopoly::gameMapFileName;
@@ -24,9 +24,10 @@ void Monopoly::monopolyInit()
 	mode = 0;
 }
 
+// 主選單Loop
 void Monopoly::monopolyLoop()
 {
-	mode = 0;
+	/*mode = 0;
 	monopolyInit();
 	fileReader.readAndSetData();
 	while (mode != 3)
@@ -43,36 +44,286 @@ void Monopoly::monopolyLoop()
 		{
 			// Detail code
 		}
+	}*/
+	
+	// Step1 : 印初始動畫
+	if (isFirstStart) {
+		printArtSleep();
+	}
+	// Step2 : 印選單
+	wstring title = L"";
+	printBoard(boardX, boardY);
+	isFirstStart = false;
+	// Step3 : 讓玩家選擇
+	while (true) {
+		if (_kbhit())
+		{
+			int ch = _getch();
+			// 按下Enter鍵後
+			if (ch == '\r')
+			{
+				setCursorSize(true, 0); // 歸還游標
+				if (mode == 0)
+				{
+					// 玩家人數選單
+					clearFrame();
+					gameWorld.gameStart(/*playerAmount*/); // 進入遊戲，打算傳入遊玩人數
+				}
+				else if (mode == 1)
+				{
+					// Continue，進入選單(another loop)
+				}
+				else if (mode == 2)
+				{
+					// Rule，規則畫面
+				}
+				else if (mode == 3) {
+					// Setting，設定選單(another loop)
+				}
+				else if (mode == 4) {
+					// Exit，break
+					break;
+				}
+			}
+			// 按下方向鍵後
+			else if (ch == 224)
+			{
+				ch = _getch();
+				switch (ch)
+				{
+				case 72: // 上
+					if (mode == 0) mode = 4;
+					else mode--;
+					break;
+				case 80: // 下
+					if (mode == 4) mode = 0;
+					else mode++;
+					break;
+				};
+				printWord(wordX, wordY, wordWidth, wordHeight); // 更新已選取選項位置
+			}
+		}
 	}
 }
 
+void Monopoly::printFrame(int xpos, int ypos, int xsize, int ysize, wstring title) {
+	setColor();
+	wstring upper;
+	wstring lower(xsize - 2, L'＝');
+	wstring side(xsize - 2, L'　');
+	lower = L"●" + lower;
+	lower.push_back(L'●');
+	side = L"∥" + side;
+	side.push_back(L'∥');
+	if (int(title.size()) != 0)
+	{
+		int leftspace = (xsize - int(title.size()) - 2) / 2;
+		int rightspace = xsize - int(title.size()) - 2 - leftspace;
+		upper = title;
+		upper = wstring(leftspace, L'＝') + upper + wstring(rightspace, L'＝');
+		upper.insert(0, 1, L'●');
+		upper.push_back(L'●');
+	}
+	else
+	{
+		upper = lower;
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// static function
-// �]�w�y��
-void Monopoly::setCursor(int x, int y)
-{
-	COORD point;
-	point.X = x; point.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), point);
+	for (int i = 0; i < ysize; i++)
+	{
+		setCursor(xpos, ypos + i);
+		if (i == 0)
+		{
+			wcout << upper;
+		}
+		else if (i == ysize - 1)
+		{
+			wcout << lower;
+		}
+		else
+		{
+			wcout << side;
+		}
+	}
 }
 
-// �]�w�C��
+void Monopoly::printBoard(int xpos, int ypos) {
+	setCursorSize(false, 0);
+	setColor(9, 0);
+	for (int i = 0; i < boardHeight; i++) {
+		setCursor(xpos, ypos + i);
+		for (int j = 0; j < boardWidth; j++) {
+			if (i == 0 || i == boardHeight - 1 || i % 6 == 0) // 上
+			{
+				if (j == 0) wcout << L"●";// 左上角
+				else if (j == boardWidth - 1) wcout << L"●";// 右上角
+				else wcout << L"＝";// 上方
+			}
+			else// 中
+			{
+				if (j == 0 || j == boardWidth - 1) wcout << L"∥";// 中間
+				else wcout << L"　"; // 
+			}
+		}
+	}
+	setColor();
+	wordX = boardX + 2; // 減邊框
+	wordY = boardY + 1; // 減邊框
+	wordWidth = boardWidth - 2; // 減邊框長度
+	wordHeight = (boardHeight - (modeAmount + 1)) / modeAmount; // 算出單格長度
+	printWord(wordX, wordY, wordWidth, wordHeight);
+}
+
+void Monopoly::printWord(int xpos, int ypos, int width, int height) {
+	
+	setColor();
+
+	
+	if (mode == 0) setColor(0, 15);
+	else setColor();
+	for (int i = 0; i < height; i++) {
+		setCursor(xpos, ypos + i);
+		for (int j = 0; j < width; j++) {
+			wcout << L"　";
+		}
+	}
+	Monopoly::setCursor(xpos + 12, ypos + 2);
+	wcout << L"開始遊戲";
+
+
+
+	
+	if (mode == 1) Monopoly::setColor(0, 15);
+	else setColor();
+	ypos += 6;
+	for (int i = 0; i < height; i++) {
+		setCursor(xpos, ypos + i);
+		for (int j = 0; j < width; j++) {
+			wcout << L"　";
+		}
+	}
+	ypos -= 6;
+	Monopoly::setCursor(xpos + 12, ypos + 8);
+	wcout << L"繼續遊戲";
+
+	
+	if (mode == 2) setColor(0, 15);
+	else setColor();
+	ypos += 12;
+	for (int i = 0; i < height; i++) {
+		setCursor(xpos, ypos + i);
+		for (int j = 0; j < width; j++) {
+			wcout << L"　";
+		}
+	}
+	ypos -= 12;
+	Monopoly::setCursor(xpos + 12, ypos + 14);
+	wcout << L"規則說明";
+
+	
+	if (mode == 3) setColor(0, 15);
+	else setColor();
+	ypos += 18;
+	for (int i = 0; i < height; i++) {
+		setCursor(xpos, ypos + i);
+		for (int j = 0; j < width; j++) {
+			wcout << L"　";
+		}
+	}
+	ypos -= 18;
+	Monopoly::setCursor(xpos + 12, ypos + 20);
+	wcout << L"遊戲設定";
+
+	
+	if (mode == 4) setColor(0, 15);
+	else setColor();
+	ypos += 24;
+	for (int i = 0; i < height; i++) {
+		setCursor(xpos, ypos + i);
+		for (int j = 0; j < width; j++) {
+			wcout << L"　";
+		}
+	}
+	ypos -= 24;
+	Monopoly::setCursor(xpos + 12, ypos + 26);
+	wcout << L"離開遊戲";
+
+	setColor();
+
+}
+
+void Monopoly::printArt() {
+	fstream inputMonopoly("art/monopoly.txt", ios::in);
+	fstream inputMoney("art/fadatsai.txt", ios::in);
+	setCursorSize(false, 0);
+
+	string line;
+	int yPos = 3;
+
+	setColor(6, 0);
+	while (getline(inputMonopoly, line)) {
+		setCursor(3, yPos);
+		cout << line << endl;
+		yPos++;
+	}
+
+
+	yPos = 3;
+	setColor(6, 0);
+	while (getline(inputMoney, line)) {
+		setCursor(3, yPos);
+		cout << line << endl;
+		yPos++;
+	}
+
+	inputMonopoly.close();
+	inputMoney.close();
+	setColor();
+}
+
+void Monopoly::printArtSleep() {
+	fstream inputMonopoly("art/monopoly.txt", ios::in);
+	fstream inputMoney("art/fadatsai.txt", ios::in);
+	setCursorSize(false, 0);
+
+	string line;
+	int yPos = 3;
+
+	setColor(6, 0);
+	while (getline(inputMonopoly, line)) {
+		setCursor(3, yPos);
+		cout << line << endl;
+		yPos++;
+		Sleep(100);
+	}
+
+
+	yPos = 3;
+	setColor(6, 0);
+	while (getline(inputMoney, line)) {
+		setCursor(3, yPos);
+		cout << line << endl;
+		yPos++;
+		Sleep(100);
+	}
+
+	inputMonopoly.close();
+	inputMoney.close();
+	setColor();
+}
+
+void Monopoly::clearFrame() {
+	setColor();
+	for (int i = 0; i < 49; i++) {
+		setCursor(0, i);
+		for (int j = 0; j < 188; j++) {
+			wcout << L"　";
+		}
+	}
+
+}
+
+// 設定顏色
 void Monopoly::setColor(int f, int b)
 {
 	unsigned short ForeColor = f + 16 * b;
@@ -80,7 +331,15 @@ void Monopoly::setColor(int f, int b)
 	SetConsoleTextAttribute(hCon, ForeColor);
 }
 
-// ���o�ثe��Ц�m
+// 設定座標
+void Monopoly::setCursor(int x, int y)
+{
+	COORD point;
+	point.X = x; point.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), point);
+}
+
+// 取得目前游標位置
 void Monopoly::getCursor(int &x, int &y)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -89,7 +348,7 @@ void Monopoly::getCursor(int &x, int &y)
 	y = csbi.dwCursorPosition.Y;
 }
 
-// �]�w�y��visible
+// 設定座標visible
 void Monopoly::setCursorSize(bool visible, DWORD size) // set bool visible = 0 - invisible, bool visible = 1 - visible
 {
 	if (size == 0)
