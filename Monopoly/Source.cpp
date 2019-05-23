@@ -5,7 +5,6 @@ using namespace std;
 
 int main()
 {
-
 	locale::global(locale(""));
 	Monopoly monopoly;
 	system("PAUSE");
