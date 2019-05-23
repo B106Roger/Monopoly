@@ -1,9 +1,11 @@
 #include "Monopoly.h"
 
-wstring Monopoly::musicFileName = L"";
-wstring Monopoly::gameMapFileName = L"";
-wstring Monopoly::settingFileName = L"";
-wstring Monopoly::gameRecordFileName = L"";
+wstring Monopoly::musicFileName;
+wstring Monopoly::gameMapFileName;
+wstring Monopoly::settingFileName;
+wstring Monopoly::gameRecordFileName;
+GameWorld Monopoly::gameWorld;
+FileReader Monopoly::fileReader;
 
 Monopoly::Monopoly()
 {
@@ -15,9 +17,35 @@ Monopoly::~Monopoly()
 }
 void Monopoly::monopolyInit()
 {
+	musicFileName = L"";
+	gameMapFileName = L"map//basemap.txt";
+	settingFileName = L"";
+	gameRecordFileName = L"";
+	mode = 0;
 }
 
-
+void Monopoly::monopolyLoop()
+{
+	mode = 0;
+	monopolyInit();
+	fileReader.readAndSetData();
+	while (mode != 3)
+	{
+		if (mode == 0)
+		{
+			
+			gameWorld.gameStart();
+		}
+		else if (mode == 1)
+		{
+			// Setting code
+		}
+		else if (mode == 2)
+		{
+			// Detail code
+		}
+	}
+}
 
 
 
