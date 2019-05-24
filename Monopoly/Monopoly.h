@@ -16,7 +16,7 @@ public:
 	void monopolyInit();       // 初始化遊戲參數 (地圖、聲音.....)
 	void monopolyLoop();       // 遊戲流程迴圈
 
-	void printFrame(int xpos, int ypos, int xsize, int ysize, wstring title);// 印大外框
+	static void printFrame(int xpos, int ypos, int xsize, int ysize, wstring title = L"");// 印大外框
 	void printBoard(int xpos, int ypos);     // 印主選單
 	void printWord(int xpos, int ypos, int width, int height);   // 印主選單的字
 
@@ -45,7 +45,7 @@ public:
 	int mode;
 	int modeAmount = 5;
 	static wstring settingFileName;     // 設定檔檔名
-	static wstring gameMapFileName;     // 遊戲地圖檔名
+	static wstring gameMapFileName;     // 遊戲地圖檔名-新遊戲開始時所套用的地圖
 	static wstring musicFileName;       // 遊戲音樂檔名
 	static wstring gameRecordFileName;  // 遊戲記錄檔名
 	static GameWorld gameWorld;         // 遊戲世界

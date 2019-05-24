@@ -18,15 +18,17 @@ Monopoly::~Monopoly()
 void Monopoly::monopolyInit()
 {
 	musicFileName = L"";
-	gameMapFileName = L"map//basemap.txt";
+	gameMapFileName = L"basemap.txt";
 	settingFileName = L"";
 	gameRecordFileName = L"";
 	mode = 0;
+	setCursorSize(false, 0);
 }
 
 // 主選單Loop
 void Monopoly::monopolyLoop()
 {
+	system("CLS");
 	/*mode = 0;
 	monopolyInit();
 	fileReader.readAndSetData();
@@ -48,7 +50,7 @@ void Monopoly::monopolyLoop()
 	
 	// Step1 : 印初始動畫
 	if (isFirstStart) {
-		printArtSleep();
+		printArt();
 	}
 	// Step2 : 印選單
 	wstring title = L"";
@@ -68,16 +70,15 @@ void Monopoly::monopolyLoop()
 				{
 					// 玩家人數選單
 					clearFrame();
-					fileReader.resetAllData();     // 重置遊戲參數
-					fileReader.readAndSetData();   // 讀取遊戲
 					gameWorld.gameStart(/*playerAmount*/); // 進入遊戲，打算傳入遊玩人數
 				}
 				else if (mode == 1)
 				{
 					// Continue，進入選單(another loop)
-					fileReader.resetAllData();     // 重置遊戲參數
+					fileReader.getFilename("continue");
 					fileReader.readAndSetData();   // 讀取遊戲
-					mode = 0;
+					clearFrame();
+					gameWorld.gameStart();
 				}
 				else if (mode == 2)
 				{

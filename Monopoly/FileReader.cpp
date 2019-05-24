@@ -1,10 +1,6 @@
 #include"FileReader.h"
 #include"Monopoly.h"
 #include"GameWorld.h"
-#include<codecvt>
-#include<locale>
-#include <sstream>
-
 
 FileReader::FileReader()
 {
@@ -16,13 +12,13 @@ FileReader::~FileReader()
 
 void FileReader::readAndSetData()
 {
+	// 重置GameWorld的參數
 	resetAllData();
 	wifstream in;
-	wstring fileName = Monopoly::gameMapFileName,tmpWstr;
+	wstring fileName = continuePath + L"//" + Monopoly::gameRecordFileName,tmpWstr;
 	if (fileName.size() != 0u)
 	{
 		in.open(fileName);
-		//in.imbue(loc);
 		if (in.is_open() == true)
 		{
 			int numberOfRealEstate = 28;
@@ -94,6 +90,7 @@ void FileReader::readAndSetData()
 			}
 
 		}
+		else wcout << L"fail open " << fileName;
 	}
 	
 }
@@ -107,4 +104,89 @@ void FileReader::resetAllData()
 	GameWorld::playerState = -1;
 	GameWorld::reamainRound = 0;
 	GameWorld::obstaclePosition = -1;
+}
+
+bool FileReader::getFilename(string foldername)
+{
+	const FS::path absoluteFilename = FS::current_path() / foldername;
+	vector<FS::path> fileList = getAllFile(absoluteFilename);
+	int fileListSize = (int)fileList.size();
+	int index = 0;
+	displayFolder(fileList, index);
+	while (true)
+	{
+		if (_kbhit())
+		{
+			int ch = _getch();
+			if (ch == 224)
+			{
+				ch = _getch();
+				if (ch == 80)
+				{
+					++index;
+					index == fileListSize ? (index = 0) : 0;
+				}
+				else if (ch == 72)
+				{
+					--index;
+					index == -1 ? (index = fileListSize - 1) : 0;
+				}
+				displayFolder(fileList, index);
+			}
+			else if (ch == '\r')
+			{
+				Monopoly::gameRecordFileName = fileList[index].filename();
+				return true;
+			}
+			else if (ch == 27)          // 案Esc鍵後離開
+			{
+				Monopoly::gameRecordFileName = L"";
+				return false;
+			}
+		}
+	}
+}
+
+void FileReader::displayFolder(const vector<FS::path> & fileList, int index)
+{
+	int width = 20, fileListSize = (int)fileList.size();
+	// 決定顯示欄位的index
+	int start = index, end = fileListSize - 1,displayIndex = 0;
+	if (end - start >= 9)
+	{
+		end = start + 9;
+	}
+	else if (end - start < 9)
+	{
+		start = end - 9;
+		if (start < 0)
+		{
+			start = 0;
+		}
+	}
+
+	for (; start <= end; start++, displayIndex++)
+	{
+		Monopoly::printFrame(startX, startY + 2 * displayIndex, width, 3);
+		Monopoly::setCursor(startX + 4, startY + 2 * displayIndex + 1);
+		index == start ? Monopoly::setColor(0, 15) : Monopoly::setColor();
+		wcout << fileList[start].filename();
+	}
+}
+
+
+vector<FS::path> FileReader::getAllFile(const FS::path & ps)
+{
+	vector<FS::path> fileList;
+	// 如果這不是資料夾就跳出
+	if (FS::is_regular_file(ps))
+	{
+		return fileList;
+	}
+	// 獲取資料夾下所有的檔案或資料夾
+	for (FS::directory_iterator it(ps); it != FS::directory_iterator(); it++)
+	{
+		fileList.push_back(it->path());
+	}
+	return fileList;
 }
