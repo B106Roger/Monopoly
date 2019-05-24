@@ -25,6 +25,7 @@ GameWorld::~GameWorld()
 void GameWorld::gameStart()
 {
 	gameBoard.printMap();
+	actionBoard.printFrame();
 	while (true)
 	{
 

@@ -1,9 +1,2 @@
-﻿  FileReader.cpp
-c:\users\user\desktop\ntust\大二下\物件導向程式設計\project2-monopoly\monopoly\monopoly\filereader.cpp(59): warning C4101: 'level': 未參考的區域變數
-c:\users\user\desktop\ntust\大二下\物件導向程式設計\project2-monopoly\monopoly\monopoly\filereader.cpp(79): warning C4101: 'balance': 未參考的區域變數
-  GameBoard.cpp
-  GameWorld.cpp
-  Monopoly.cpp
-  Source.cpp
-  正在產生程式碼...
+﻿  ActionBoard.cpp
   Monopoly.vcxproj -> C:\Users\USER\Desktop\NTUST\大二下\物件導向程式設計\Project2-Monopoly\Monopoly\x64\Debug\Monopoly.exe

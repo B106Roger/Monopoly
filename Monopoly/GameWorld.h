@@ -26,8 +26,8 @@ public:
 	static int obstaclePosition;      // 為路障位置 
 	//display static data member
 	static GameBoard gameBoard;       // 負責地圖的顯示
-	static ActionBoard actionBoard;   // 負責玩家操作介面的顯示
-	static ConsoleBoard consoleBoard; // 負責console文字的顯示
+	static ActionBoard actionBoard;   // 面的顯示
+	static ConsoleBoard consoleBoard; // 負責consol負責玩家操作介e文字的顯示
 
 };
 
