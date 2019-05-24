@@ -9,6 +9,7 @@ FileReader Monopoly::fileReader;
 
 Monopoly::Monopoly()
 {
+	setCursorSize(false, 0);
 	monopolyInit();
 }
 
@@ -22,7 +23,6 @@ void Monopoly::monopolyInit()
 	settingFileName = L"";
 	gameRecordFileName = L"";
 	mode = 0;
-	setCursorSize(false, 0);
 }
 
 // 主選單Loop
@@ -154,6 +154,7 @@ void Monopoly::printFrame(int xpos, int ypos, int xsize, int ysize, wstring titl
 	}
 }
 
+
 void Monopoly::printBoard(int xpos, int ypos) {
 	setCursorSize(false, 0);
 	setColor(9, 0);
@@ -181,6 +182,7 @@ void Monopoly::printBoard(int xpos, int ypos) {
 	printWord(wordX, wordY, wordWidth, wordHeight);
 }
 
+// 印出主選單選項
 void Monopoly::printWord(int xpos, int ypos, int width, int height) {
 	
 	setColor();
@@ -259,6 +261,7 @@ void Monopoly::printWord(int xpos, int ypos, int width, int height) {
 
 }
 
+// 印出開頭背景
 void Monopoly::printArt() {
 	fstream inputMonopoly("art/monopoly.txt", ios::in);
 	fstream inputMoney("art/fadatsai.txt", ios::in);
@@ -288,6 +291,7 @@ void Monopoly::printArt() {
 	setColor();
 }
 
+// 印出開頭背景，有特效
 void Monopoly::printArtSleep() {
 	fstream inputMonopoly("art/monopoly.txt", ios::in);
 	fstream inputMoney("art/fadatsai.txt", ios::in);
@@ -319,6 +323,7 @@ void Monopoly::printArtSleep() {
 	setColor();
 }
 
+// 清空畫面
 void Monopoly::clearFrame() {
 	setColor();
 	for (int i = 0; i < 49; i++) {
@@ -329,6 +334,9 @@ void Monopoly::clearFrame() {
 	}
 
 }
+
+
+// Console介面的helper function
 
 // 設定顏色
 void Monopoly::setColor(int f, int b)

@@ -10,7 +10,7 @@ GameBoard::GameBoard()
 GameBoard::~GameBoard()
 {
 }
-
+// 印出地圖的第N個位置
 void GameBoard::printItem(int index)
 {
 	int y, x;          // 全形為基準的座標
@@ -47,26 +47,12 @@ void GameBoard::printItem(int index)
 	{
 		if (ele.playerPosition == index)
 		{
-			int color = 0;
-			switch (ele.id)
-			{
-			case 0:
-				color = 5;
-				break;
-			case 1:
-				color = 1;
-				break;
-			case 2:
-				color = 2;
-				break;
-			case 3:
-				color = 6;
-				break;
-			}
+			int color = getPlayerColor(ele.id);
 			Monopoly::setColor(color);
 			wcout << L"●";
 		}
 	}
+	Monopoly::setColor();
 	// 印路障 + (價格或房子)
 	Monopoly::setCursor(boxX + 2, boxY + 3);
 	if (GameWorld::obstaclePosition == index)
@@ -75,13 +61,13 @@ void GameBoard::printItem(int index)
 	}
 	if (ref.type == 1 && ref.ownerId != -1)
 	{
-		for (int i = 0; i < ref.level;++i)
-		{
-			wcout << L"★";
-		}
+		Monopoly::setColor(7, getPlayerColor(ref.ownerId));
+		wcout << wstring(ref.level, L'★');
+		Monopoly::setColor();
 	}
 }
 
+// 印出整份地圖
 void GameBoard::printMap()
 {
 	for (int i = 0; i < 28; i++)
@@ -90,6 +76,7 @@ void GameBoard::printMap()
 	}
 }
 
+// helper function for printItem
 void GameBoard::printFrame(int xpos, int ypos, int xsize, int ysize, wstring title)
 {
 	Monopoly::setColor();
@@ -130,4 +117,26 @@ void GameBoard::printFrame(int xpos, int ypos, int xsize, int ysize, wstring tit
 			wcout << side;
 		}
 	}
+}
+
+// 取得玩家專用顏色
+int GameBoard::getPlayerColor(int id)
+{
+	int color = 7;
+	switch (id)
+	{
+	case 0:
+		color = 5;
+		break;
+	case 1:
+		color = 1;
+		break;
+	case 2:
+		color = 2;
+		break;
+	case 3:
+		color = 6;
+		break;
+	}
+	return color;
 }

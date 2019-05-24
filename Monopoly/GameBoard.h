@@ -16,6 +16,9 @@ public:
 	void printMap();
 	void printFrame(int xpos, int ypos, int xsize, int ysize, wstring title = L"");
 
+
+private:
+	int getPlayerColor(int playerid);
 };
 
 //�@�ССССССС�

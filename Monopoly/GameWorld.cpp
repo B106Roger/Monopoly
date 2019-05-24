@@ -22,13 +22,47 @@ GameWorld::~GameWorld()
 {
 }
 
+// 遊戲迴圈
 void GameWorld::gameStart()
 {
+	Monopoly::setCursorSize(false, 0);
 	gameBoard.printMap();
 	actionBoard.printFrame();
 	while (true)
 	{
-
+		int actionMode = actionBoard.getMenuOption();
+		switch (actionMode)
+		{
+		case 0:                       // 玩家資訊
+			break;
+		case 1:                       // 存款
+			break;
+		case 2:                       // 提款
+			break;
+		case 3:                       // 股票開盤
+			actionBoard.printStock();
+			system("PAUSE");
+			break;
+		case 4:                       // 買股票
+			break;
+		case 5:                       // 賣股票
+			break;
+		case 6:                       // 擲骰子
+			// 判斷能不能值骰的function
+			int distance = rand() % 6 + 1;
+			for (int i = distance; i != 0; --i)
+			{
+				int & playerPosition = playerList[playerState].playerPosition;
+				int oldPosition = playerPosition++;
+				playerPosition %= 28;
+				gameBoard.printItem(oldPosition);
+				gameBoard.printItem(playerPosition);
+				Sleep(200);
+			}
+			playerState++;
+			playerState %= 4;
+			break;
+		}
 	}
 }
 

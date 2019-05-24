@@ -10,6 +10,7 @@ FileReader::~FileReader()
 {
 }
 
+// 讀取 Monopoly::gameRecordFilename ，必須確認Monopoly::gameRecordFilename不為空
 void FileReader::readAndSetData()
 {
 	// 重置GameWorld的參數
@@ -95,6 +96,7 @@ void FileReader::readAndSetData()
 	
 }
 
+// 重設遊戲參數
 void FileReader::resetAllData()
 {
 	GameWorld::mapName = L"";
@@ -105,6 +107,7 @@ void FileReader::resetAllData()
 	GameWorld::reamainRound = 0;
 	GameWorld::obstaclePosition = -1;
 }
+
 
 bool FileReader::getFilename(string foldername)
 {
@@ -121,12 +124,12 @@ bool FileReader::getFilename(string foldername)
 			if (ch == 224)
 			{
 				ch = _getch();
-				if (ch == 80)
+				if (ch == 80)          // 按下
 				{
 					++index;
 					index == fileListSize ? (index = 0) : 0;
 				}
-				else if (ch == 72)
+				else if (ch == 72)     // 按上
 				{
 					--index;
 					index == -1 ? (index = fileListSize - 1) : 0;
@@ -147,18 +150,20 @@ bool FileReader::getFilename(string foldername)
 	}
 }
 
+// 顯示檔案
 void FileReader::displayFolder(const vector<FS::path> & fileList, int index)
 {
 	int width = 20, fileListSize = (int)fileList.size();
+	int maxmumPrintFile = 6;
 	// 決定顯示欄位的index
 	int start = index, end = fileListSize - 1,displayIndex = 0;
-	if (end - start >= 9)
+	if (end - start >= maxmumPrintFile)
 	{
-		end = start + 9;
+		end = start + maxmumPrintFile;
 	}
-	else if (end - start < 9)
+	else if (end - start < maxmumPrintFile)
 	{
-		start = end - 9;
+		start = end - maxmumPrintFile;
 		if (start < 0)
 		{
 			start = 0;
@@ -174,7 +179,7 @@ void FileReader::displayFolder(const vector<FS::path> & fileList, int index)
 	}
 }
 
-
+// 給定資料夾名稱，取得該目錄底下的檔案
 vector<FS::path> FileReader::getAllFile(const FS::path & ps)
 {
 	vector<FS::path> fileList;
