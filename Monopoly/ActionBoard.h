@@ -27,10 +27,16 @@ public:
 
 private:
 	const vector<wstring>& getActionList();
+
+	// ============================================
+	// 玩家資訊的板子
+	// ============================================
 	void choosePlayerInfo(int infoMode, int playerId, int indexY, int lineHeight, int indexX); // 三選一的code
 	void printPlayerInfoMain(int playerId, int indexY, int lineHeight); // 玩家一般資訊(含標頭、尾)
 	void printPlayerInfoStock(int playerId, int indexY, int lineHeight, int indexX);// 玩家股票資訊(含標頭、尾)
 	void printPlayerInfoHouse(int playerId, int indexY, int lineHeight, int indexX);// 玩家房產資訊(含標頭、尾)
+	// ============================================
+
 	void headerTip(wstring); // 標頭
 	void tailTip(); // 頁尾
 };
