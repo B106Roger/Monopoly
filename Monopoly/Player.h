@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include<string>
 #include<vector>
 using namespace std;
@@ -9,15 +9,15 @@ public:
 	~Player();
 
 
-	wstring name;             // ª±®a¦WºÙ
-	int id;                   // ª±®aid
-	int cash;                 // ª±®a²{ª÷
-	int bankBalance;          // ª±®a¦s´Ú
-	int stopRound;            // ª±®a°±¤î²¾°Êªº³Ñ¾l¦^¦X¼Æ
-	int playerPosition;       // ª±®a©Ò¦b¦a
-	int remoteDice;           // »»±±¦â¤l¼Æ¶q// ·s¹CÀ¸¨C¤H§K¶OÃØ°e»»±±¦â¤l
-	int withdraw(int dollars);// ´£´Ú
-	int deposit(int dollars); // ¦s´Ú
+	wstring name;             // ç©å®¶åç¨±
+	int id;                   // ç©å®¶id
+	int cash;                 // ç©å®¶ç¾é‡‘
+	int bankBalance;          // ç©å®¶å­˜æ¬¾
+	int stopRound;            // ç©å®¶åœæ­¢ç§»å‹•çš„å‰©é¤˜å›åˆæ•¸
+	int playerPosition;       // ç©å®¶æ‰€åœ¨åœ°
+	int remoteDice;           // é™æ§è‰²å­æ•¸é‡// æ–°éŠæˆ²æ¯äººå…è²»è´ˆé€é™æ§è‰²å­
+	int withdraw(int dollars);// ææ¬¾
+	int deposit(int dollars); // å­˜æ¬¾
 	// int buyStock(Stock & stock, int number);
 	// int soldStock(Stock& stock, int number);
 };
