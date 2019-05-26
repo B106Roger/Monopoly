@@ -75,7 +75,11 @@ void Monopoly::monopolyLoop()
 				else if (mode == 1)
 				{
 					// Continue，進入選單(another loop)
-					fileReader.getFilename("continue");
+					bool success = fileReader.getFilename("continue");
+					if (success == false)
+					{
+						continue;
+					}
 					fileReader.readAndSetData();   // 讀取遊戲
 					clearFrame();
 					gameWorld.gameStart();

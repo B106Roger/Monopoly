@@ -296,7 +296,7 @@ void ActionBoard::headerTip(wstring tip) {
 	wcout << tip;
 };
 
-void ActionBoard::tailTip() {
+void ActionBoard::tailTip() { 
 	Monopoly::setCursor(startX + width / 2, startY + length - 2);
 	wcout << L"←　Ｅｎｔｅｒ　→";
 }
@@ -348,31 +348,38 @@ void ActionBoard::printStock()
 // ========================================================================
 vector<int> ActionBoard::printBuyStock()
 {
-	printFrame();
-	int playerId = GameWorld::playerState;// 取得當前玩家為誰
-	int lineHeight = 2; // 行間距，目前 間隔一個 + 自己本行 = 2
-	int indexX = startX + 4, indexY = startY + 3;
+	printFrame();                     // 清空ActionBoard
+	Player currentPlayer = GameWorld::playerList[GameWorld::playerState];     // 取得當前玩家reference
+	int lineHeight = 2;                                                       // 行間距，股票與股票之間的間距
+	int indexX = startX + 4, indexY = startY + 3;                             // 股票列印位置
+	vector<int> numberOfStock(int(Bank::stockList.size()), 0);                // 股票數量
 	Monopoly::setColor();
 	headerTip(L"----------股票交易所----------");
 	Monopoly::setCursor(indexX, indexY);
-
+	wcout << L"存款:　" << currentPlayer.bankBalance ;
+	indexY += 2;
+	// 列印交易版 標頭
+	Monopoly::setCursor(indexX, indexY);
 	wcout << L"股票名稱" << L'　';
 	wcout << L"單股現價" << L'　';
 	wcout << L"購買張數" << L'　';
 	wcout << L"　總價格" << L'　';
-	vector<int> numberOfStock(int(Bank::stockList.size()), 0);
+	
+	// 列印股票交易列表
 	indexY += 2;
 	int stockId = 0, previousId = 0;
 	for (int i = 0; i < int(numberOfStock.size());i++)
 	{
 		printBuyStockNumber(i, numberOfStock[i], indexX, indexY + 2 * i, i == stockId);
 	}
+	printTotalStock(numberOfStock, indexX, indexY + 2 * int(numberOfStock.size()));
 	while (true)
 	{
 		if (_kbhit)
 		{
 			int ch = _getch();
-			if (ch == 224)
+			// 方向鍵操控數量
+			if (ch == 224)   
 			{
 				ch = _getch();
 				switch (ch)
@@ -406,23 +413,29 @@ vector<int> ActionBoard::printBuyStock()
 				}
 				case 77: //右
 				{
-					int & ref = numberOfStock[stockId];
+					int & ref = numberOfStock[stockId], total = 0;
 					++ref;
-					int total = 0;
 					for (int i = 0; i < int(numberOfStock.size()); i++)
 					{
 						total += numberOfStock[i] * Bank::stockList[i].currentDollars;
 					}
-					if (total > GameWorld::playerList[playerId].bankBalance) --ref;
+					if (total > currentPlayer.bankBalance) --ref;
 				}
 				}
 			}
+			// Enter鍵 確認交易
 			else if (ch == '\r')
 			{
 				return numberOfStock;
 			}
-			printBuyStockNumber(stockId, numberOfStock[stockId], indexX, indexY + 2 * stockId, true);
+			// Esc鍵 取消交易
+			else if (ch == 27)
+			{
+				return vector<int>(int(Bank::stockList.size()), 0);
+			}
 			printBuyStockNumber(previousId, numberOfStock[previousId], indexX, indexY + 2 * previousId, false);
+			printBuyStockNumber(stockId, numberOfStock[stockId], indexX, indexY + 2 * stockId, true);
+			printTotalStock(numberOfStock, indexX, indexY + 2 * int(numberOfStock.size()));
 		}
 	}
 }
@@ -452,6 +465,94 @@ void ActionBoard::printBuyStockNumber(int stockId, int number, int x, int y, boo
 	cout.width(8);
 	cout << ref.currentDollars * number;
 }
+void ActionBoard::printTotalStock(vector<int> &ref,int x, int y)
+{
+	int total = 0;
+	for (int i = 0; i < int(ref.size()); i++)
+	{
+		total += Bank::stockList[i].currentDollars * ref[i];
+	}
+	Monopoly::setCursor(x, y);
+	cout.width(19 * 2);
+	cout << total;
+}
+// ========================================================================
+
+// ========================================================================
+// 印出銀行存款介面
+// ========================================================================
+int ActionBoard::printWithdrawDeposit(bool isWithdraw)// 印出存款提款介面
+{
+	int gapX = 4;                                          // 單位(寬字元)
+	int indexX = startX + gapX * 2, indexY = startY + 3;   // indexX座標 單位(窄字元)，因此gapX要乘2
+	int indexWidth = width - 2 * gapX;
+	const Player & ref = GameWorld::playerList[GameWorld::playerState];
+	printFrame();
+	if (isWithdraw == true)
+	{
+		printFrame(indexX, indexY, indexWidth, 7, L"銀行提款");
+	}
+	else
+	{
+		printFrame(indexX, indexY, indexWidth, 7, L"銀行存款");
+	}
+
+	Monopoly::setCursor(indexX + 6, indexY + 2);
+	if (isWithdraw == true)
+	{
+		wcout << L"目前存款：" << ref.bankBalance;
+	}
+	else
+	{
+		wcout << L"目前現金：" << ref.cash;
+	}
+	int sizeOfDigit = 10;
+
+	Monopoly::setColor(0, 15);
+	Monopoly::setCursor(indexX + 6, indexY + 4);
+	cout << string(sizeOfDigit, ' ');
+
+	Monopoly::setCursor(indexX + 6, indexY + 4);
+	string number;
+	
+	while (true)
+	{
+		if (_kbhit())
+		{
+			int ch = _getch();
+			if (isdigit(char(ch)))
+			{
+				if (int(number.size()) < sizeOfDigit)
+				{
+					cout << (char)ch;
+					number.push_back(char(ch));
+				}
+			}
+			else if (ch == 224)
+			{
+				_getch();
+			}
+			else if (ch == '\b')
+			{
+				if (int(number.size()) != 0)
+				{
+					cout << "\b \b";
+					number.pop_back();
+				}
+			}
+			else if (ch == '\r')
+			{
+				return atoi(number.c_str());
+			}
+			else if (ch == 27) // Esc 按鈕
+			{
+				return 0;
+			}
+		}
+	}
+}
+
+
 
 // 遊戲中的選單
 const vector<wstring>& ActionBoard::getActionList()

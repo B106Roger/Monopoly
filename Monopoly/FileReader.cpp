@@ -115,6 +115,7 @@ bool FileReader::getFilename(string foldername)
 	vector<FS::path> fileList = getAllFile(absoluteFilename);
 	int fileListSize = (int)fileList.size();
 	int index = 0;
+	Monopoly::setCursorSize(false, 0);
 	displayFolder(fileList, index);
 	while (true)
 	{
@@ -153,29 +154,36 @@ bool FileReader::getFilename(string foldername)
 // 顯示檔案
 void FileReader::displayFolder(const vector<FS::path> & fileList, int index)
 {
+	// 顯示檔案名稱寬度
 	int width = 20, fileListSize = (int)fileList.size();
+	// 最多顯示檔案名稱
 	int maxmumPrintFile = 6;
-	// 決定顯示欄位的index
-	int start = index, end = fileListSize - 1,displayIndex = 0;
-	if (end - start >= maxmumPrintFile)
+	// 決定顯示檔案名稱的index
+	int start = 0, end = fileListSize, displayIndex = 0;
+	for (; start < end; start+= maxmumPrintFile)
 	{
-		end = start + maxmumPrintFile;
-	}
-	else if (end - start < maxmumPrintFile)
-	{
-		start = end - maxmumPrintFile;
-		if (start < 0)
+		if (start <= index && index < start + maxmumPrintFile)
 		{
-			start = 0;
+			end = start + maxmumPrintFile;
+			break;
 		}
 	}
 
-	for (; start <= end; start++, displayIndex++)
+	for (; start < end; start++, displayIndex++)
 	{
+		Monopoly::setColor();
+		// 印出小框框
 		Monopoly::printFrame(startX, startY + 2 * displayIndex, width, 3);
+		// 設定游標位置 並清空該欄位
 		Monopoly::setCursor(startX + 4, startY + 2 * displayIndex + 1);
+		wcout << wstring(width - 3, L'　');
+		// 印出檔名，必要時為檔名著色
 		index == start ? Monopoly::setColor(0, 15) : Monopoly::setColor();
-		wcout << fileList[start].filename();
+		Monopoly::setCursor(startX + 4, startY + 2 * displayIndex + 1);
+		if (start < fileListSize)
+		{
+			wcout << fileList[start].filename();
+		}
 	}
 }
 

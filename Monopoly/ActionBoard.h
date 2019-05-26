@@ -21,9 +21,10 @@ public:
 	void printFrame();
 	void printMenu(int selectedIndex);
 	
-	void printStock();      // 印出股票版
+	void printStock();             // 印出股票版
 	vector<int> printBuyStock();   // 印出股票購買介面
-	void printPlayerInfo();
+	void printPlayerInfo();        // 印出玩家資訊
+	int printWithdrawDeposit(bool isWithdraw);    // 印出存款提款介面
 	~ActionBoard();
 
 private:
@@ -39,7 +40,10 @@ private:
 	// ============================================
 
 	// ============================================
+	// 印出一種股票名稱及購買數量
+	// ============================================
 	void printBuyStockNumber(int stockId, int number, int x, int y, bool light);
+	void printTotalStock(vector<int> & ref,int x, int y);
 	// ============================================
 
 

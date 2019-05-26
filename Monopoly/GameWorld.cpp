@@ -37,9 +37,17 @@ void GameWorld::gameStart()
 			actionBoard.printPlayerInfo();
 			break;
 		case 1:                       // 存款
+		{
+			int number = actionBoard.printWithdrawDeposit(false);
+			playerList[playerState].deposit(number);
 			break;
+		}
 		case 2:                       // 提款
+		{
+			int number = actionBoard.printWithdrawDeposit(true);
+			playerList[playerState].withdraw(number);
 			break;
+		}
 		case 3:                       // 股票開盤
 		{
 			actionBoard.printStock();

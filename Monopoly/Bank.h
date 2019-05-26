@@ -28,7 +28,6 @@ struct Stock                 // 存股票資料
 	int previousDollars;
 	wstring name;
 };
-
 struct StockRecord           // 存玩家所持有股票與對映張數
 {
 	int player_id;
