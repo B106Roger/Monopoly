@@ -52,3 +52,27 @@ void Bank::initialStock()
 	stockList.push_back(stock6);
 }
 
+void Bank::buyStock(Player & player, vector<int> numberOfStock)   // vector存股票購買數量
+{
+	int total = 0;
+	int playerId = player.id;
+	for (int i = 0; i < int(numberOfStock.size()); i++)
+	{
+		total += stockList[i].currentDollars * numberOfStock[i];
+		vector<StockRecord>::iterator it = find_if(
+			stockOwnerList[playerId].begin(), 
+			stockOwnerList[playerId].end(), 
+			[i](StockRecord & ref) {return ref.stockId == i; }
+		);
+		if (it == stockOwnerList[playerId].end())
+		{
+			stockOwnerList[playerId].push_back(StockRecord{ playerId,i,numberOfStock[i ]});
+		}
+		else
+		{
+			it->number += numberOfStock[i];
+		}
+
+	}
+	
+}

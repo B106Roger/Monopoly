@@ -18,6 +18,5 @@ public:
 	int remoteDice;           // 遙控色子數量// 新遊戲每人免費贈送遙控色子
 	int withdraw(int dollars);// 提款
 	int deposit(int dollars); // 存款
-	// int buyStock(Stock & stock, int number);
-	// int soldStock(Stock& stock, int number);
+	
 };

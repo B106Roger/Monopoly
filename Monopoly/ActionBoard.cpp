@@ -159,13 +159,11 @@ void ActionBoard::printPlayerInfo() {
 		}
 	}
 }
-
 void ActionBoard::choosePlayerInfo(int infoMode, int playerId, int indexY, int lineHeight, int indexX) {
 	if (infoMode == 0) printPlayerInfoMain(playerId, indexY, lineHeight);
 	else if(infoMode == 1) printPlayerInfoStock(playerId, indexY, lineHeight, indexX);
 	else if(infoMode == 2) printPlayerInfoHouse(playerId, indexY, lineHeight, indexX);
 }
-
 void ActionBoard::printPlayerInfoMain(int playerId, int indexY, int lineHeight) {
 
 	// 頁首標頭
@@ -291,7 +289,6 @@ void ActionBoard::printPlayerInfoHouse(int playerId, int indexY, int lineHeight,
 	// 頁底提示按鈕
 	tailTip();
 };
-
 // ========================================================================
 
 void ActionBoard::headerTip(wstring tip) {
@@ -304,8 +301,9 @@ void ActionBoard::tailTip() {
 	wcout << L"←　Ｅｎｔｅｒ　→";
 }
 
-
+// ========================================================================
 // 印出股票版
+// ========================================================================
 void ActionBoard::printStock()
 {
 	printFrame();
@@ -328,7 +326,7 @@ void ActionBoard::printStock()
 			wcout << setw(5) << L"-" << endl;
 		Monopoly::setColor();
 	}
-
+	tailTip();
 	while (true)
 	{
 		if (_kbhit())
@@ -342,6 +340,117 @@ void ActionBoard::printStock()
 		}
 	}
 
+}
+// ========================================================================
+
+// ========================================================================
+// 印出購買股票介面
+// ========================================================================
+vector<int> ActionBoard::printBuyStock()
+{
+	printFrame();
+	int playerId = GameWorld::playerState;// 取得當前玩家為誰
+	int lineHeight = 2; // 行間距，目前 間隔一個 + 自己本行 = 2
+	int indexX = startX + 4, indexY = startY + 3;
+	Monopoly::setColor();
+	headerTip(L"----------股票交易所----------");
+	Monopoly::setCursor(indexX, indexY);
+
+	wcout << L"股票名稱" << L'　';
+	wcout << L"單股現價" << L'　';
+	wcout << L"購買張數" << L'　';
+	wcout << L"　總價格" << L'　';
+	vector<int> numberOfStock(int(Bank::stockList.size()), 0);
+	indexY += 2;
+	int stockId = 0, previousId = 0;
+	for (int i = 0; i < int(numberOfStock.size());i++)
+	{
+		printBuyStockNumber(i, numberOfStock[i], indexX, indexY + 2 * i, i == stockId);
+	}
+	while (true)
+	{
+		if (_kbhit)
+		{
+			int ch = _getch();
+			if (ch == 224)
+			{
+				ch = _getch();
+				switch (ch)
+				{
+				case 72: //上
+				{
+					previousId = stockId;
+					--stockId;
+					if (stockId == -1)
+					{
+						stockId = int(numberOfStock.size()) - 1;
+					}
+					break;
+				}
+				case 80: //下
+				{
+					previousId = stockId;
+					++stockId;
+					if (stockId == int(numberOfStock.size()))
+					{
+						stockId = 0;
+					}
+					break;
+				}
+				case 75: //左
+				{
+					int & ref = numberOfStock[stockId];
+					--ref;
+					if (ref < 0) ref = 0;
+					break;
+				}
+				case 77: //右
+				{
+					int & ref = numberOfStock[stockId];
+					++ref;
+					int total = 0;
+					for (int i = 0; i < int(numberOfStock.size()); i++)
+					{
+						total += numberOfStock[i] * Bank::stockList[i].currentDollars;
+					}
+					if (total > GameWorld::playerList[playerId].bankBalance) --ref;
+				}
+				}
+			}
+			else if (ch == '\r')
+			{
+				return numberOfStock;
+			}
+			printBuyStockNumber(stockId, numberOfStock[stockId], indexX, indexY + 2 * stockId, true);
+			printBuyStockNumber(previousId, numberOfStock[previousId], indexX, indexY + 2 * previousId, false);
+		}
+	}
+}
+void ActionBoard::printBuyStockNumber(int stockId, int number, int x, int y, bool light)
+{
+	Monopoly::setCursor(x, y);
+	const struct Stock & ref = Bank::stockList[stockId];
+	wcout.width(4);
+	wcout.fill(L'　');
+	wcout << ref.name << L'　';
+
+	cout.width(8);
+	cout.fill(' ');
+	cout << ref.currentDollars;
+	wcout << L'　';
+
+	wcout << L'←';
+	cout.width(4);
+	cout.fill(' ');
+	light == true ? Monopoly::setColor(0, 15) : Monopoly::setColor();
+	cout << number;
+	Monopoly::setColor();
+	wcout << L'→';
+	
+
+	wcout << L'　';
+	cout.width(8);
+	cout << ref.currentDollars * number;
 }
 
 // 遊戲中的選單

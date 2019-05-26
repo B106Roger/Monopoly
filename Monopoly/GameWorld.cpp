@@ -41,13 +41,20 @@ void GameWorld::gameStart()
 		case 2:                       // 提款
 			break;
 		case 3:                       // 股票開盤
+		{
 			actionBoard.printStock();
 			break;
+		}
 		case 4:                       // 買股票
+		{
+			vector<int> numberOfStock = actionBoard.printBuyStock();
+			bank.buyStock(playerList[playerState], numberOfStock);
 			break;
+		}
 		case 5:                       // 賣股票
 			break;
 		case 6:                       // 擲骰子
+		{
 			// 判斷能不能值骰的function
 			int distance = rand() % 6 + 1;
 			for (int i = distance; i != 0; --i)
@@ -62,6 +69,7 @@ void GameWorld::gameStart()
 			playerState++;
 			playerState %= 4;
 			break;
+		}
 		}
 	}
 }

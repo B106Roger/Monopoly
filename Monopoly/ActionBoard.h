@@ -22,6 +22,7 @@ public:
 	void printMenu(int selectedIndex);
 	
 	void printStock();      // 印出股票版
+	vector<int> printBuyStock();   // 印出股票購買介面
 	void printPlayerInfo();
 	~ActionBoard();
 
@@ -36,6 +37,11 @@ private:
 	void printPlayerInfoStock(int playerId, int indexY, int lineHeight, int indexX);// 玩家股票資訊(含標頭、尾)
 	void printPlayerInfoHouse(int playerId, int indexY, int lineHeight, int indexX);// 玩家房產資訊(含標頭、尾)
 	// ============================================
+
+	// ============================================
+	void printBuyStockNumber(int stockId, int number, int x, int y, bool light);
+	// ============================================
+
 
 	void headerTip(wstring); // 標頭
 	void tailTip(); // 頁尾
