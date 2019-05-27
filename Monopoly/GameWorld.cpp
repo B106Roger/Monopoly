@@ -55,7 +55,7 @@ void GameWorld::gameStart()
 		case 3:                       // 股票開盤
 		{
 			actionBoard.printStock();
-			system("pause>nul");
+			// system("pause>nul");
 			break;
 		}
 		case 4:                       // 買股票
