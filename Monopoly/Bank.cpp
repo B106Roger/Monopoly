@@ -60,7 +60,7 @@ void Bank::initialStock()
 	stockList.push_back(stock6);
 }
 
-void Bank::buyStock(Player & player, vector<int> numberOfStock)   // vector¦sªÑ²¼ÁÊ¶R¼Æ¶q
+int Bank::buyStock(Player & player, vector<int> numberOfStock)   // vector¦sªÑ²¼ÁÊ¶R¼Æ¶q
 {
 	int total = 0;
 	int playerId = player.id;
@@ -82,5 +82,28 @@ void Bank::buyStock(Player & player, vector<int> numberOfStock)   // vector¦sªÑ²
 		}
 
 	}
-	
+	return total;
+}
+
+int Bank::soldStock(Player & player, vector<int>numberOfStock)
+{	//°²©w­n½æªº±i¼Æ³£¨S¦³¶W¹L«ù¦³ªÑ²¼¼Æ
+	int total = 0;
+	int playerId = player.id;
+	for (int i = 0; i < int(numberOfStock.size()); i++)
+	{
+		if (numberOfStock[i] != 0) {			//¦³­n½æ¥X¤~°µ³B²z
+			total += stockList[i].currentDollars * numberOfStock[i];
+			vector<StockRecord>::iterator it = find_if(
+				stockOwnerList[playerId].begin(),
+				stockOwnerList[playerId].end(),
+				[i](StockRecord & ref) {return ref.stockId == i; }
+			);
+			if (it != stockOwnerList[playerId].end())		//§ä¨ì­n½æ±¼ªºªÑ²¼¨Ã½æ±¼
+			{
+				it->number -= numberOfStock[i];
+			}
+		}
+
+	}
+	return total;
 }

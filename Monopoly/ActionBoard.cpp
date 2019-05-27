@@ -364,6 +364,7 @@ vector<int> ActionBoard::printBuyStock()
 	wcout << L"單股現價" << L'　';
 	wcout << L"購買張數" << L'　';
 	wcout << L"　總價格" << L'　';
+	wcout << L"持有股數" << L'　';
 	
 	// 列印股票交易列表
 	indexY += 2;
@@ -371,6 +372,19 @@ vector<int> ActionBoard::printBuyStock()
 	for (int i = 0; i < int(numberOfStock.size());i++)
 	{
 		printBuyStockNumber(i, numberOfStock[i], indexX, indexY + 2 * i, i == stockId);
+		int owned;
+		vector<StockRecord>::iterator it = find_if(
+			GameWorld::bank.stockOwnerList[GameWorld::playerState].begin(),
+			GameWorld::bank.stockOwnerList[GameWorld::playerState].end(),
+			[i](StockRecord & ref) {return ref.stockId == i; }
+		);
+		if (it != GameWorld::bank.stockOwnerList[GameWorld::playerState].end())
+			owned = it->number;
+		else
+			owned = 0;
+		wcout << L'　';						//印現有持股數
+		cout.width(4);
+		cout << owned;
 	}
 	printTotalStock(numberOfStock, indexX, indexY + 2 * int(numberOfStock.size()));
 	while (true)
@@ -439,6 +453,112 @@ vector<int> ActionBoard::printBuyStock()
 		}
 	}
 }
+vector<int> ActionBoard::printSellStock()
+{
+	printFrame();                     // 清空ActionBoard
+	Player currentPlayer = GameWorld::playerList[GameWorld::playerState];     // 取得當前玩家reference
+	int lineHeight = 2;                                                       // 行間距，股票與股票之間的間距
+	int indexX = startX + 4, indexY = startY + 3;                             // 股票列印位置
+	vector<int> numberOfStock(int(Bank::stockList.size()), 0);                // 股票數量
+	vector<int> numberOfOwnedStock(int(Bank::stockList.size()), 0);                // 持有股票數量
+	Monopoly::setColor();
+	headerTip(L"----------股票交易所----------");
+	Monopoly::setCursor(indexX, indexY);
+	wcout << L"存款:　" << currentPlayer.bankBalance;
+	indexY += 2;
+	// 列印交易版 標頭
+	Monopoly::setCursor(indexX, indexY);
+	wcout << L"股票名稱" << L'　';
+	wcout << L"單股現價" << L'　';
+	wcout << L"賣出張數" << L'　';
+	wcout << L"　總價格" << L'　';
+	wcout << L"持有張數" << L'　';
+
+	// 列印股票交易列表
+	indexY += 2;
+	int stockId = 0, previousId = 0;
+	for (int i = 0; i < int(numberOfStock.size()); i++)
+	{
+		printBuyStockNumber(i, numberOfStock[i], indexX, indexY + 2 * i, i == stockId);
+		int owned;																//找出某股的現有持股數
+		vector<StockRecord>::iterator it = find_if(
+			GameWorld::bank.stockOwnerList[GameWorld::playerState].begin(),
+			GameWorld::bank.stockOwnerList[GameWorld::playerState].end(),
+			[i](StockRecord & ref) {return ref.stockId == i; }
+		);
+		if (it != GameWorld::bank.stockOwnerList[GameWorld::playerState].end())
+			owned = it->number;
+		else
+			owned = 0;
+		numberOfOwnedStock[i] = owned;
+		wcout << L'　';						
+		cout.width(4);
+		cout << owned;
+	}
+	printTotalStock(numberOfStock, indexX, indexY + 2 * int(numberOfStock.size()));
+	while (true)
+	{
+		if (_kbhit)
+		{
+			int ch = _getch();
+			// 方向鍵操控數量
+			if (ch == 224)
+			{
+				ch = _getch();
+				switch (ch)
+				{
+				case 72: //上
+				{
+					previousId = stockId;
+					--stockId;
+					if (stockId == -1)
+					{
+						stockId = int(numberOfStock.size()) - 1;
+					}
+					break;
+				}
+				case 80: //下
+				{
+					previousId = stockId;
+					++stockId;
+					if (stockId == int(numberOfStock.size()))
+					{
+						stockId = 0;
+					}
+					break;
+				}
+				case 75: //左
+				{
+					int & ref = numberOfStock[stockId];
+					--ref;
+					if (ref < 0) ref = 0;
+					break;
+				}
+				case 77: //右
+				{
+					int & ref = numberOfStock[stockId];
+					if (ref < numberOfOwnedStock[stockId]) {
+						++ref;
+					}
+				}
+				}
+			}
+			// Enter鍵 確認交易
+			else if (ch == '\r')
+			{
+				return numberOfStock;
+			}
+			// Esc鍵 取消交易
+			else if (ch == 27)
+			{
+				return vector<int>(int(Bank::stockList.size()), 0);
+			}
+			printBuyStockNumber(previousId, numberOfStock[previousId], indexX, indexY + 2 * previousId, false);
+			printBuyStockNumber(stockId, numberOfStock[stockId], indexX, indexY + 2 * stockId, true);
+			printTotalStock(numberOfStock, indexX, indexY + 2 * int(numberOfStock.size()));
+		}
+	}
+}
 void ActionBoard::printBuyStockNumber(int stockId, int number, int x, int y, bool light)
 {
 	Monopoly::setCursor(x, y);
@@ -464,8 +584,10 @@ void ActionBoard::printBuyStockNumber(int stockId, int number, int x, int y, boo
 	wcout << L'　';
 	cout.width(8);
 	cout << ref.currentDollars * number;
+
+
 }
-void ActionBoard::printTotalStock(vector<int> &ref,int x, int y)
+void ActionBoard::printTotalStock(vector<int> &ref,int x, int y)		//印總價格
 {
 	int total = 0;
 	for (int i = 0; i < int(ref.size()); i++)

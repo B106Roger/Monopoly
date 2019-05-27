@@ -57,11 +57,16 @@ void GameWorld::gameStart()
 		case 4:                       // 買股票
 		{
 			vector<int> numberOfStock = actionBoard.printBuyStock();
-			bank.buyStock(playerList[playerState], numberOfStock);
+			playerList[playerState].bankBalance -= bank.buyStock(playerList[playerState], numberOfStock);
 			break;
 		}
 		case 5:                       // 賣股票
+		{
+			vector<int> numberOfStock = actionBoard.printSellStock();
+			playerList[playerState].bankBalance += bank.soldStock(playerList[playerState], numberOfStock);
 			break;
+		}
+
 		case 6:                       // 擲骰子
 		{
 			// 判斷能不能值骰的function
