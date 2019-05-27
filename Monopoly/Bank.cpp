@@ -1,6 +1,7 @@
 #include "Bank.h"
+#include"GameWorld.h"
 vector<Stock> Bank::stockList;
-
+vector<vector<StockRecord>> Bank::stockOwnerList;
 
 Bank::Bank()
 {
@@ -12,6 +13,8 @@ Bank::~Bank()
 {
 }
 
+
+// 初始化股票列表
 void Bank::stockUpate()
 {
 	for (int i = 0; i < stockList.size(); i++) {
@@ -59,7 +62,6 @@ void Bank::initialStock()
 	stock6.stockId = 6;
 	stockList.push_back(stock6);
 }
-
 int Bank::buyStock(Player & player, vector<int> numberOfStock)   // vector存股票購買數量
 {
 	int total = 0;
@@ -104,6 +106,38 @@ int Bank::soldStock(Player & player, vector<int>numberOfStock)
 			}
 		}
 
+	}
+	return total;
+}
+
+
+// 計算玩家資產
+int Bank::computePlayerAsset(Player & pl)
+{
+	int total = 0;
+	total += pl.cash;
+	total += pl.bankBalance;
+	// 股票
+	for (StockRecord & ref : stockOwnerList[pl.id])
+	{
+		int stockTargetId = ref.stockId;
+		vector<Stock>::iterator it = find_if(stockList.begin(), stockList.end(), [stockTargetId](Stock & ref) {return ref.stockId == stockTargetId; });
+		total += ref.number * it->currentDollars;
+	}
+	// 房產
+	for (RealEstate & ref : GameWorld::gameMap)
+	{
+		int estateCost = ref.buyCost;
+		double rate = 0.75;
+		if (ref.ownerId == pl.id)
+		{
+			for (int i = 0; i < ref.level; i++)
+			{
+				estateCost += int(rate * (double)ref.buyCost);
+			}
+			rate += 0.25;
+		}
+		total += estateCost;
 	}
 	return total;
 }

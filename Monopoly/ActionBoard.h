@@ -49,5 +49,5 @@ private:
 
 
 	void headerTip(wstring); // 標頭
-	void tailTip(); // 頁尾
+	void tailTip(wstring = L"←　Ｅｎｔｅｒ　→"); // 頁尾
 };

@@ -140,3 +140,16 @@ int GameBoard::getPlayerColor(int id)
 	}
 	return color;
 }
+
+// 印出玩家資產
+void GameBoard::printPlayerAsset()
+{
+	int indexX = startX + (boxWidth + 2) * 2;
+	int indexY = startY + (boxLength + 1) * 2;
+	int indexWidth = 15, indexLength = 3;
+	for (int i = 0; i < int(GameWorld::playerList.size()); i++)
+	{
+		printFrame(indexX, indexY + i * 2, indexWidth, indexLength);
+
+	}
+}

@@ -9,6 +9,7 @@ FileReader Monopoly::fileReader;
 
 Monopoly::Monopoly()
 {
+	srand(time(NULL));
 	setCursorSize(false, 0);
 	monopolyInit();
 }

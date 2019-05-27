@@ -28,14 +28,18 @@ void GameWorld::gameStart()
 	Monopoly::setCursorSize(false, 0);
 	gameBoard.printMap();
 	actionBoard.printFrame();
+	int initialPlayer =  playerState;
 	while (true)
 	{
+		
 		int actionMode = actionBoard.getMenuOption();
 		switch (actionMode)
 		{
 		case 0:                       // 玩家資訊
+		{
 			actionBoard.printPlayerInfo();
 			break;
+		}
 		case 1:                       // 存款
 		{
 			int number = actionBoard.printWithdrawDeposit(false);
@@ -51,7 +55,7 @@ void GameWorld::gameStart()
 		case 3:                       // 股票開盤
 		{
 			actionBoard.printStock();
-			system("pause>nul");
+			// system("pause>nul");
 			break;
 		}
 		case 4:                       // 買股票
@@ -66,7 +70,6 @@ void GameWorld::gameStart()
 			playerList[playerState].bankBalance += bank.soldStock(playerList[playerState], numberOfStock);
 			break;
 		}
-
 		case 6:                       // 擲骰子
 		{
 			// 判斷能不能值骰的function
@@ -85,6 +88,12 @@ void GameWorld::gameStart()
 			break;
 		}
 		}
+
+		if (playerState == initialPlayer)
+		{
+			bank.stockUpate();
+		}
+
 	}
 }
 

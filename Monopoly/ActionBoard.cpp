@@ -76,6 +76,7 @@ void ActionBoard::printMenu(int selectedIndex)
 int ActionBoard::getMenuOption()
 {
 	int mode = 0;
+	printFrame();
 	printMenu(mode);
 	while (true)
 	{
@@ -296,9 +297,9 @@ void ActionBoard::headerTip(wstring tip) {
 	wcout << tip;
 };
 
-void ActionBoard::tailTip() { 
+void ActionBoard::tailTip(wstring tip) {
 	Monopoly::setCursor(startX + width / 2, startY + length - 2);
-	wcout << L"←　Ｅｎｔｅｒ　→";
+	wcout << tip;
 }
 
 // ========================================================================
