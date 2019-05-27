@@ -13,7 +13,7 @@ public:
 	static vector<Stock> stockList;                   // 股票列表
 	vector<vector<StockRecord>> stockOwnerList;// 玩家持有股票
 	int computeAsset(Player & p1);             // 計算玩家總資產
-	void stockUpate();                         // 更新股票單價
+	static void stockUpate();                         // 更新股票單價
 private:
 	static void initialStock();			//用於初始化股票資訊
 };

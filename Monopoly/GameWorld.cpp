@@ -41,11 +41,13 @@ void GameWorld::gameStart()
 			break;
 		case 3:                       // 股票開盤
 			actionBoard.printStock();
-			system("PAUSE");
+			system("pause>nul");
 			break;
 		case 4:                       // 買股票
+			playerList[playerState].buyStock();
 			break;
 		case 5:                       // 賣股票
+			//actionBoard.sellStock(playerList[playerState]);
 			break;
 		case 6:                       // 擲骰子
 			// 判斷能不能值骰的function

@@ -12,6 +12,14 @@ Bank::~Bank()
 {
 }
 
+void Bank::stockUpate()
+{
+	for (int i = 0; i < stockList.size(); i++) {
+		stockList[i].previousDollars = stockList[i].currentDollars;
+		stockList[i].currentDollars = (1.0 + -rand() % 100 / 1000.0) * stockList[i].currentDollars;
+	}
+}
+
 void Bank::initialStock()
 {
 	Stock stock1, stock2, stock3, stock4, stock5, stock6;
