@@ -3,6 +3,8 @@
 #include<conio.h>
 #include<string>
 #include<iostream>
+#include<cstdlib>
+#include<ctime>
 #include"GameWorld.h"
 #include"FileReader.h"
 using namespace std;

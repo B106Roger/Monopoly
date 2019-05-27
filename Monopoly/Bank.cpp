@@ -1,4 +1,5 @@
 #include "Bank.h"
+#include"GameWorld.h"
 vector<Stock> Bank::stockList;
 
 
@@ -12,6 +13,7 @@ Bank::~Bank()
 {
 }
 
+// ªì©l¤ÆªÑ²¼¦Cªí
 void Bank::initialStock()
 {
 	Stock stock1, stock2, stock3, stock4, stock5, stock6;
@@ -52,6 +54,7 @@ void Bank::initialStock()
 	stockList.push_back(stock6);
 }
 
+// ¶RªÑ²¼
 void Bank::buyStock(Player & player, vector<int> numberOfStock)   // vector¦sªÑ²¼ÁÊ¶R¼Æ¶q
 {
 	int total = 0;
@@ -75,4 +78,45 @@ void Bank::buyStock(Player & player, vector<int> numberOfStock)   // vector¦sªÑ²
 
 	}
 	
+}
+
+// §ó·sªÑ²¼
+void Bank::stockUpate()
+{
+	for (auto &ele : stockList)
+	{
+		ele.previousDollars = ele.currentDollars;
+		ele.currentDollars += (rand() % 51 - 25);
+	}
+}
+
+// ­pºâª±®a¸ê²£
+int Bank::computePlayerAsset(Player & pl)
+{
+	int total = 0;
+	total += pl.cash;
+	total += pl.bankBalance;
+	// ªÑ²¼
+	for (StockRecord & ref : stockOwnerList[pl.id])
+	{
+		int stockTargetId = ref.stockId;
+		vector<Stock>::iterator it = find_if(stockList.begin(), stockList.end(), [stockTargetId](Stock & ref) {return ref.stockId == stockTargetId; });
+		total += ref.number * it->currentDollars;
+	}
+	// ©Ð²£
+	for (RealEstate & ref : GameWorld::gameMap)
+	{
+		int estateCost = ref.buyCost;
+		double rate = 0.75;
+		if (ref.ownerId == pl.id)
+		{
+			for (int i = 0; i < ref.level; i++)
+			{
+				estateCost += int(rate * (double)ref.buyCost);
+			}
+			rate += 0.25;
+		}
+		total += estateCost;
+	}
+	return total;
 }
