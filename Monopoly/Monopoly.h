@@ -30,8 +30,8 @@ public:
 	const int width = 64;     // 視窗長寬
 	const int height = 36;
 
-	int boardX = 30;
-	int boardY = 0;
+	int boardX = 60;
+	int boardY = 10;
 	int boardWidth = 20;
 	int boardHeight = 31;
 

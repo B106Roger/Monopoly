@@ -1,4 +1,4 @@
-#include "GameWorld.h"
+ï»¿#include "GameWorld.h"
 #include"Monopoly.h"
 vector<Player> GameWorld::playerList;
 Bank GameWorld::bank;
@@ -22,7 +22,7 @@ GameWorld::~GameWorld()
 {
 }
 
-// ¹CÀ¸°j°é
+// éŠæˆ²è¿´åœˆ
 void GameWorld::gameStart()
 {
 	Monopoly::setCursorSize(false, 0);
@@ -33,24 +33,38 @@ void GameWorld::gameStart()
 		int actionMode = actionBoard.getMenuOption();
 		switch (actionMode)
 		{
-		case 0:                       // ª±®a¸ê°T
+		case 0:                       // ç©å®¶è³‡è¨Š
+			actionBoard.printPlayerInfo();
 			break;
-		case 1:                       // ¦s´Ú
+		case 1:                       // å­˜æ¬¾
+		{
+			int number = actionBoard.printWithdrawDeposit(false);
+			playerList[playerState].deposit(number);
 			break;
-		case 2:                       // ´£´Ú
+		}
+		case 2:                       // ææ¬¾
+		{
+			int number = actionBoard.printWithdrawDeposit(true);
+			playerList[playerState].withdraw(number);
 			break;
-		case 3:                       // ªÑ²¼¶}½L
+		}
+		case 3:                       // è‚¡ç¥¨é–‹ç›¤
+		{
 			actionBoard.printStock();
 			system("pause>nul");
 			break;
-		case 4:                       // ¶RªÑ²¼
-			playerList[playerState].buyStock();
+		}
+		case 4:                       // è²·è‚¡ç¥¨
+		{
+			vector<int> numberOfStock = actionBoard.printBuyStock();
+			bank.buyStock(playerList[playerState], numberOfStock);
 			break;
-		case 5:                       // ½æªÑ²¼
-			//actionBoard.sellStock(playerList[playerState]);
+		}
+		case 5:                       // è³£è‚¡ç¥¨
 			break;
-		case 6:                       // ÂY»ë¤l
-			// §PÂ_¯à¤£¯à­È»ëªºfunction
+		case 6:                       // æ“²éª°å­
+		{
+			// åˆ¤æ–·èƒ½ä¸èƒ½å€¼éª°çš„function
 			int distance = rand() % 6 + 1;
 			for (int i = distance; i != 0; --i)
 			{
@@ -64,6 +78,7 @@ void GameWorld::gameStart()
 			playerState++;
 			playerState %= 4;
 			break;
+		}
 		}
 	}
 }

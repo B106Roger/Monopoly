@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include<string>
 using namespace std;
 class GameBoard
@@ -15,17 +15,17 @@ public:
 	void printItem(int index);
 	void printMap();
 	void printFrame(int xpos, int ypos, int xsize, int ysize, wstring title = L"");
-
+	int getPlayerColor(int playerid);
 
 private:
-	int getPlayerColor(int playerid);
+	
 };
 
-//¡@¡Ğ¡Ğ¡Ğ¡Ğ¡Ğ¡Ğ¡Ğ¡Ğ
-//¡@¡Ğ
-//¡@¡Ğ
-//¡@¡Ğ
-//¡@¡Ğ
-//¡@¡Ğ
-//¡@¡Ğ
-//¡@¡Ğ¡Ğ¡Ğ¡Ğ¡Ğ¡Ğ¡Ğ¡Ğ
+//ã€€ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼
+//ã€€ï¼
+//ã€€ï¼
+//ã€€ï¼
+//ã€€ï¼
+//ã€€ï¼
+//ã€€ï¼
+//ã€€ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼

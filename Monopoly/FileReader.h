@@ -11,8 +11,8 @@ class FileReader
 public:
 	FileReader();
 	~FileReader();
-	const int startX = 20;
-	const int startY = 30;
+	const int startX = 60;
+	const int startY = 10;
 
 	const wstring continuePath = L"continue";
 	const wstring mapPath = L"map";
