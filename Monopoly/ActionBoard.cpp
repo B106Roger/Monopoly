@@ -307,10 +307,10 @@ void ActionBoard::tailTip() {
 void ActionBoard::printStock()
 {
 	printFrame();
-	Monopoly::setCursor(startX + 4, startY + 4);
+	Monopoly::setCursor(startX + 8, startY + 8);
 	wcout << setw(6) << L"公司" << setw(6) << L"上次價格" << setw(6) << L"本日價格" << setw(5) << L"脹/跌" << endl;
 	for (int i = 0; i < Bank::stockList.size(); i++) {
-		Monopoly::setCursor(startX + 4, startY + 5 + i);
+		Monopoly::setCursor(startX + 8, startY + 5 + i);
 		wcout << setw(4) << Bank::stockList[i].name << L"|";
 		wcout << setw(9) << Bank::stockList[i].previousDollars << L"|";
 		wcout << setw(9) << Bank::stockList[i].currentDollars << L"|";

@@ -1,7 +1,7 @@
 #include "Bank.h"
 #include"GameWorld.h"
 vector<Stock> Bank::stockList;
-
+vector<vector<StockRecord>> Bank::stockOwnerList;
 
 Bank::Bank()
 {
@@ -13,7 +13,16 @@ Bank::~Bank()
 {
 }
 
+
 // ªì©l¤ÆªÑ²¼¦Cªí
+void Bank::stockUpate()
+{
+	for (int i = 0; i < stockList.size(); i++) {
+		stockList[i].previousDollars = stockList[i].currentDollars;
+		stockList[i].currentDollars = (1.0 + -rand() % 100 / 1000.0) * stockList[i].currentDollars;
+	}
+}
+
 void Bank::initialStock()
 {
 	Stock stock1, stock2, stock3, stock4, stock5, stock6;
@@ -78,16 +87,6 @@ void Bank::buyStock(Player & player, vector<int> numberOfStock)   // vector¦sªÑ²
 
 	}
 	
-}
-
-// §ó·sªÑ²¼
-void Bank::stockUpate()
-{
-	for (auto &ele : stockList)
-	{
-		ele.previousDollars = ele.currentDollars;
-		ele.currentDollars += (rand() % 51 - 25);
-	}
 }
 
 // ­pºâª±®a¸ê²£
