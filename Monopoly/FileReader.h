@@ -18,6 +18,7 @@ public:
 	const wstring mapPath = L"map";
 	void readAndSetData();        // 讀取Monopoly::gameMapFileName 內的檔案到GameWorld
 	void resetAllData();          // reset所有gameWorld的參數
+	void saveFile();              // 儲存檔案
 	
 	bool getFilename(string foldername);
 private:

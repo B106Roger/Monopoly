@@ -69,14 +69,14 @@ void FileReader::readAndSetData()
 				GameWorld::bank.stockOwnerList.push_back(vector<StockRecord>());
 			}
 			// 取得玩家存款股票資訊
-			if (in >> line)
+			if (getline(in,line))
 			{
 				for (int i = 0; i < numberOfPlayer; i++)
 				{
 					int playerId, balance,stockId;
 					getline(in, line);
 					ss.clear();
-					ss << line;
+					ss.str(line);
 					ss >> playerId;
 					ss >> GameWorld::playerList[playerId].bankBalance;
 					while (ss >> stockId)
@@ -84,7 +84,7 @@ void FileReader::readAndSetData()
 						StockRecord tmp;
 						tmp.player_id = playerId;
 						tmp.stockId = stockId;
-						in >> tmp.number;
+						ss >> tmp.number;
 						GameWorld::bank.stockOwnerList[playerId].push_back(tmp);
 					}
 				}
@@ -202,4 +202,63 @@ vector<FS::path> FileReader::getAllFile(const FS::path & ps)
 		fileList.push_back(it->path());
 	}
 	return fileList;
+}
+
+void FileReader::saveFile()
+{
+	if (Monopoly::gameRecordFileName.size() == 0u)
+	{
+		// actionBoard.userInputFileName();
+	}
+	wofstream out;
+	out.open(Monopoly::gameRecordFileName);
+	out << GameWorld::mapName << L" " << GameWorld::reamainRound << " " << GameWorld::playerList.size() << endl;
+	for (const auto &ref: GameWorld::gameMap)
+	{
+		wstring location = to_wstring(ref.position);
+		if (location.size() == 1u)
+		{
+			location.insert(0, 1, L'0');
+		}
+		out << location << L" " << ref.name << L" ";
+		if (ref.type == 1)
+		{
+			out << ref.buyCost << L" ";
+			for (auto integer : ref.tolls)
+			{
+				wcout << integer << L" ";
+			}
+		}
+		wcout << endl;
+	}
+
+	out << L"playerstate " << GameWorld::playerState << endl;
+	for (auto & player : GameWorld::playerList)
+	{
+		out << player.id << L" " << player.playerPosition << L" " << player.cash;
+		for (auto &ref : GameWorld::gameMap)
+		{
+			if (ref.ownerId == player.id)
+			{
+				wstring loc = to_wstring(ref.position);
+				if (loc.size() == 1u)
+				{
+					loc.insert(0, 1, L'0');
+				}
+				out << loc << L" " << ref.level << L" ";
+			}
+		}
+	}
+
+	out << L"bank" << endl;
+	for (auto & player : GameWorld::playerList)
+	{
+		out << player.id << L" " << player.bankBalance << L" ";
+		for (auto &ref : Bank::stockOwnerList[player.id])
+		{
+			out << ref.stockId << L" " << ref.number;
+		}
+		out << endl;
+	}
+
 }

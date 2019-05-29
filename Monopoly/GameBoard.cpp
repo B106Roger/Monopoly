@@ -157,6 +157,7 @@ void GameBoard::printPlayerAsset()
 	{
 		printFrame(indexX, indexY + i * (indexLength-1), indexWidth, indexLength);
 
+		ref.id == GameWorld::playerState ? Monopoly::setColor(15, getPlayerColor(ref.id)) : Monopoly::setColor();
 		Monopoly::setCursor(indexX + 2, indexY + i * (indexLength - 1) + 1);
 		wcout.fill(L'　');
 		wcout << L"Player " << ref.id;

@@ -479,7 +479,7 @@ vector<int> ActionBoard::printBuyStock()
 	printTotalStock(numberOfStock, indexX, indexY + 2 * int(numberOfStock.size()));
 	while (true)
 	{
-		if (_kbhit)
+		if (_kbhit())
 		{
 			int ch = _getch();
 			// 方向鍵操控數量
@@ -588,7 +588,7 @@ vector<int> ActionBoard::printSellStock()
 	printTotalStock(numberOfStock, indexX, indexY + 2 * int(numberOfStock.size()));
 	while (true)
 	{
-		if (_kbhit)
+		if (_kbhit())
 		{
 			int ch = _getch();
 			// 方向鍵操控數量
@@ -710,14 +710,9 @@ int ActionBoard::printWithdrawDeposit(bool isWithdraw)// 印出存款提款介�
 	}
 
 	Monopoly::setCursor(indexX + 6, indexY + 2);
-	if (isWithdraw == true)
-	{
-		wcout << L"目前存款：" << ref.bankBalance;
-	}
-	else
-	{
-		wcout << L"目前現金：" << ref.cash;
-	}
+	
+		wcout << L"存款：" << ref.bankBalance << L"　　　" << L"現金：" << ref.cash;
+
 	int sizeOfDigit = 10;
 
 	Monopoly::setColor(0, 15);
@@ -810,7 +805,7 @@ int ActionBoard::assignDiceNumber() {
 
 	while (true)
 	{
-		if (_kbhit)
+		if (_kbhit())
 		{
 			int ch = _getch();
 			// 

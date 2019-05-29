@@ -122,7 +122,7 @@ int Bank::computePlayerAsset(Player & pl)
 	for (StockRecord & ref : stockOwnerList[pl.id])
 	{
 		int stockTargetId = ref.stockId;
-		vector<Stock>::iterator it = find_if(stockList.begin(), stockList.end(), [stockTargetId](Stock & ref) {return ref.stockId == stockTargetId; });
+		vector<Stock>::iterator it = find_if(stockList.begin(), stockList.end(), [stockTargetId](Stock & stock) {return stock.stockId == stockTargetId; });
 		total += ref.number * it->currentDollars;
 	}
 	// ©Ð²£
