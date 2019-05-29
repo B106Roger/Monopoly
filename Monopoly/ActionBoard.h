@@ -12,7 +12,7 @@ public:
 	ActionBoard();
 	const int startX = 100;
 	const int startY = 0;
-	const int width = 30;
+	const int width = 28;
 	const int length = 33;
 
 	int getMenuOption();

@@ -33,7 +33,8 @@ void GameWorld::gameStart()
 	actionBoard.printFrame();
 	int initialPlayer =  playerState;
 	while (true)
-	{																								
+	{																
+		gameBoard.printPlayerAsset();
 		int actionMode = actionBoard.getMenuOption();
 		switch (actionMode)
 		{

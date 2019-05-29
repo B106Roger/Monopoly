@@ -144,12 +144,25 @@ int GameBoard::getPlayerColor(int id)
 // 印出玩家資產
 void GameBoard::printPlayerAsset()
 {
+	Monopoly::setColor();
 	int indexX = startX + (boxWidth + 2) * 2;
 	int indexY = startY + (boxLength + 1) * 2;
 	int indexWidth = 15, indexLength = 3;
-	for (int i = 0; i < int(GameWorld::playerList.size()); i++)
+	int nameLength = 8;
+	Monopoly::setCursor(indexX, indexY);
+	wcout << wstring((indexWidth - 5)/2, L'－') << L"玩家總資產" << wstring((indexWidth - 5) / 2, L'－');
+	int i = 0;
+	indexY++;
+	for (auto & ref: GameWorld::playerList)
 	{
-		printFrame(indexX, indexY + i * 2, indexWidth, indexLength);
+		printFrame(indexX, indexY + i * (indexLength-1), indexWidth, indexLength);
 
+		Monopoly::setCursor(indexX + 2, indexY + i * (indexLength - 1) + 1);
+		wcout.fill(L'　');
+		wcout << L"Player " << ref.id;
+
+		Monopoly::setCursor(indexX + 2 + nameLength * 2, indexY + i * (indexLength - 1) + 1);
+		cout << GameWorld::bank.computePlayerAsset(ref) << endl;
+		++i;
 	}
 }
