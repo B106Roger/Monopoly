@@ -58,7 +58,7 @@ void ActionBoard::printFrame()
 void ActionBoard::printMenu(int selectedIndex)
 {
 	const int gapX = 6, gapY = 6;
-	const int menuX = startX + gapX, menuY = startY + gapY;
+	const int menuX = startX + gapX*2, menuY = startY + gapY;
 	const int menuW = width - 2 * gapX, menuL = 3;
 	const vector<wstring> & actionList = getActionList();
 	for (int i = 0; i < int(actionList.size()); i++)
@@ -362,6 +362,33 @@ void ActionBoard::headerTip(wstring tip) {
 void ActionBoard::tailTip(wstring tip) {
 	Monopoly::setCursor(startX + width / 2, startY + length - 2);
 	wcout << tip;
+}
+
+void ActionBoard::pressEnterKeyToContinue() {
+	while (true)
+	{
+		if (_kbhit())
+		{
+			int ch = _getch();
+			if (ch == '\r') {
+				printFrame();
+				return;
+			}
+
+		}
+	}
+}
+
+void ActionBoard::pressAnyKeyToContinue() {
+	while (true)
+	{
+		if (_kbhit())
+		{
+			int ch = _getch();
+			printFrame();
+			return;
+		}
+	}
 }
 
 // ========================================================================
@@ -736,6 +763,134 @@ int ActionBoard::printWithdrawDeposit(bool isWithdraw)// 印出存款提款介�
 		}
 	}
 }
+
+// ===============================================
+// 骰子階段的動畫、提示視窗
+// ===============================================
+void ActionBoard::stopRoundAnim(wstring upperLine, wstring lowerLine) {
+	int frameWidth = width - 6;
+	int frameHeight = 9;
+	int cursorX = startX + 6;
+	int cursorY = startY + length / 2 - frameHeight / 2;
+	
+	printFrame(); // 清空actionBoard
+	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"暫停回合"); // 印出提示視窗
+	for (int i = 0; i < upperLine.length(); i++) { // 印出提示視窗的字
+		Monopoly::setCursor(cursorX + 4 + i*2, cursorY + 2); // 一個全形字佔據2個x
+		wcout << upperLine[i];
+		Sleep(100);
+	}
+	for (int i = 0; i < lowerLine.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 4);
+		wcout << lowerLine[i];
+		Sleep(100);
+	}
+	wstring tailTip = L"~Ｅｎｔｅｒ　Ｔｏ　Ｃｏｎｔ~";
+	for (int i = 0; i < tailTip.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 6);
+		wcout << tailTip[i];
+
+	}
+	pressEnterKeyToContinue();
+}
+
+int ActionBoard::assignDiceNumber() { 
+	int frameWidth = width - 6;
+	int frameHeight = 9;
+	int cursorX = startX + 6;
+	int cursorY = startY + length / 2 - frameHeight / 2;
+
+	printFrame(); // 清空畫面
+	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"遙控骰子"); // 印小選單
+
+	int mode = 0; // 使用骰子:不使用
+	int diceNumber = 1; // 指定點數
+	
+	printAssignDiceWord(cursorX, cursorY, mode, diceNumber);
+
+	while (true)
+	{
+		if (_kbhit)
+		{
+			int ch = _getch();
+			// 
+			if (ch == 224)
+			{
+				ch = _getch();
+				switch (ch)
+				{
+				case 72: //上
+				{
+					if(mode != 0) mode--; 
+					break;
+				}
+				case 80: //下
+				{
+					if (mode != 1) mode++;
+					break;
+				}
+				case 75: //左
+				{
+					if (mode == 0 && diceNumber != 1) diceNumber--;
+					break;
+				}
+				case 77: //右
+				{
+					if (mode == 0 && diceNumber != 6) diceNumber++;
+					break;
+				}
+				}
+			}
+			// Enter鍵 確認交易
+			else if (ch == '\r')
+			{
+				if(mode == 1) return 0; // 不骰
+				else return diceNumber; // 骰1~6點
+			}
+			printAssignDiceWord(cursorX, cursorY, mode, diceNumber);
+		}
+	}
+
+
+}
+
+void ActionBoard::printAssignDiceWord(int cursorX, int cursorY, int mode, int diceNumber) {
+
+	//=========
+	// 第一行
+	//=========
+	Monopoly::setCursor(cursorX + 4, cursorY + 2); // 一個全形字佔據2個x
+
+	if (mode == 0) Monopoly::setColor(0, 15);
+	else Monopoly::setColor();
+	wcout << L"遙控骰子"; 
+
+	Monopoly::setColor();
+	wcout << L"　←";
+
+	if (mode == 0) Monopoly::setColor(0, 15);
+	else Monopoly::setColor();
+	wcout << L"　" << diceNumber << L"　";
+
+	Monopoly::setColor();
+	wcout << L"→ ";
+
+	//=========
+	// 第二行
+	//=========
+	Monopoly::setCursor(cursorX + 4, cursorY + 4);
+	if (mode == 1) Monopoly::setColor(0, 15);
+	else Monopoly::setColor();
+	wcout << L"不遙控";
+
+	//=========
+	// 第三行
+	//=========
+	Monopoly::setCursor(cursorX + 4, cursorY + 6);
+	Monopoly::setColor();
+	wcout << L"～Ｅｎｔｅｒ　Ｔｏ　Ｃｈｏｏｓｅ～";
+}
+// ===============================================
 
 
 

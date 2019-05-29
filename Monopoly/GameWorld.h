@@ -13,6 +13,7 @@ public:
 	GameWorld();
 	~GameWorld();
 	void gameStart();
+
 	// mode 
 	int mode;
 	static wstring mapName;
@@ -33,6 +34,15 @@ public:
 private:
 	void drawAChance();			// 走到機會時呼叫
 	void drawADestiny();			// 走到命運時呼叫
+private:
+	// 選擲骰子之後的動作
+	// ============================================
+	void diceStage();
+	void playDiceAni(int diceNum, bool playAni);
+	void playerWalkAni(int distance);
+	void playerLocation();
+	vector<vector<wstring>> diceImages;
+	// ============================================
 };
 
 struct RealEstate
