@@ -1,5 +1,6 @@
 ﻿#include "GameWorld.h"
 #include"Monopoly.h"
+#include<fstream>
 vector<Player> GameWorld::playerList;
 Bank GameWorld::bank;
 vector<RealEstate> GameWorld::gameMap;
@@ -20,6 +21,8 @@ GameWorld::GameWorld()
 
 GameWorld::~GameWorld()
 {
+	chanceList.clear();
+	destinyList.clear();
 }
 
 // 遊戲迴圈
@@ -30,8 +33,7 @@ void GameWorld::gameStart()
 	actionBoard.printFrame();
 	int initialPlayer =  playerState;
 	while (true)
-	{
-		
+	{																								
 		int actionMode = actionBoard.getMenuOption();
 		switch (actionMode)
 		{
@@ -55,7 +57,6 @@ void GameWorld::gameStart()
 		case 3:                       // 股票開盤
 		{
 			actionBoard.printStock();
-			// system("pause>nul");
 			break;
 		}
 		case 4:                       // 買股票
@@ -83,6 +84,12 @@ void GameWorld::gameStart()
 				gameBoard.printItem(playerPosition);
 				Sleep(200);
 			}
+			if (gameMap[playerList[playerState].playerPosition].type == -1) {
+				drawADestiny();
+			}
+			else if (gameMap[playerList[playerState].playerPosition].type == -2) {
+				drawAChance();
+			}
 			playerState++;
 			playerState %= 4;
 			break;
@@ -94,6 +101,75 @@ void GameWorld::gameStart()
 			bank.stockUpate();
 		}
 
+	}
+}
+
+void GameWorld::getChanceList()
+{
+	wifstream file;
+	file.open(L"Chance.txt");
+	if (file.is_open())
+	{
+		wstring message;
+		int type, number;
+		while (file >> message) {
+			Chance tmp;
+			tmp.message = message;
+			file >> type >> number;
+			tmp.type = type;
+			tmp.number = number;
+			chanceList.push_back(tmp);
+		}
+	}
+}
+
+void GameWorld::getDestinyList()
+{
+	wifstream file;
+	file.open("Destiny.txt");
+	if (file.is_open()) {
+		wstring message;
+		int type, number;
+		while (file >> message) {
+			Chance tmp;
+			tmp.message = message;
+			file >> type >> number;
+			tmp.type = type;
+			tmp.number = number;
+			destinyList.push_back(tmp);
+		}
+	}
+}
+
+void GameWorld::drawAChance()
+{
+	srand(time(NULL));
+	int index = rand() % chanceList.size();
+	actionBoard.printChance(index);
+	if (chanceList[index].type == 0) {
+		playerList[playerState].cash += chanceList[index].number;
+	}
+	else if (chanceList[index].type == 1) {
+		playerList[playerState].remoteDice += chanceList[index].number;
+	}
+	else if (chanceList[index].type == 2) {
+		playerList[playerState].stopRound += chanceList[index].number;
+	}
+}
+
+void GameWorld::drawADestiny()
+{
+	srand(time(NULL));
+	int index = rand() % destinyList.size();
+	actionBoard.printDestiny(index);
+	if (destinyList[index].type == 0) {
+		playerList[playerState].cash += destinyList[index].number;
+	}
+	else if (destinyList[index].type == 1) {
+		playerList[playerState].remoteDice += destinyList[index].number;
+	}
+	else if (destinyList[index].type == 2) {
+		playerList[playerState].stopRound += destinyList[index].number;
 	}
 }
 

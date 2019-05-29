@@ -28,7 +28,11 @@ public:
 	static GameBoard gameBoard;       // 負責地圖的顯示
 	static ActionBoard actionBoard;   // 面的顯示
 	static ConsoleBoard consoleBoard; // 負責consol負責玩家操作介e文字的顯示
-
+	static void getChanceList();
+	static void getDestinyList();
+private:
+	void drawAChance();			// 走到機會時呼叫
+	void drawADestiny();			// 走到命運時呼叫
 };
 
 struct RealEstate
@@ -65,7 +69,7 @@ struct RealEstate
 
 struct Chance
 {
-	string message;
+	wstring message;
 	int type;     // 0: +-$, 1: 遙控色子, 2:暫停回合
 	int number;   // 依據type有不同的效果
 };

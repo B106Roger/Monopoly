@@ -1,4 +1,8 @@
 ﻿  ActionBoard.cpp
-c:\users\user\desktop\ntust\大二下\物件導向程式設計\project2-monopoly\monopoly\monopoly\actionboard.cpp(393): warning C4551: 函式呼叫遺漏引數清單
-c:\users\user\desktop\ntust\大二下\物件導向程式設計\project2-monopoly\monopoly\monopoly\actionboard.cpp(502): warning C4551: 函式呼叫遺漏引數清單
+c:\users\user\desktop\ntust\大二下\物件導向程式設計\project2-monopoly\monopoly\monopoly\actionboard.cpp(455): warning C4551: 函式呼叫遺漏引數清單
+c:\users\user\desktop\ntust\大二下\物件導向程式設計\project2-monopoly\monopoly\monopoly\actionboard.cpp(564): warning C4551: 函式呼叫遺漏引數清單
+  GameWorld.cpp
+c:\users\user\desktop\ntust\大二下\物件導向程式設計\project2-monopoly\monopoly\monopoly\gameworld.cpp(148): warning C4244: '引數': 將 'time_t' 轉換為 'unsigned int'，由於類型不同，可能導致資料遺失
+c:\users\user\desktop\ntust\大二下\物件導向程式設計\project2-monopoly\monopoly\monopoly\gameworld.cpp(164): warning C4244: '引數': 將 'time_t' 轉換為 'unsigned int'，由於類型不同，可能導致資料遺失
+  正在產生程式碼...
   Monopoly.vcxproj -> C:\Users\USER\Desktop\NTUST\大二下\物件導向程式設計\Project2-Monopoly\Monopoly\x64\Debug\Monopoly.exe

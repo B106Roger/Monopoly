@@ -160,6 +160,68 @@ void ActionBoard::printPlayerInfo() {
 		}
 	}
 }
+void ActionBoard::printChance(int index)
+{
+	printFrame();
+	Monopoly::setCursor(startX + 8, startY + 5);
+	wcout << (L"－－－－－－－你抽到的機會是－－－－－－－");
+	Monopoly::setCursor(startX + 8, startY + 7);
+	wstring message = GameWorld::chanceList[index].message;
+	if (message.size() > 21) {
+		for (int i = 0; i < 21; i++) {
+			wcout << message[i];
+		}
+		Monopoly::setCursor(startX + 8, startY + 8);
+		for (int i = 21; i < message.size(); i++)
+			wcout << message[i];
+	}
+	else
+		wcout << message;
+
+	tailTip();
+	while (true)
+	{
+		if (_kbhit())
+		{
+			int ch = _getch();
+			if (ch == '\r') {
+				printFrame();
+				return;
+			}
+
+		}
+	}
+}
+void ActionBoard::printDestiny(int index)
+{
+	printFrame();
+	Monopoly::setCursor(startX + 8, startY + 5);
+	wcout << (L"----------你抽到的命運是----------");
+	Monopoly::setCursor(startX + 8, startY + 7);
+	wstring message = GameWorld::destinyList[index].message;
+	if (message.size() > 21) {
+		for (int i = 0; i < 21; i++)
+			wcout << message[i];
+		Monopoly::setCursor(startX + 8, startY + 8);
+		for (int i = 0; i < message.size(); i++)
+			wcout << message[i];
+	}
+	else
+		wcout << message;
+	tailTip();
+	while (true)
+	{
+		if (_kbhit())
+		{
+			int ch = _getch();
+			if (ch == '\r') {
+				printFrame();
+				return;
+			}
+
+		}
+	}
+}
 void ActionBoard::choosePlayerInfo(int infoMode, int playerId, int indexY, int lineHeight, int indexX) {
 	if (infoMode == 0) printPlayerInfoMain(playerId, indexY, lineHeight);
 	else if(infoMode == 1) printPlayerInfoStock(playerId, indexY, lineHeight, indexX);

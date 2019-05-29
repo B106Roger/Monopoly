@@ -12,6 +12,8 @@ Monopoly::Monopoly()
 	srand(time(NULL));
 	setCursorSize(false, 0);
 	monopolyInit();
+	GameWorld::getChanceList();
+	GameWorld::getDestinyList();
 }
 
 Monopoly::~Monopoly()

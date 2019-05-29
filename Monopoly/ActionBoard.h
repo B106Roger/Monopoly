@@ -25,6 +25,8 @@ public:
 	vector<int> printBuyStock();   // 印出股票購買介面
 	vector<int> printSellStock();   // 印出股票賣出介面
 	void printPlayerInfo();        // 印出玩家資訊
+	void printChance(int index);	// 印出機會
+	void printDestiny(int index);	// 印出命運
 	int printWithdrawDeposit(bool isWithdraw);    // 印出存款提款介面
 	~ActionBoard();
 
