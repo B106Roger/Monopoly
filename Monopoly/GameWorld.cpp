@@ -19,71 +19,23 @@ GameWorld::GameWorld()
 	// ===============================================================
 	// 將dice圖片讀入
 	// ===============================================================
-
-	/*diceImages.push_back(vector<wstring>()); // 0號不存放任何東西
-	vector<wstring> line;
-	wstring line1 = L"┌─────────┐"; line.push_back(line1);
-	wstring line2 = L"|         |"; line.push_back(line2);
-	wstring line3 = L"│    ●    │"; line.push_back(line3);
-	wstring line4 = L"│         │"; line.push_back(line4);
-	wstring line5 = L"└─────────┘"; line.push_back(line5);*/
-	//┌─────────┐
-	//|         |
-	//│    ●    │
-	//│         │
-	//└─────────┘
 	locale::global(locale(""));
 	diceImages.push_back(vector<wstring>());
 	wstring dicePath = L"dice//dice";
 	for (int i = 1; i <= 6; i++) {
-		/*diceImages.push_back(vector<wstring>());
-		if (i == 1) {
-			line[2][6] = L"●";
-		}
-		else if (i == 2) {
-
-		}
-		else if (i == 3) {
-
-		}
-		else if (i == 4) {
-			
-		}
-		else if (i == 5) {
-
-		}
-		else {
-
-		}
-		for (int j = 0; j < 5; j++) {
-			diceImages[i].push_back(line[j]);
-		}*/
 		diceImages.push_back(vector<wstring>());
 		wifstream inputFile; // dice1 ~ 6 跑一輪
 		wstring fileName = dicePath + to_wstring(i) + L".txt";
 		inputFile.open(fileName);
 		if (!inputFile.is_open()) { cout << "cannot open dice"; }
 		wstring line;
-		/*getline(inputFile, line);
-		//inputFile >> line;
-		while (!inputFile.eof()) {
-			diceImages[i].push_back(line); // 存在index 1 ~ 6 之間
-			getline(inputFile, line);
-			cout << "line" << endl;
-			//inputFile >> line;
-		}*/
-		system("pause");
 		do {
 			getline(inputFile, line);
 			diceImages[i].push_back(line);
-			wcout << line << endl;
 		} while (!inputFile.eof());
 
 		inputFile.close();
 	}
-
-	//std::locale loc2("");
-	//wcout.imbue(loc2);
 	// ===============================================================
 
 
