@@ -1,4 +1,4 @@
-#include "Bank.h"
+ï»¿#include "Bank.h"
 #include"GameWorld.h"
 vector<Stock> Bank::stockList;
 vector<vector<StockRecord>> Bank::stockOwnerList;
@@ -14,12 +14,13 @@ Bank::~Bank()
 }
 
 
-// ªì©l¤ÆªÑ²¼¦Cªí
+// åˆå§‹åŒ–è‚¡ç¥¨åˆ—è¡¨
 void Bank::stockUpate()
 {
 	for (int i = 0; i < stockList.size(); i++) {
 		stockList[i].previousDollars = stockList[i].currentDollars;
-		stockList[i].currentDollars = (1.0 + -rand() % 100 / 1000.0) * stockList[i].currentDollars;
+
+		stockList[i].currentDollars = (1.0 + (rand() % 200 - 100) / 1000.0) * stockList[i].currentDollars;
 	}
 }
 
@@ -27,42 +28,42 @@ void Bank::initialStock()
 {
 	Stock stock1, stock2, stock3, stock4, stock5, stock6;
 	stock1.currentDollars = 200;
-	stock1.name = L"¸{¶H¹q¤l";
+	stock1.name = L"è…¥è±¡é›»å­";
 	stock1.previousDollars = 197;
 	stock1.stockId = 0;
 	stockList.push_back(stock1);
 
 	stock2.currentDollars = 250;
-	stock2.name = L"½æ¥x¿n¹q";
+	stock2.name = L"è³£å°ç©é›»";
 	stock2.previousDollars = 260;
 	stock2.stockId = 1;
 	stockList.push_back(stock2);
 
 	stock3.currentDollars = 50;
-	stock3.name = L"¡@¡@¸È³Ğ";
+	stock3.name = L"ã€€ã€€è£™å‰µ";
 	stock3.previousDollars = 150;
 	stock3.stockId = 2;
 	stockList.push_back(stock3);
 
 	stock4.currentDollars = 3800;
-	stock4.name = L"¤j¤O¥úÀY";
+	stock4.name = L"å¤§åŠ›å…‰é ­";
 	stock4.previousDollars = 4085;
 	stock4.stockId = 3;
 	stockList.push_back(stock4);
 
 	stock5.currentDollars = 50;
-	stock5.name = L"¡@¯«¬Ş§½";
+	stock5.name = L"ã€€ç¥ç›¾å±€";
 	stock5.previousDollars = 150;
 	stock5.stockId = 4;
 	stockList.push_back(stock5);
 
 	stock6.currentDollars = 87;
-	stock6.name = L"«Â­è»sÃÄ";
+	stock6.name = L"å¨å‰›è£½è—¥";
 	stock6.previousDollars = 99;
 	stock6.stockId = 5;
 	stockList.push_back(stock6);
 }
-int Bank::buyStock(Player & player, vector<int> numberOfStock)   // vector¦sªÑ²¼ÁÊ¶R¼Æ¶q
+int Bank::buyStock(Player & player, vector<int> numberOfStock)   // vectorå­˜è‚¡ç¥¨è³¼è²·æ•¸é‡
 {
 	int total = 0;
 	int playerId = player.id;
@@ -89,19 +90,19 @@ int Bank::buyStock(Player & player, vector<int> numberOfStock)   // vector¦sªÑ²¼
 }
 
 int Bank::soldStock(Player & player, vector<int>numberOfStock)
-{	//°²©w­n½æªº±i¼Æ³£¨S¦³¶W¹L«ù¦³ªÑ²¼¼Æ
+{	//å‡å®šè¦è³£çš„å¼µæ•¸éƒ½æ²’æœ‰è¶…éæŒæœ‰è‚¡ç¥¨æ•¸
 	int total = 0;
 	int playerId = player.id;
 	for (int i = 0; i < int(numberOfStock.size()); i++)
 	{
-		if (numberOfStock[i] != 0) {			//¦³­n½æ¥X¤~°µ³B²z
+		if (numberOfStock[i] != 0) {			//æœ‰è¦è³£å‡ºæ‰åšè™•ç†
 			total += stockList[i].currentDollars * numberOfStock[i];
 			vector<StockRecord>::iterator it = find_if(
 				stockOwnerList[playerId].begin(),
 				stockOwnerList[playerId].end(),
 				[i](StockRecord & ref) {return ref.stockId == i; }
 			);
-			if (it != stockOwnerList[playerId].end())		//§ä¨ì­n½æ±¼ªºªÑ²¼¨Ã½æ±¼
+			if (it != stockOwnerList[playerId].end())		//æ‰¾åˆ°è¦è³£æ‰çš„è‚¡ç¥¨ä¸¦è³£æ‰
 			{
 				it->number -= numberOfStock[i];
 			}
@@ -112,20 +113,20 @@ int Bank::soldStock(Player & player, vector<int>numberOfStock)
 }
 
 
-// ­pºâª±®a¸ê²£
+// è¨ˆç®—ç©å®¶è³‡ç”¢
 int Bank::computePlayerAsset(Player & pl)
 {
 	int total = 0;
 	total += pl.cash;
 	total += pl.bankBalance;
-	// ªÑ²¼
+	// è‚¡ç¥¨
 	for (StockRecord & ref : stockOwnerList[pl.id])
 	{
 		int stockTargetId = ref.stockId;
 		vector<Stock>::iterator it = find_if(stockList.begin(), stockList.end(), [stockTargetId](Stock & stock) {return stock.stockId == stockTargetId; });
 		total += ref.number * it->currentDollars;
 	}
-	// ©Ğ²£
+	// æˆ¿ç”¢
 	for (RealEstate & ref : GameWorld::gameMap)
 	{
 		if (ref.ownerId != pl.id)
@@ -143,6 +144,18 @@ int Bank::computePlayerAsset(Player & pl)
 			rate += 0.25;
 		}
 		total += estateCost;
+	}
+	return total;
+}
+
+int Bank::computePlayerStockAsset(Player & p1) {
+	int total = 0;
+	// è‚¡ç¥¨
+	for (StockRecord & ref : stockOwnerList[p1.id])
+	{
+		int stockTargetId = ref.stockId;
+		vector<Stock>::iterator it = find_if(stockList.begin(), stockList.end(), [stockTargetId](Stock & ref) {return ref.stockId == stockTargetId; });
+		total += ref.number * it->currentDollars;
 	}
 	return total;
 }

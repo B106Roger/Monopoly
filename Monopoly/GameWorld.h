@@ -53,6 +53,7 @@ struct RealEstate
 		ownerId = -1;             // 當作是銀行的
 		level = 0;
 		tolls.resize(4);
+		rate = { 0.75, 1.0, 1.25 };
 	}
 	int type;          // 類型 1地產, -1 機會
 	int position;      // 0~27
@@ -61,17 +62,16 @@ struct RealEstate
 	int buyCost;       // 地產價格
 	vector<int> tolls; // 過路費(一律給現金)
 	int level;         // 物產等級 0 ~ 3
-	
+	vector<double> rate;
+
 	int mortgageRealEstate()
 	{
 		ownerId = -1;
 		level = 0;
-		double rate = 0.75;
 		int returnVal = buyCost;
 		for (int i = 0; i < level; i++)
 		{
-			returnVal += int(buyCost * rate);
-			rate += 0.25;
+			returnVal += int(buyCost * rate[i]);
 		}
 		return int(returnVal * 0.8);
 	}
