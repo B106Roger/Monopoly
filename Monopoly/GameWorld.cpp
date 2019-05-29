@@ -59,7 +59,7 @@ void GameWorld::gameStart()
 	Monopoly::setCursorSize(false, 0);
 	gameBoard.printMap();
 	actionBoard.printFrame();
-	int initialPlayer =  playerState;
+	//int initialPlayer =  playerState;
 	while (true)
 	{																
 		gameBoard.printPlayerAsset();
