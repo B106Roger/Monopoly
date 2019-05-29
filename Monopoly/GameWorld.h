@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Player.h"
 #include"Bank.h"
 #include"GameBoard.h"
@@ -13,44 +13,54 @@ public:
 	GameWorld();
 	~GameWorld();
 	void gameStart();
+
 	// mode 
 	int mode;
 	static wstring mapName;
-	static vector<Player> playerList; // ª±®a¦Cªí
-	static Bank bank;                 // »È¦æ PlayerId = -1
-	static vector<RealEstate> gameMap;// ¹CÀ¸¦a¹Ï¸ê°T
-	static int playerState;           // ¥Ø«e­Û¨ì­ş­Óª±®a
-	static vector<Chance> chanceList; // ¾÷·|¦Cªí  
-	static vector<Chance> destinyList;// ©R¹B¦Cªí
-	static int reamainRound;          // ³Ñ¾l¦^¦X¼Æ
-	static int obstaclePosition;      // ¬°¸ô»Ù¦ì¸m 
+	static vector<Player> playerList; // ç©å®¶åˆ—è¡¨
+	static Bank bank;                 // éŠ€è¡Œ PlayerId = -1
+	static vector<RealEstate> gameMap;// éŠæˆ²åœ°åœ–è³‡è¨Š
+	static int playerState;           // ç›®å‰å€«åˆ°å“ªå€‹ç©å®¶
+	static vector<Chance> chanceList; // æ©Ÿæœƒåˆ—è¡¨  
+	static vector<Chance> destinyList;// å‘½é‹åˆ—è¡¨
+	static int reamainRound;          // å‰©é¤˜å›åˆæ•¸
+	static int obstaclePosition;      // ç‚ºè·¯éšœä½ç½® 
 	//display static data member
-	static GameBoard gameBoard;       // ­t³d¦a¹ÏªºÅã¥Ü
-	static ActionBoard actionBoard;   // ­±ªºÅã¥Ü
-	static ConsoleBoard consoleBoard; // ­t³dconsol­t³dª±®a¾Ş§@¤¶e¤å¦rªºÅã¥Ü
+	static GameBoard gameBoard;       // è² è²¬åœ°åœ–çš„é¡¯ç¤º
+	static ActionBoard actionBoard;   // é¢çš„é¡¯ç¤º
+	static ConsoleBoard consoleBoard; // è² è²¬consolè² è²¬ç©å®¶æ“ä½œä»‹eæ–‡å­—çš„é¡¯ç¤º
 	static void getChanceList();
 	static void getDestinyList();
 private:
-	void drawAChance();			// ¨«¨ì¾÷·|®É©I¥s
-	void drawADestiny();			// ¨«¨ì©R¹B®É©I¥s
+	
+	// é¸æ“²éª°å­ä¹‹å¾Œçš„å‹•ä½œ
+	// ============================================
+	void diceStage();
+	void playDiceAni(int diceNum, bool playAni);
+	void playerWalkAni(int distance);
+	void playerLocation();
+	void drawAChance();			// èµ°åˆ°æ©Ÿæœƒæ™‚å‘¼å«
+	void drawADestiny();			// èµ°åˆ°å‘½é‹æ™‚å‘¼å«
+	vector<vector<wstring>> diceImages;
+	// ============================================
 };
 
 struct RealEstate
 {
 	RealEstate()
 	{
-		// ¥h±¼PlayerPostion ¦]¬°¨C¦¸»ë¦â¤l­n§äplayer ¥Ø«eªº¦ì¸m¤£¦n§ä
-		ownerId = -1;             // ·í§@¬O»È¦æªº
+		// å»æ‰PlayerPostion å› ç‚ºæ¯æ¬¡éª°è‰²å­è¦æ‰¾player ç›®å‰çš„ä½ç½®ä¸å¥½æ‰¾
+		ownerId = -1;             // ç•¶ä½œæ˜¯éŠ€è¡Œçš„
 		level = 0;
 		tolls.resize(4);
 	}
-	int type;          // Ãş«¬ 1¦a²£, -1 ¾÷·|
+	int type;          // é¡å‹ 1åœ°ç”¢, -1 æ©Ÿæœƒ
 	int position;      // 0~27
-	int ownerId;       // «ù¦³ªÌid(ª±®aid)
-	wstring name;      // ¦a²£¦WºÙ
-	int buyCost;       // ¦a²£»ù®æ
-	vector<int> tolls; // ¹L¸ô¶O(¤@«ßµ¹²{ª÷)
-	int level;         // ª«²£µ¥¯Å 0 ~ 3
+	int ownerId;       // æŒæœ‰è€…id(ç©å®¶id)
+	wstring name;      // åœ°ç”¢åç¨±
+	int buyCost;       // åœ°ç”¢åƒ¹æ ¼
+	vector<int> tolls; // éè·¯è²»(ä¸€å¾‹çµ¦ç¾é‡‘)
+	int level;         // ç‰©ç”¢ç­‰ç´š 0 ~ 3
 	
 	int mortgageRealEstate()
 	{
@@ -70,6 +80,6 @@ struct RealEstate
 struct Chance
 {
 	wstring message;
-	int type;     // 0: +-$, 1: »»±±¦â¤l, 2:¼È°±¦^¦X
-	int number;   // ¨Ì¾Útype¦³¤£¦Pªº®ÄªG
+	int type;     // 0: +-$, 1: é™æ§è‰²å­, 2:æš«åœå›åˆ
+	int number;   // ä¾æ“štypeæœ‰ä¸åŒçš„æ•ˆæœ
 };
