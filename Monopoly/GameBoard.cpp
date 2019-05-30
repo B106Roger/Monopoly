@@ -40,7 +40,10 @@ void GameBoard::printItem(int index)
 	printFrame(boxX, boxY, boxWidth, boxLength);
 	// 印土地名稱
 	Monopoly::setCursor(boxX + 2, boxY + 1);
+	
+	Monopoly::setColor(7, getPlayerColor(ref.ownerId));
 	wcout << ref.name;
+	Monopoly::setColor();
 	// 印玩家位置
 	Monopoly::setCursor(boxX + 2, boxY + 2);
 	for (auto const & ele : GameWorld::playerList)
@@ -137,6 +140,8 @@ int GameBoard::getPlayerColor(int id)
 	case 3:
 		color = 6;
 		break;
+	default:
+		color = 0;
 	}
 	return color;
 }

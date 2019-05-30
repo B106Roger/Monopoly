@@ -57,9 +57,13 @@ void ActionBoard::printFrame()
 // 印出選菜單
 void ActionBoard::printMenu(int selectedIndex)
 {
+	// ActionBoard跟選單的X軸,Y軸的距離 (單位寬字元)
 	const int gapX = 6, gapY = 6;
+	// Menu的X,Y軸位置
 	const int menuX = startX + gapX*2, menuY = startY + gapY;
+	// Menu的長寬 (單位寬字元)
 	const int menuW = width - 2 * gapX, menuL = 3;
+
 	const vector<wstring> & actionList = getActionList();
 	for (int i = 0; i < int(actionList.size()); i++)
 	{
@@ -102,6 +106,10 @@ int ActionBoard::getMenuOption()
 			else if (ch == '\r')
 			{
 				return mode;
+			}
+			else if (ch == 27)
+			{
+				return -1;
 			}
 		}
 	}
@@ -998,6 +1006,63 @@ void ActionBoard::printBuyOrNotWord(int cursorX, int cursorY, bool mode, int lan
 }
 // ===============================================
 
+
+// ===============================================
+// Esc Menu
+// ===============================================
+int ActionBoard::getEscOption()
+{
+	int mode = 0;
+	printFrame();       // 刷新actionBoard;
+	printEscMenu(mode); // 更新已選取選項位置
+	while (true) {
+		if (_kbhit())
+		{
+			int ch = _getch();
+			// 按下Enter鍵後
+			if (ch == '\r')
+			{
+				return mode;
+			}
+			// 按下方向鍵後
+			else if (ch == 224)
+			{
+				ch = _getch();
+				switch (ch)
+				{
+				case 72: // 上
+					if (mode == 0) mode = 2;
+					else mode--;
+					break;
+				case 80: // 下
+					if (mode == 2) mode = 0;
+					else mode++;
+					break;
+				};
+				printEscMenu(mode); // 更新已選取選項位置
+			}
+		}
+	}
+}
+void ActionBoard::printEscMenu(int mode)
+{
+	// Menu的X軸,Y軸的距離 (單位寬字元)
+	const int gapX = 6, gapY = 6;
+	// Menu的X,Y軸位置
+	const int menuX = startX + gapX * 2, menuY = startY + gapY;
+	// Menu的長寬 (單位寬字元)
+	const int menuW = width - 2 * gapX, menuL = 3;
+	vector<wstring> list = { L"繼續遊戲",L"儲存遊戲",L"回主選單" };
+	for (int i = 0; i < list.size(); i++)
+	{
+		printFrame(menuX, menuY + i * (menuL - 1), menuW, menuL);
+		if (mode == i) Monopoly::setColor(0, 7);
+		else Monopoly::setColor();
+		Monopoly::setCursor(menuX + 4, menuY + i * (menuL - 1) + 1);
+		wcout << list[i];
+	}
+	Monopoly::setColor();
+}
 
 
 // 遊戲中的選單

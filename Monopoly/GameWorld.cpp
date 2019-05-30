@@ -113,6 +113,18 @@ void GameWorld::gameStart()
 			}
 			break;
 		}
+		case -1:
+			int returnValue = actionBoard.getEscOption();
+			switch(returnValue)
+			{
+			case 0:        // 繼續遊戲
+				break;
+			case 1:        // 儲存遊戲
+				Monopoly::fileReader.saveFile();
+				break;
+			case 2:        // 回到主選單
+				return;
+			}
 		}
 
 		

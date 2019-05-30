@@ -214,10 +214,16 @@ void FileReader::saveFile()
 {
 	if (Monopoly::gameRecordFileName.size() == 0u)
 	{
-		// actionBoard.userInputFileName();
+		//Monopoly::gameRecordFileName = actionBoard.userInputFileName();
 	}
 	wofstream out;
-	out.open(Monopoly::gameRecordFileName);
+	wstring fileanme = continuePath + +L"//" + Monopoly::gameRecordFileName;
+	out.open(fileanme);
+	if (out.is_open() == false)
+	{
+		Monopoly::setCursor(0, 0);
+		cout << "fail open file\n";
+	}
 	out << GameWorld::mapName << L" " << GameWorld::reamainRound << " " << GameWorld::playerList.size() << endl;
 	for (const auto &ref: GameWorld::gameMap)
 	{
@@ -229,19 +235,19 @@ void FileReader::saveFile()
 		out << location << L" " << ref.name << L" ";
 		if (ref.type == 1)
 		{
-			out << ref.buyCost << L" ";
+			out << to_wstring(ref.buyCost) << L" ";
 			for (auto integer : ref.tolls)
 			{
-				wcout << integer << L" ";
+				out << to_wstring(integer) << L" ";
 			}
 		}
-		wcout << endl;
+		out << endl;
 	}
 
 	out << L"playerstate " << GameWorld::playerState << endl;
 	for (auto & player : GameWorld::playerList)
 	{
-		out << player.id << L" " << player.playerPosition << L" " << player.cash;
+		out << player.id << L" " << player.playerPosition << L" " << to_wstring(player.cash) << L" ";
 		for (auto &ref : GameWorld::gameMap)
 		{
 			if (ref.ownerId == player.id)
@@ -251,20 +257,24 @@ void FileReader::saveFile()
 				{
 					loc.insert(0, 1, L'0');
 				}
-				out << loc << L" " << ref.level << L" ";
+				out << loc << L" " << to_wstring(ref.level) << L" ";
 			}
 		}
+		out << endl;
 	}
 
 	out << L"bank" << endl;
 	for (auto & player : GameWorld::playerList)
 	{
-		out << player.id << L" " << player.bankBalance << L" ";
+		out << player.id << L" " << to_wstring(player.bankBalance) << L" ";
 		for (auto &ref : Bank::stockOwnerList[player.id])
 		{
-			out << ref.stockId << L" " << ref.number;
+			if (ref.number == 0)
+				continue;
+			out << ref.stockId << L" " << to_wstring(ref.number) << L" ";
 		}
 		out << endl;
 	}
+	out.close();
 
 }

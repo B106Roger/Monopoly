@@ -29,6 +29,7 @@ public:
 	static GameBoard gameBoard;       // 負責地圖的顯示
 	static ActionBoard actionBoard;   // 面的顯示
 	static ConsoleBoard consoleBoard; // 負責consol負責玩家操作介e文字的顯示
+	
 	static void getChanceList();
 	static void getDestinyList();
 private:

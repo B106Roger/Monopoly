@@ -15,7 +15,6 @@ public:
 	const int startY = 0;
 	const int width = 28;
 	const int length = 33;
-
 	int getMenuOption();
 
 	void printFrame(int xpos, int ypos, int xsize, int ysize, wstring title = L"");  // 印出actionBoard的框框
@@ -41,6 +40,12 @@ public:
 	void printBuyOrNotWord(int cursorX, int cursorY, bool mode, int landMode, wstring subTitle); // helper function
 	// ===============================================
 	
+	// ===============================================
+	// Esc Menu
+	// ===============================================
+	int getEscOption();
+	void printEscMenu(int mode);
+	// ===============================================
 	~ActionBoard();
 
 private:
