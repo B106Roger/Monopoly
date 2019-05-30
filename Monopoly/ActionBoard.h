@@ -37,6 +37,8 @@ public:
 	int assignDiceNumber(); // 是否要用遙控骰子提示 // 0：不使用／1-6：使用
 	void printAssignDiceWord(int cursorX, int cursorY, int mode, int diceNumber); // helper function
 
+	void startingPointAnim(); // 起點加5000動畫
+
 	void moneyInefficientAnim(int mode); // 現金不足提示
 	bool buyOrNot(int landMode, wstring subTitle); // 購置/升級房產選單
 	void printBuyOrNotWord(int cursorX, int cursorY, bool mode, int landMode, wstring subTitle); // helper function
@@ -47,6 +49,13 @@ public:
 	void payTollAnim(wstring houseName, int toll);
 	// ===============================================
 	
+	// ===============================================
+	// 勝利、失敗動畫視窗
+	// ===============================================
+	void winBoard(int mode, Player &player);
+	// ===============================================
+
+
 	// ===============================================
 	// Esc Menu
 	// ===============================================

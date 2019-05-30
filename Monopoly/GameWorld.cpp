@@ -126,22 +126,19 @@ void GameWorld::gameStart()
 			if (isAllBankrupt()) { // 破產
 				if (playerAmount == 1) { // 一人遊玩，破產
 					// 顯示玩家失敗的提示
-					// 跳出遊戲迴圈
-					gameFinish = true;
+					gameFinish = true;// 跳出遊戲迴圈
 				}
 				else { // 多人遊玩，一人存活
-					// 顯示玩家勝利的提示
-					// 跳出遊戲迴圈
-					gameFinish = true;
+					actionBoard.winBoard(1, playerList[playerState]);// 顯示玩家勝利的提示
+					gameFinish = true;// 跳出遊戲迴圈
 				}
 				
 			}
 			else if (playerAmount == 1) { // 一人遊玩情況
 				if (reamainRound == 1) { // 20回結束
 					reamainRound = 0;
-					// 結束遊戲，顯示勝利
-					// 跳出遊戲迴圈
-					gameFinish = true;
+					actionBoard.winBoard(0, playerList[playerState]);// 結束遊戲，顯示勝利
+					gameFinish = true;// 跳出遊戲迴圈
 				}
 				else { // 還沒結束
 					bank.stockUpate();
@@ -151,16 +148,14 @@ void GameWorld::gameStart()
 			else if (previousPlayer > currentPlayer) { // 多人遊玩時，結束一輪時
 				if (reamainRound == 1) { // 20回結束
 					reamainRound = 0;
-					// 結束遊戲，顯示勝利
-					// 跳出遊戲迴圈
-					gameFinish = true;
+					actionBoard.winBoard(0, playerList[getRichestPlayer()]);// 結束遊戲，顯示勝利
+					gameFinish = true;// 跳出遊戲迴圈
 				}
 				else { // 還沒結束
 					bank.stockUpate();
 					reamainRound--;
 				}
 			}
-			
 
 			/*playerState++;
 			int playerAmount = playerList.size();
@@ -191,6 +186,11 @@ void GameWorld::gameStart()
 	}
 }
 
+// ===================================
+// 骰子階段
+// ===================================
+
+// 機會與命運
 void GameWorld::getChanceList()
 {
 	wifstream file;
@@ -260,6 +260,8 @@ void GameWorld::drawADestiny()
 	}
 }
 
+
+// 骰子階段主幹
 void GameWorld::diceStage() {
 
 	// 測試用code
@@ -299,6 +301,7 @@ void GameWorld::diceStage() {
 	}
 }
 
+// 骰子動畫
 void GameWorld::playDiceAni(int diceNum, bool playAni) {
 
 
@@ -318,7 +321,7 @@ void GameWorld::playDiceAni(int diceNum, bool playAni) {
 				Monopoly::setCursor(startX, startY + j);
 				wcout << diceImages[random][j] << L"　";
 			}
-			Sleep(50 + i * 50); // 由快到慢
+			Sleep(50 + i * 20); // 由快到慢
 		}
 	}
 	else { // 使用遙控骰子時，直接顯示骰子點數
@@ -332,6 +335,7 @@ void GameWorld::playDiceAni(int diceNum, bool playAni) {
 
 }
 
+// 玩家走路動畫
 void GameWorld::playerWalkAni(int distance) {
 	for (int i = distance; i != 0; --i)
 	{
@@ -340,10 +344,16 @@ void GameWorld::playerWalkAni(int distance) {
 		playerPosition %= 28;
 		gameBoard.printItem(oldPosition);
 		gameBoard.printItem(playerPosition);
+		if (playerPosition == 0) {
+			playerList[playerState].cash += 5000;
+			actionBoard.startingPointAnim(); // 提示動畫
+			gameBoard.printPlayerAsset(); // 更新遊戲版子的資訊
+		}
 		Sleep(200);
 	}
 }
 
+// 玩家到訪地區判斷(副幹)
 void GameWorld::playerLocation() {
 	Player &player = playerList[playerState]; // 玩家
 	RealEstate &house = gameMap[playerList[playerState].playerPosition]; // 房子
@@ -354,7 +364,7 @@ void GameWorld::playerLocation() {
 	else if (house.type == -2) { // 走到機會時
 		drawAChance();
 	}
-	else if(house.ownerId == -1 && house.position != 0){ // 走到空地時，起點不能買
+	else if(house.ownerId == -1 && house.position != 0){ // 購買：走到空地時，起點不能買
 
 		if (house.buyCost > player.cash) { // 現金買不起
 			actionBoard.moneyInefficientAnim(0); // 空地mode = 0
@@ -368,7 +378,7 @@ void GameWorld::playerLocation() {
 			}
 		}
 	}
-	else if (house.ownerId == playerState && house.level < 3) { // 走到自己的地時，而且地產等級小於三
+	else if (house.ownerId == playerState && house.level < 3) { // 升級：走到自己的地時，而且地產等級小於三
 		int upgrateCost = house.buyCost * house.rate[house.level]; // 升級價格
 
 		if (upgrateCost > player.cash) { // 現金升級不起
@@ -383,19 +393,16 @@ void GameWorld::playerLocation() {
 			}
 		}
 	}
-	else if (house.ownerId != playerState && house.position != 0) { // 走到其他人的地時(上面已經濾掉無人地情況)
+	else if (house.ownerId != playerState && house.position != 0) { // 過路：走到其他人的地時(上面已經濾掉無人地情況)
 
-		wstring houseName = gameMap[playerList[playerState].playerPosition].name; // 房產名
+		int toll = house.tolls[house.level]; // 過路費
+		Player &playerGet = playerList[house.ownerId];
 
-		int level = gameMap[playerList[playerState].playerPosition].level; // 等級
-		int toll = gameMap[playerList[playerState].playerPosition].tolls[level]; // 過路費
 
-		int &myMoney = playerList[playerState].cash; // 現金
-		int &myBalance = playerList[playerState].bankBalance; // 存款
-		int totalAsset = bank.computePlayerAsset(playerList[playerState]); // 總資產
-
-		player.cash -= toll;
-		actionBoard.payTollAnim(houseName, toll);
+		player.cash -= toll; // 失去方
+		playerGet.cash += toll; // 獲得方
+		actionBoard.payTollAnim(house.name, toll); // 支付提示
+		gameBoard.printPlayerAsset(); // 更新版上資產
 	}
 
 	/*// 進入破產判斷
@@ -435,6 +442,7 @@ void GameWorld::playerLocation() {
 			actionBoard.bankruptcyAnim(); // 付不起提示
 			// 將玩家id設為破產
 			player.id = -1;
+			gameBoard.printItem(player.playerPosition); // 讓玩家消失在地圖上
 			// 將玩家房產初始化(level = 0, ownerId = -1)
 			// 初始化同時也要更新gameBoard
 			bankruptcy();
@@ -458,6 +466,9 @@ void GameWorld::bankruptcy() {
 	}
 }
 
+//=======================================================
+// 遊戲結束判斷
+//=======================================================
 bool GameWorld::isAllBankrupt() {
 
 	int playerAmount = playerList.size();
@@ -477,3 +488,17 @@ bool GameWorld::isAllBankrupt() {
 	if (bankruptAmount == playerAmount - 1) return true;
 	else return false;
 }
+
+int GameWorld::getRichestPlayer() {
+	int richest = -1;
+	for (int i = 0; i < playerList.size(); i++) {
+		if (playerList[i].id != -1 && richest == -1) { // 找到第一個沒破產的人
+			richest = playerList[i].id;
+		}
+		else if (playerList[i].id != -1 && bank.computePlayerAsset(playerList[richest]) < bank.computePlayerAsset(playerList[i])) { // 沒破產而且比richest還有錢
+			richest = i;
+		}
+	}
+	return richest;
+}
+//=======================================================

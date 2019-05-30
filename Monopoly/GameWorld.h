@@ -43,9 +43,14 @@ private:
 	void drawAChance();			// 走到機會時呼叫
 	void drawADestiny();			// 走到命運時呼叫
 	void bankruptcy();          // 破產時，將房產清
-	bool isAllBankrupt();			// 如果
+	
 	vector<vector<wstring>> diceImages;
 	// ============================================
+
+	// 遊戲結束時要做的判斷
+	// ============================================
+	bool isAllBankrupt();			// 是否n-1家都破產
+	int getRichestPlayer();         // 找最有錢的玩家id
 };
 
 struct RealEstate

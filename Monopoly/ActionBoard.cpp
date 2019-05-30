@@ -896,6 +896,36 @@ void ActionBoard::printAssignDiceWord(int cursorX, int cursorY, int mode, int di
 	wcout << L"～Ｅｎｔｅｒ　Ｔｏ　Ｃｈｏｏｓｅ～";
 }
 
+void ActionBoard::startingPointAnim() {
+	int frameWidth = width - 6;
+	int frameHeight = 9;
+	int cursorX = startX + 6;
+	int cursorY = startY + length / 2 - frameHeight / 2;
+
+	wstring upperLine = L"由於經過起點";
+	wstring lowerLine = L"因此獲得　＄５０００元";
+
+	printFrame(); // 清空actionBoard
+	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"起點紅利"); // 印出提示視窗
+	for (int i = 0; i < upperLine.length(); i++) { // 印出提示視窗的字
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 2); // 一個全形字佔據2個x
+		wcout << upperLine[i];
+		Sleep(100);
+	}
+	for (int i = 0; i < lowerLine.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 4);
+		wcout << lowerLine[i];
+		Sleep(100);
+	}
+	wstring tailTip = L"~Ｅｎｔｅｒ　Ｔｏ　Ｃｏｎｔ~";
+	for (int i = 0; i < tailTip.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 6);
+		wcout << tailTip[i];
+
+	}
+	pressEnterKeyToContinue();
+}
+
 // 購置/升級房產提示
 void ActionBoard::moneyInefficientAnim(int mode) {
 	int frameWidth = width - 6;
@@ -1041,6 +1071,7 @@ void ActionBoard::sellOutMenu(Player & player) {
 	int mode = 0;
 	printFrame();
 	sellOutWord(mode);
+	tailTip(L"～欠款　＄" + to_wstring(abs(player.cash)) + L"元～");
 	while (player.cash < 0)
 	{
 
@@ -1072,7 +1103,10 @@ void ActionBoard::sellOutMenu(Player & player) {
 				else if (mode == 1) {
 					//  
 				}
+				printFrame(); // 跳出賣版時，要清空畫面
+				GameWorld::gameBoard.printPlayerAsset(); // 即時更新玩家資產
 				sellOutWord(mode);
+				tailTip(L"～欠款　＄" + to_wstring(abs(player.cash)) + L"元～");
 			}
 		}
 	}
@@ -1092,6 +1126,7 @@ void ActionBoard::sellOutWord(int selectedIndex)
 		wcout << sellList[i];
 	}
 	Monopoly::setColor();
+	
 }
 // 支付過路費提示
 void ActionBoard::payTollAnim(wstring houseName, int toll) {
@@ -1122,6 +1157,50 @@ void ActionBoard::payTollAnim(wstring houseName, int toll) {
 		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 6);
 		wcout << tailTip[i];
 
+	}
+	pressEnterKeyToContinue();
+}
+// ===============================================
+
+// ===============================================
+// 骰子階段的動畫、提示視窗
+// ===============================================
+void ActionBoard::winBoard(int mode, Player &player) {
+	int frameWidth = width - 6;
+	int frameHeight = 9;
+	int cursorX = startX + 6;
+	int cursorY = startY + length / 2 - frameHeight / 2;
+
+	printFrame(); // 清空actionBoard
+	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"勝利"); // 印出提示視窗
+	
+	wstring upperLine, lowerLine;
+	
+
+	if (mode == 0) { // 金錢最多
+		upperLine = L"由於　玩家" + to_wstring(player.id) + L"　擁有最多資產";
+		lowerLine = L"因此　玩家" + to_wstring(player.id) + L"　勝利！！！";
+	}
+	else if (mode == 1) { // 其他家破產
+		upperLine = L"由於　其他家全數破產";
+		lowerLine = L"因此　玩家" + to_wstring(player.id) + L"勝利！！！";
+	}
+
+
+	for (int i = 0; i < upperLine.length(); i++) { // 印出提示視窗的字
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 2); // 一個全形字佔據2個x
+		wcout << upperLine[i];
+		Sleep(100);
+	}
+	for (int i = 0; i < lowerLine.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 4);
+		wcout << lowerLine[i];
+		Sleep(100);
+	}
+	wstring tailTip = L"~Ｅｎｔｅｒ　Ｔｏ　Ｆｉｎｉｓｈ~";
+	for (int i = 0; i < tailTip.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 6);
+		wcout << tailTip[i];
 	}
 	pressEnterKeyToContinue();
 }
