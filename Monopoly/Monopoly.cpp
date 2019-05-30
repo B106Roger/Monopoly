@@ -98,6 +98,9 @@ void Monopoly::monopolyLoop()
 					// Exit，break
 					break;
 				}
+				clearFrame();
+				printArt();
+				printBoard(boardX, boardY);
 			}
 			// 按下方向鍵後
 			else if (ch == 224)

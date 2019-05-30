@@ -116,7 +116,10 @@ int Bank::soldStock(Player & player, vector<int>numberOfStock)
 }
 
 void Bank::bankruptStock(int playerState) {
-	stockOwnerList[playerState].clear();
+	for (StockRecord & ref : stockOwnerList[playerState])
+	{
+		ref.number = 0;
+	}
 }
 
 // 計算玩家資產
