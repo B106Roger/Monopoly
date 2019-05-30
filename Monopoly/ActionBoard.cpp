@@ -1043,6 +1043,7 @@ void ActionBoard::sellOutMenu(Player & player) {
 	sellOutWord(mode);
 	while (player.cash < 0)
 	{
+
 		if (_kbhit())
 		{
 			int ch = _getch();
@@ -1071,6 +1072,7 @@ void ActionBoard::sellOutMenu(Player & player) {
 				else if (mode == 1) {
 					//  
 				}
+				sellOutWord(mode);
 			}
 		}
 	}

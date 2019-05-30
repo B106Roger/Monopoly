@@ -383,7 +383,7 @@ void GameWorld::playerLocation() {
 			}
 		}
 	}
-	else if (house.ownerId != playerState) { // 走到其他人的地時(上面已經濾掉無人地情況)
+	else if (house.ownerId != playerState && house.position != 0) { // 走到其他人的地時(上面已經濾掉無人地情況)
 
 		wstring houseName = gameMap[playerList[playerState].playerPosition].name; // 房產名
 
