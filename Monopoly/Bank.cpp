@@ -115,6 +115,9 @@ int Bank::soldStock(Player & player, vector<int>numberOfStock)
 	return total;
 }
 
+void Bank::bankruptStock(int playerState) {
+	stockOwnerList[playerState].clear();
+}
 
 // 計算玩家資產
 int Bank::computePlayerAsset(Player & pl)

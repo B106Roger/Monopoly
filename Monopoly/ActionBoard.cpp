@@ -2,6 +2,7 @@
 #include"Monopoly.h"
 #include"Bank.h"
 
+
 ActionBoard::ActionBoard()
 {
 }
@@ -337,6 +338,7 @@ void ActionBoard::printPlayerInfoHouse(int playerId, int indexY, int lineHeight,
 
 	for (int i = 0; i < GameWorld::gameMap.size(); i++) {
 		if (GameWorld::gameMap[i].ownerId == playerId) {
+
 			wstring name = GameWorld::gameMap[i].name;
 			int blockId = GameWorld::gameMap[i].position;
 			int price = GameWorld::gameMap[i].buyCost;
@@ -1004,6 +1006,123 @@ void ActionBoard::printBuyOrNotWord(int cursorX, int cursorY, bool mode, int lan
 	Monopoly::setColor();
 	wcout << L"～Ｅｎｔｅｒ　Ｔｏ　Ｃｈｏｏｓｅ～";
 }
+void ActionBoard::bankruptcyAnim() {
+
+	wstring upperLine = L"由於總資產付不起";
+	wstring lowerLine = L"因此宣告破產";
+
+
+	int frameWidth = width - 6;
+	int frameHeight = 9;
+	int cursorX = startX + 6;
+	int cursorY = startY + length / 2 - frameHeight / 2;
+
+	printFrame(); // 清空actionBoard
+	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"破產"); // 印出提示視窗
+	for (int i = 0; i < upperLine.length(); i++) { // 印出提示視窗的字
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 2); // 一個全形字佔據2個x
+		wcout << upperLine[i];
+		Sleep(100);
+	}
+	for (int i = 0; i < lowerLine.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 4);
+		wcout << lowerLine[i];
+		Sleep(100);
+	}
+	wstring tailTip = L"~Ｅｎｔｅｒ　Ｔｏ　Ｃｏｎｔ~";
+	for (int i = 0; i < tailTip.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 6);
+		wcout << tailTip[i];
+
+	}
+	pressEnterKeyToContinue();
+}
+void ActionBoard::sellOutMenu(Player & player) {
+	int mode = 0;
+	printFrame();
+	sellOutWord(mode);
+	while (player.cash < 0)
+	{
+		if (_kbhit())
+		{
+			int ch = _getch();
+			if (ch == 224)
+			{
+				ch = _getch();
+
+				if (ch == 80)         // 按下
+				{
+					++mode;
+					mode == int(getSellList().size()) ? mode = 0 : 0;
+				}
+				else if (ch == 72)    // 按上
+				{
+					--mode;
+					mode == -1 ? mode = int(getSellList().size()) - 1 : 0;
+				}
+				sellOutWord(mode);
+			}
+			else if (ch == '\r')
+			{
+				if (mode == 0) {
+					vector<int> numberOfStock = printSellStock();
+					player.cash += GameWorld::bank.soldStock(player, numberOfStock);
+				}
+				else if (mode == 1) {
+					//  
+				}
+			}
+		}
+	}
+}
+void ActionBoard::sellOutWord(int selectedIndex)
+{
+	const int gapX = 6, gapY = 6;
+	const int menuX = startX + gapX * 2, menuY = startY + gapY;
+	const int menuW = width - 2 * gapX, menuL = 3;
+	const vector<wstring> & sellList = getSellList();
+	for (int i = 0; i < int(sellList.size()); i++)
+	{
+		printFrame(menuX, menuY + i * (menuL - 1), menuW, menuL);
+		if (selectedIndex == i) Monopoly::setColor(0, 7);
+		else Monopoly::setColor();
+		Monopoly::setCursor(menuX + 4, menuY + i * (menuL - 1) + 1);
+		wcout << sellList[i];
+	}
+	Monopoly::setColor();
+}
+// 支付過路費提示
+void ActionBoard::payTollAnim(wstring houseName, int toll) {
+
+	wstring upperLine = L"由於經過　" + houseName;
+	wstring lowerLine = L"因此支付過路費　＄" + to_wstring(toll) + L"元";
+
+
+	int frameWidth = width - 6;
+	int frameHeight = 9;
+	int cursorX = startX + 6;
+	int cursorY = startY + length / 2 - frameHeight / 2;
+
+	printFrame(); // 清空actionBoard
+	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"過路費"); // 印出提示視窗
+	for (int i = 0; i < upperLine.length(); i++) { // 印出提示視窗的字
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 2); // 一個全形字佔據2個x
+		wcout << upperLine[i];
+		Sleep(100);
+	}
+	for (int i = 0; i < lowerLine.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 4);
+		wcout << lowerLine[i];
+		Sleep(100);
+	}
+	wstring tailTip = L"~Ｅｎｔｅｒ　Ｔｏ　Ｃｏｎｔ~";
+	for (int i = 0; i < tailTip.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 6);
+		wcout << tailTip[i];
+
+	}
+	pressEnterKeyToContinue();
+}
 // ===============================================
 
 
@@ -1077,5 +1196,15 @@ const vector<wstring>& ActionBoard::getActionList()
 		L"賣股票",
 		L"擲骰子"
 	});
+	return actionList;
+}
+
+// 賣資產付過路費的選單
+const vector<wstring>& ActionBoard::getSellList()
+{
+	static const vector<wstring> actionList({
+		L"賣股票",
+		L"賣房產",
+		});
 	return actionList;
 }

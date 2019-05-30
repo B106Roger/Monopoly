@@ -39,9 +39,11 @@ private:
 	void diceStage();
 	void playDiceAni(int diceNum, bool playAni);
 	void playerWalkAni(int distance);
-	void playerLocation();
+	void playerLocation();		// 判斷玩家所在位置與對應動作
 	void drawAChance();			// 走到機會時呼叫
 	void drawADestiny();			// 走到命運時呼叫
+	void bankruptcy();          // 破產時，將房產清
+	bool isAllBankrupt();			// 如果
 	vector<vector<wstring>> diceImages;
 	// ============================================
 };

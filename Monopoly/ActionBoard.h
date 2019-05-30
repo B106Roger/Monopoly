@@ -4,7 +4,7 @@
 #include<iostream>
 #include<vector>
 #include<string>
-
+#include "Player.h"
 
 using namespace std;
 class ActionBoard
@@ -33,11 +33,18 @@ public:
 	// 骰子階段的動畫、提示視窗
 	// ===============================================
 	void stopRoundAnim(wstring = L"因暫停回合無法移動", wstring = L"輪到下一家"); // 無法移動提示
+
 	int assignDiceNumber(); // 是否要用遙控骰子提示 // 0：不使用／1-6：使用
 	void printAssignDiceWord(int cursorX, int cursorY, int mode, int diceNumber); // helper function
+
 	void moneyInefficientAnim(int mode); // 現金不足提示
 	bool buyOrNot(int landMode, wstring subTitle); // 購置/升級房產選單
 	void printBuyOrNotWord(int cursorX, int cursorY, bool mode, int landMode, wstring subTitle); // helper function
+
+	void bankruptcyAnim(); // 破產提示
+	void sellOutMenu(Player & player); // 賣資產付過路費選單
+	void sellOutWord(int selectedIndex); // 選單上的字
+	void payTollAnim(wstring houseName, int toll);
 	// ===============================================
 	
 	// ===============================================
@@ -50,7 +57,7 @@ public:
 
 private:
 	const vector<wstring>& getActionList();
-
+	const vector<wstring>& getSellList();
 	// ============================================
 	// 玩家資訊的板子
 	// ============================================
