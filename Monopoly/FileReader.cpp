@@ -232,7 +232,7 @@ void FileReader::saveFile()
 		{
 			location.insert(0, 1, L'0');
 		}
-		out << location << L" " << ref.name << L" ";
+		out << location << L" " << ref.name << L" " << to_wstring(ref.type) << L" ";
 		if (ref.type == 1)
 		{
 			out << to_wstring(ref.buyCost) << L" ";
