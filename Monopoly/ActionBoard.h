@@ -5,6 +5,7 @@
 #include<vector>
 #include<string>
 
+
 using namespace std;
 class ActionBoard
 {
@@ -12,7 +13,7 @@ public:
 	ActionBoard();
 	const int startX = 100;
 	const int startY = 0;
-	const int width = 30;
+	const int width = 28;
 	const int length = 33;
 
 	int getMenuOption();
@@ -28,6 +29,18 @@ public:
 	void printChance(int index);	// 印出機會
 	void printDestiny(int index);	// 印出命運
 	int printWithdrawDeposit(bool isWithdraw);    // 印出存款提款介面
+
+	// ===============================================
+	// 骰子階段的動畫、提示視窗
+	// ===============================================
+	void stopRoundAnim(wstring = L"因暫停回合無法移動", wstring = L"輪到下一家"); // 無法移動提示
+	int assignDiceNumber(); // 是否要用遙控骰子提示 // 0：不使用／1-6：使用
+	void printAssignDiceWord(int cursorX, int cursorY, int mode, int diceNumber); // helper function
+	void moneyInefficientAnim(int mode); // 現金不足提示
+	bool buyOrNot(int landMode, wstring subTitle); // 購置/升級房產選單
+	void printBuyOrNotWord(int cursorX, int cursorY, bool mode, int landMode, wstring subTitle); // helper function
+	// ===============================================
+	
 	~ActionBoard();
 
 private:
@@ -52,4 +65,6 @@ private:
 
 	void headerTip(wstring); // 標頭
 	void tailTip(wstring = L"←　Ｅｎｔｅｒ　→"); // 頁尾
+	void pressEnterKeyToContinue();
+	void pressAnyKeyToContinue();
 };
