@@ -196,14 +196,14 @@ void ActionBoard::printDestiny(int index)
 {
 	printFrame();
 	Monopoly::setCursor(startX + 8, startY + 5);
-	wcout << (L"----------你抽到的命運是----------");
+	wcout << (L"－－－－－－－你抽到的命運是－－－－－－－");
 	Monopoly::setCursor(startX + 8, startY + 7);
 	wstring message = GameWorld::destinyList[index].message;
 	if (message.size() > 21) {
 		for (int i = 0; i < 21; i++)
 			wcout << message[i];
 		Monopoly::setCursor(startX + 8, startY + 8);
-		for (int i = 0; i < message.size(); i++)
+		for (int i = 21; i < message.size(); i++)
 			wcout << message[i];
 	}
 	else

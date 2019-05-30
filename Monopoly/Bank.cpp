@@ -19,7 +19,11 @@ void Bank::stockUpate()
 {
 	for (int i = 0; i < stockList.size(); i++) {
 		stockList[i].previousDollars = stockList[i].currentDollars;
-		stockList[i].currentDollars = (1.0 + -rand() % 100 / 1000.0) * stockList[i].currentDollars;
+		bool sign = rand() % 2;
+		if(sign)
+			stockList[i].currentDollars = (1.0 + rand() % 100 / 1000.0) * stockList[i].currentDollars;
+		else 
+			stockList[i].currentDollars = (1.0 + -rand() % 100 / 1000.0) * stockList[i].currentDollars;
 	}
 }
 
