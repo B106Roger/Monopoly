@@ -69,8 +69,14 @@ void FileReader::readAndSetData()
 				GameWorld::bank.stockOwnerList.push_back(vector<StockRecord>());
 			}
 			// 取得玩家存款股票資訊
-			if (getline(in,line))
+			wstring bankString;
+
+			
+
+			if (in >> bankString)
 			{
+				in.get();//去除\n 字元
+
 				for (int i = 0; i < numberOfPlayer; i++)
 				{
 					int playerId, balance,stockId;
