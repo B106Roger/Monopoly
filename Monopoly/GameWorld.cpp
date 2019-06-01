@@ -116,69 +116,34 @@ void GameWorld::gameStart()
 		}
 		case 6:                       // 擲骰子
 		{
-			diceStage(); // 
-			
-			// 用prev > cur player 當作更新點
+			diceStage();
 
-			// Step1：找出最後一個玩家
+			// 不太可能發生的code，理論上可以刪了他
+			if (playerAmount == 1 && isAllBankrupt()) {
+				actionBoard.loseBoard();// 顯示玩家失敗的提示
+				gameFinish = true;// 跳出遊戲迴圈
+				break;
+			} // Warning：搬到下面會infinite loop
 
-			int previousPlayer = playerState;
-			int currentPlayer;
-
-			playerState++;
-			playerState %= playerAmount;
-
-			while (playerList[playerState].id == -1) { // 不考慮全部人都破產的情形
+			do {
 				playerState++;
-				playerState %= playerAmount;
-			}
-			currentPlayer = playerState;
-
+				if (playerState == playerAmount) { // 用尾部判斷更新
+					playerState %= playerAmount;
+					bank.stockUpate();
+					updateObstacle();
+					reamainRound--;
+				}
+			} while (playerList[playerState].id == -1);
 			
-			if (isAllBankrupt()) { // 破產
-				if (playerAmount == 1) { // 一人遊玩，破產
-					// 顯示玩家失敗的提示
-					gameFinish = true;// 跳出遊戲迴圈
-				}
-				else { // 多人遊玩，一人存活
-					actionBoard.winBoard(1, playerList[playerState]);// 顯示玩家勝利的提示
-					gameFinish = true;// 跳出遊戲迴圈
-				}
-				
+			if (isAllBankrupt()) { // 其他家都破產
+				actionBoard.winBoard(1, playerList[playerState]);// 顯示玩家勝利的提示
+				gameFinish = true;// 跳出遊戲迴圈
 			}
-			else if (playerAmount == 1) { // 一人遊玩情況
-				if (reamainRound == 1) { // 20回結束
-					reamainRound = 0;
-					actionBoard.winBoard(0, playerList[playerState]);// 結束遊戲，顯示勝利
-					gameFinish = true;// 跳出遊戲迴圈
-				}
-				else { // 還沒結束
-					bank.stockUpate();
-					updateObstacle();
-					reamainRound--;
-				}
-			}
-			else if (previousPlayer > currentPlayer) { // 多人遊玩時，結束一輪時
-				if (reamainRound == 1) { // 20回結束
-					reamainRound = 0;
-					actionBoard.winBoard(0, playerList[getRichestPlayer()]);// 結束遊戲，顯示勝利
-					gameFinish = true;// 跳出遊戲迴圈
-				}
-				else { // 還沒結束
-					bank.stockUpate();
-					updateObstacle();
-					reamainRound--;
-				}
+			else if (reamainRound == 0) { // 20回結束
+				actionBoard.winBoard(0, playerList[getRichestPlayer()]);// 結束遊戲，顯示勝利
+				gameFinish = true;// 跳出遊戲迴圈
 			}
 
-			/*playerState++;
-			int playerAmount = playerList.size();
-
-			playerState %= playerAmount;
-			if (playerState == 0) // 代處理0號破產情況
-			{
-				bank.stockUpate();
-			}*/
 			break;
 		}
 		case -1:

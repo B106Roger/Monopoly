@@ -35,12 +35,8 @@ public:
 	static void getChanceList();
 	static void getDestinyList();
 private:
-	// 更新路障
-	void updateObstacle();
 
-
-
-	// 選擲骰子之後的動作
+	// 擲骰子階段
 	// ============================================
 	void diceStage();
 	void playDiceAni(int diceNum, bool playAni);
@@ -52,6 +48,9 @@ private:
 	
 	vector<vector<wstring>> diceImages;
 	// ============================================
+
+	// 更新路障
+	void updateObstacle();
 
 	// 遊戲結束時要做的判斷
 	// ============================================
