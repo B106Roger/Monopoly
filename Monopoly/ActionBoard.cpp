@@ -1,6 +1,7 @@
 ﻿#include "ActionBoard.h"
 #include"Monopoly.h"
 #include"Bank.h"
+using namespace std;
 
 ActionBoard::ActionBoard()
 {
@@ -351,7 +352,135 @@ void ActionBoard::printPlayerInfoHouse(int playerId, int indexY, int lineHeight,
 
 	// 頁底提示按鈕
 	tailTip();
-};
+}
+// =================================變賣房地產===========================================
+vector<int> ActionBoard::sellRealEstate()
+{	
+	// 清空actionBoard
+	printFrame();
+	//找出目前玩家的所有房產ID
+	vector<int> ownedHouseID, soldHouseID;
+	for (int i = 0; i < GameWorld::gameMap.size(); i++) {
+		if (GameWorld::gameMap[i].ownerId == GameWorld::playerState)
+			ownedHouseID.push_back(i);
+	}
+	// 紀錄是否出售，預設為否
+	vector<bool> sellOrNot(ownedHouseID.size(), 0);
+	int indexX = 2, indexY = 2, lineHeight = 2;
+	headerTip(L"－－－－－－－－－－你的房產－－－－－－－－－－");
+	int indent = 1; // 要縮排幾格(全形字)
+	Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
+	wcout << L"房產名稱";
+	Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
+	wcout << L"房產地段";
+	Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
+	wcout << L"房產等級";
+	Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
+	wcout << L"抵押價";
+	Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indexY += lineHeight;// sub-header
+	wcout << L"賣出";
+	int index = 0;
+	printRealEstate(ownedHouseID, index, sellOrNot);
+	int houseListSize = (int)ownedHouseID.size();
+	while (true)
+	{
+		if (_kbhit())
+		{
+			int ch = _getch();
+			if (ch == 224)
+			{
+				ch = _getch();
+				if (ch == 80)          // 按下
+				{
+					++index;
+					index == houseListSize ? (index = 0) : 0;
+					printRealEstate(ownedHouseID, index, sellOrNot);
+				}
+				else if (ch == 72)     // 按上
+				{
+					--index;
+					index == -1 ? (index = houseListSize - 1) : 0;
+					printRealEstate(ownedHouseID, index, sellOrNot);
+				}
+				else if (ch == 77) {	// 按右
+					if (sellOrNot[index] == 1) {
+						sellOrNot[index] = 0;
+						printRealEstate(ownedHouseID, index, sellOrNot);
+					}
+				}
+				else if (ch == 75) {	// 按左
+					if (sellOrNot[index] == 0) {
+						sellOrNot[index] = 1;
+						printRealEstate(ownedHouseID, index, sellOrNot);
+					}
+				}
+			}
+			else if (ch == '\r')
+			{
+				for (int i = 0; i < sellOrNot.size(); i++) {
+					if (sellOrNot[i])
+						soldHouseID.push_back(ownedHouseID[i]);
+				}
+				return soldHouseID;
+				break;
+			}
+		}
+	}
+}
+
+void ActionBoard::printRealEstate(vector<int> ownedHouseId, int index, vector<bool> sell) {
+	// 顯示檔案名稱寬度
+	int houseListSize = (int)ownedHouseId.size();
+	// 最多顯示房產名稱
+	int maxPrint = 6;
+	// 決定顯示房產名稱的index
+	int start = 0, end = houseListSize, displayIndex = 0;
+	for (; start < end; start += maxPrint)
+	{
+		if (start <= index && index < start + maxPrint)
+		{
+			end = start + maxPrint;
+			break;
+		}
+	}
+	int indexX = 2, indexY = 2, lineHeight = 2;
+	indexY += lineHeight; // header
+	for (; start < end; start++, displayIndex++)
+	{
+		Monopoly::setColor();
+		// 清空欄位
+		Monopoly::setCursor(startX + 4, startY + 2 + indexY + displayIndex);
+		wcout << wstring(width - 3, L'　');
+		// index指到的資訊整欄反白
+		index == start ? Monopoly::setColor(0, 15) : Monopoly::setColor();
+		if (start < houseListSize)
+		{
+			int indent = 1; // 要縮排幾格(全形字)
+			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY + displayIndex); indent += 5;
+			wcout << GameWorld::gameMap[ownedHouseId[start]].name;
+			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY + displayIndex); indent += 5;
+			wcout << GameWorld::gameMap[ownedHouseId[start]].position;
+			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY + displayIndex); indent += 5;
+			wcout << GameWorld::gameMap[ownedHouseId[start]].level;
+			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY + displayIndex); indent += 5;
+			wcout << GameWorld::gameMap[ownedHouseId[start]].mortgageRealEstate();
+			// 印出是/否，必要時反白
+			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY + displayIndex); indent += 5;
+			if (!sell[displayIndex]) {
+				Monopoly::setColor();
+				wcout << L"是／";
+				Monopoly::setColor(0, 15);
+				wcout << L"否";
+			}
+			else {
+				Monopoly::setColor(0, 15);
+				wcout << L"是";
+				Monopoly::setColor();
+				wcout << L"／否";
+			}
+		}
+	}
+}
 // ========================================================================
 
 void ActionBoard::headerTip(wstring tip) {
@@ -360,7 +489,7 @@ void ActionBoard::headerTip(wstring tip) {
 };
 
 void ActionBoard::tailTip(wstring tip) {
-	Monopoly::setCursor(startX + width / 2, startY + length - 2);
+	Monopoly::setCursor(startX + 18, startY + length - 2);
 	wcout << tip;
 }
 
@@ -397,23 +526,23 @@ void ActionBoard::pressAnyKeyToContinue() {
 void ActionBoard::printStock()
 {
 	printFrame();
-	Monopoly::setCursor(startX + 8, startY + 4);
+	Monopoly::setCursor(startX + 4, startY + 4);
 	wcout << setw(6) << L"公司" << setw(6) << L"上次價格" << setw(6) << L"本日價格" << setw(5) << L"脹/跌" << endl;
 	for (int i = 0; i < Bank::stockList.size(); i++) {
-		Monopoly::setCursor(startX + 8, startY + 5 + 2 * i);
-		wcout << setw(4) << Bank::stockList[i].name << L"|";
-		wcout << setw(9) << Bank::stockList[i].previousDollars << L"|";
-		wcout << setw(9) << Bank::stockList[i].currentDollars << L"|";
+		Monopoly::setCursor(startX + 4, startY + 6 + 2 * i);
+		wcout << setw(6) << Bank::stockList[i].name;
+		cout << setw(12) << Bank::stockList[i].previousDollars;
+		cout << setw(12) << Bank::stockList[i].currentDollars;
 		if (Bank::stockList[i].currentDollars > Bank::stockList[i].previousDollars) {
 			Monopoly::setColor(2, 0);
-			wcout << setw(5) << L"↑" << endl;
+			wcout << setw(4) << L"↑" << endl;
 		}
 		else if (Bank::stockList[i].currentDollars < Bank::stockList[i].previousDollars) {
 			Monopoly::setColor(4, 0);
-			wcout << setw(5) << L"↓" << endl;
+			wcout << setw(4) << L"↓" << endl;
 		}
 		else
-			wcout << setw(5) << L"-" << endl;
+			wcout << setw(4) << L"-" << endl;
 		Monopoly::setColor();
 	}
 	tailTip();
@@ -543,6 +672,8 @@ vector<int> ActionBoard::printBuyStock()
 		}
 	}
 }
+// 印出出售股票介面
+// ========================================================================
 vector<int> ActionBoard::printSellStock()
 {
 	printFrame();                     // 清空ActionBoard

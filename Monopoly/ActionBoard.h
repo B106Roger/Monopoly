@@ -40,6 +40,7 @@ public:
 	bool buyOrNot(int landMode, wstring subTitle); // 購置/升級房產選單
 	void printBuyOrNotWord(int cursorX, int cursorY, bool mode, int landMode, wstring subTitle); // helper function
 	// ===============================================
+	vector<int> sellRealEstate();
 	
 	~ActionBoard();
 
@@ -54,7 +55,9 @@ private:
 	void printPlayerInfoStock(int playerId, int indexY, int lineHeight, int indexX);// 玩家股票資訊(含標頭、尾)
 	void printPlayerInfoHouse(int playerId, int indexY, int lineHeight, int indexX);// 玩家房產資訊(含標頭、尾)
 	// ============================================
+	// 付不起過路費後賣房產
 
+	void printRealEstate(vector<int>, int, vector<bool>);
 	// ============================================
 	// 印出一種股票名稱及購買數量
 	// ============================================

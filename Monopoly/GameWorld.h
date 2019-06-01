@@ -63,11 +63,8 @@ struct RealEstate
 	vector<int> tolls; // 過路費(一律給現金)
 	int level;         // 物產等級 0 ~ 3
 	vector<double> rate;
-
 	int mortgageRealEstate()
 	{
-		ownerId = -1;
-		level = 0;
 		int returnVal = buyCost;
 		for (int i = 0; i < level; i++)
 		{
