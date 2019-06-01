@@ -3,6 +3,7 @@
 #include"Bank.h"
 using namespace std;
 
+
 ActionBoard::ActionBoard()
 {
 }
@@ -58,9 +59,13 @@ void ActionBoard::printFrame()
 // 印出選菜單
 void ActionBoard::printMenu(int selectedIndex)
 {
+	// ActionBoard跟選單的X軸,Y軸的距離 (單位寬字元)
 	const int gapX = 6, gapY = 6;
+	// Menu的X,Y軸位置
 	const int menuX = startX + gapX*2, menuY = startY + gapY;
+	// Menu的長寬 (單位寬字元)
 	const int menuW = width - 2 * gapX, menuL = 3;
+
 	const vector<wstring> & actionList = getActionList();
 	for (int i = 0; i < int(actionList.size()); i++)
 	{
@@ -71,7 +76,7 @@ void ActionBoard::printMenu(int selectedIndex)
 		wcout << actionList[i];
 	}
 	Monopoly::setColor();
-} 
+}
 
 // 讓使用者選擇菜單
 int ActionBoard::getMenuOption()
@@ -104,6 +109,10 @@ int ActionBoard::getMenuOption()
 			{
 				return mode;
 			}
+			else if (ch == 27)
+			{
+				return -1;
+			}
 		}
 	}
 }
@@ -116,7 +125,7 @@ void ActionBoard::printPlayerInfo() {
 	// 因為不會更新全部actionBoard，所以手動刷新
 	printFrame();
 	int infoMode = 0;
-	
+
 	int playerId = GameWorld::playerState;// 取得當前玩家為誰
 	int indexY = 0; // cursor y position，一路向下++
 	int lineHeight = 2; // 行間距，目前 間隔一個 + 自己本行 = 2
@@ -136,7 +145,7 @@ void ActionBoard::printPlayerInfo() {
 
 				if (ch == 75)         // 按左
 				{
-					
+
 					if (infoMode != 0) {
 						infoMode--;
 						printFrame();
@@ -145,7 +154,7 @@ void ActionBoard::printPlayerInfo() {
 				}
 				else if (ch == 77)    // 按右
 				{
-					
+
 					if (infoMode != 2) {
 						infoMode++;
 						printFrame();
@@ -330,6 +339,7 @@ void ActionBoard::printPlayerInfoHouse(int playerId, int indexY, int lineHeight,
 
 	for (int i = 0; i < GameWorld::gameMap.size(); i++) {
 		if (GameWorld::gameMap[i].ownerId == playerId) {
+
 			wstring name = GameWorld::gameMap[i].name;
 			int blockId = GameWorld::gameMap[i].position;
 			int price = GameWorld::gameMap[i].buyCost;
@@ -355,7 +365,7 @@ void ActionBoard::printPlayerInfoHouse(int playerId, int indexY, int lineHeight,
 }
 // =================================變賣房地產===========================================
 vector<int> ActionBoard::sellRealEstate()
-{	
+{
 	// 清空actionBoard
 	printFrame();
 	//找出目前玩家的所有房產ID
@@ -526,23 +536,39 @@ void ActionBoard::pressAnyKeyToContinue() {
 void ActionBoard::printStock()
 {
 	printFrame();
+	headerTip(L"---------------證券交易所---------------");
 	Monopoly::setCursor(startX + 4, startY + 4);
-	wcout << setw(6) << L"公司" << setw(6) << L"上次價格" << setw(6) << L"本日價格" << setw(5) << L"脹/跌" << endl;
+	wcout.fill(L'　');
+	wcout << setw(4) << L"公司" << setw(6) << L"上次價格" << setw(6) << L"本日價格" << setw(5) << L"脹／跌"; // 空兩格
 	for (int i = 0; i < Bank::stockList.size(); i++) {
 		Monopoly::setCursor(startX + 4, startY + 6 + 2 * i);
-		wcout << setw(6) << Bank::stockList[i].name;
-		cout << setw(12) << Bank::stockList[i].previousDollars;
-		cout << setw(12) << Bank::stockList[i].currentDollars;
+		wcout.width(4);
+		wcout.fill(L'　');
+		wcout << Bank::stockList[i].name;
+		wcout.width(12);
+		wcout.fill(L' ');
+		wcout << to_wstring(Bank::stockList[i].previousDollars);
+		wcout.width(12);
+		wcout.fill(L' ');
+		wcout << to_wstring(Bank::stockList[i].currentDollars);
+
+		wcout << L"　　";
+		wcout << setprecision(2) << fixed;
+		double percent = abs((static_cast<double>(Bank::stockList[i].currentDollars - Bank::stockList[i].previousDollars) / Bank::stockList[i].previousDollars) * 100);
 		if (Bank::stockList[i].currentDollars > Bank::stockList[i].previousDollars) {
-			Monopoly::setColor(2, 0);
-			wcout << setw(4) << L"↑" << endl;
+			Monopoly::setColor(4, 0);
+			if (percent >= 10) wcout << L"漲停板" << L"　↑";
+			else wcout << L"+" << percent << L"%　↑";
 		}
 		else if (Bank::stockList[i].currentDollars < Bank::stockList[i].previousDollars) {
-			Monopoly::setColor(4, 0);
-			wcout << setw(4) << L"↓" << endl;
+			Monopoly::setColor(2, 0);
+			if (percent >= 10.0) wcout << L"跌停板" << L"　↓";
+			else wcout << L"-" << percent << L"%　↓";
 		}
-		else
-			wcout << setw(4) << L"-" << endl;
+		else {
+			wcout << L"－";
+		}
+
 		Monopoly::setColor();
 	}
 	tailTip();
@@ -555,7 +581,7 @@ void ActionBoard::printStock()
 				printFrame();
 				return;
 			}
-				
+
 		}
 	}
 
@@ -584,7 +610,7 @@ vector<int> ActionBoard::printBuyStock()
 	wcout << L"購買張數" << L'　';
 	wcout << L"　總價格" << L'　';
 	wcout << L"持有股數" << L'　';
-	
+
 	// 列印股票交易列表
 	indexY += 2;
 	int stockId = 0, previousId = 0;
@@ -612,7 +638,7 @@ vector<int> ActionBoard::printBuyStock()
 		{
 			int ch = _getch();
 			// 方向鍵操控數量
-			if (ch == 224)   
+			if (ch == 224)
 			{
 				ch = _getch();
 				switch (ch)
@@ -712,7 +738,7 @@ vector<int> ActionBoard::printSellStock()
 		else
 			owned = 0;
 		numberOfOwnedStock[i] = owned;
-		wcout << L'　';						
+		wcout << L'　';
 		cout.width(4);
 		cout << owned;
 	}
@@ -800,7 +826,7 @@ void ActionBoard::printBuyStockNumber(int stockId, int number, int x, int y, boo
 	cout << number;
 	Monopoly::setColor();
 	wcout << L'→';
-	
+
 
 	wcout << L'　';
 	cout.width(8);
@@ -841,7 +867,7 @@ int ActionBoard::printWithdrawDeposit(bool isWithdraw)// 印出存款提款介�
 	}
 
 	Monopoly::setCursor(indexX + 6, indexY + 2);
-	
+
 		wcout << L"存款：" << ref.bankBalance << L"　　　" << L"現金：" << ref.cash;
 
 	int sizeOfDigit = 10;
@@ -852,7 +878,7 @@ int ActionBoard::printWithdrawDeposit(bool isWithdraw)// 印出存款提款介�
 
 	Monopoly::setCursor(indexX + 6, indexY + 4);
 	string number;
-	
+
 	while (true)
 	{
 		if (_kbhit())
@@ -898,7 +924,7 @@ void ActionBoard::stopRoundAnim(wstring upperLine, wstring lowerLine) {
 	int frameHeight = 9;
 	int cursorX = startX + 6;
 	int cursorY = startY + length / 2 - frameHeight / 2;
-	
+
 	printFrame(); // 清空actionBoard
 	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"暫停回合"); // 印出提示視窗
 	for (int i = 0; i < upperLine.length(); i++) { // 印出提示視窗的字
@@ -921,7 +947,7 @@ void ActionBoard::stopRoundAnim(wstring upperLine, wstring lowerLine) {
 }
 
 // 遙控骰子提示
-int ActionBoard::assignDiceNumber() { 
+int ActionBoard::assignDiceNumber() {
 	int frameWidth = width - 6;
 	int frameHeight = 9;
 	int cursorX = startX + 6;
@@ -932,7 +958,7 @@ int ActionBoard::assignDiceNumber() {
 
 	int mode = 0; // 使用骰子:不使用
 	int diceNumber = 1; // 指定點數
-	
+
 	printAssignDiceWord(cursorX, cursorY, mode, diceNumber);
 
 	while (true)
@@ -940,7 +966,7 @@ int ActionBoard::assignDiceNumber() {
 		if (_kbhit())
 		{
 			int ch = _getch();
-			// 
+			//
 			if (ch == 224)
 			{
 				ch = _getch();
@@ -948,7 +974,7 @@ int ActionBoard::assignDiceNumber() {
 				{
 				case 72: //上
 				{
-					if(mode != 0) mode--; 
+					if(mode != 0) mode--;
 					break;
 				}
 				case 80: //下
@@ -989,7 +1015,7 @@ void ActionBoard::printAssignDiceWord(int cursorX, int cursorY, int mode, int di
 
 	if (mode == 0) Monopoly::setColor(0, 15);
 	else Monopoly::setColor();
-	wcout << L"遙控骰子"; 
+	wcout << L"遙控骰子";
 
 	Monopoly::setColor();
 	wcout << L"　←";
@@ -1015,6 +1041,68 @@ void ActionBoard::printAssignDiceWord(int cursorX, int cursorY, int mode, int di
 	Monopoly::setCursor(cursorX + 4, cursorY + 6);
 	Monopoly::setColor();
 	wcout << L"～Ｅｎｔｅｒ　Ｔｏ　Ｃｈｏｏｓｅ～";
+}
+
+// 遇到路障動畫
+void ActionBoard::obstacleAnim() {
+	int frameWidth = width - 6;
+	int frameHeight = 9;
+	int cursorX = startX + 6;
+	int cursorY = startY + length / 2 - frameHeight / 2;
+
+	wstring upperLine = L"由於遇到路障";
+	wstring lowerLine = L"因此停在此地";
+
+	printFrame(); // 清空actionBoard
+	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"路障"); // 印出提示視窗
+	for (int i = 0; i < upperLine.length(); i++) { // 印出提示視窗的字
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 2); // 一個全形字佔據2個x
+		wcout << upperLine[i];
+		Sleep(100);
+	}
+	for (int i = 0; i < lowerLine.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 4);
+		wcout << lowerLine[i];
+		Sleep(100);
+	}
+	wstring tailTip = L"~Ｅｎｔｅｒ　Ｔｏ　Ｃｏｎｔ~";
+	for (int i = 0; i < tailTip.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 6);
+		wcout << tailTip[i];
+
+	}
+	pressEnterKeyToContinue();
+};
+
+// 起點+500動畫
+void ActionBoard::startingPointAnim() {
+	int frameWidth = width - 6;
+	int frameHeight = 9;
+	int cursorX = startX + 6;
+	int cursorY = startY + length / 2 - frameHeight / 2;
+
+	wstring upperLine = L"由於經過起點";
+	wstring lowerLine = L"因此獲得　＄５００元";
+
+	printFrame(); // 清空actionBoard
+	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"起點紅利"); // 印出提示視窗
+	for (int i = 0; i < upperLine.length(); i++) { // 印出提示視窗的字
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 2); // 一個全形字佔據2個x
+		wcout << upperLine[i];
+		Sleep(100);
+	}
+	for (int i = 0; i < lowerLine.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 4);
+		wcout << lowerLine[i];
+		Sleep(100);
+	}
+	wstring tailTip = L"~Ｅｎｔｅｒ　Ｔｏ　Ｃｏｎｔ~";
+	for (int i = 0; i < tailTip.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 6);
+		wcout << tailTip[i];
+
+	}
+	pressEnterKeyToContinue();
 }
 
 // 購置/升級房產提示
@@ -1067,7 +1155,7 @@ bool ActionBoard::buyOrNot(int landMode, wstring subTitle) {
 		if (_kbhit)
 		{
 			int ch = _getch();
-			// 
+			//
 			if (ch == 224)
 			{
 				ch = _getch();
@@ -1127,8 +1215,263 @@ void ActionBoard::printBuyOrNotWord(int cursorX, int cursorY, bool mode, int lan
 	Monopoly::setColor();
 	wcout << L"～Ｅｎｔｅｒ　Ｔｏ　Ｃｈｏｏｓｅ～";
 }
+void ActionBoard::bankruptcyAnim() {
+
+	wstring upperLine = L"由於總資產付不起";
+	wstring lowerLine = L"因此宣告破產";
+
+
+	int frameWidth = width - 6;
+	int frameHeight = 9;
+	int cursorX = startX + 6;
+	int cursorY = startY + length / 2 - frameHeight / 2;
+
+	printFrame(); // 清空actionBoard
+	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"破產"); // 印出提示視窗
+	for (int i = 0; i < upperLine.length(); i++) { // 印出提示視窗的字
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 2); // 一個全形字佔據2個x
+		wcout << upperLine[i];
+		Sleep(100);
+	}
+	for (int i = 0; i < lowerLine.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 4);
+		wcout << lowerLine[i];
+		Sleep(100);
+	}
+	wstring tailTip = L"~Ｅｎｔｅｒ　Ｔｏ　Ｃｏｎｔ~";
+	for (int i = 0; i < tailTip.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 6);
+		wcout << tailTip[i];
+
+	}
+	pressEnterKeyToContinue();
+}
+void ActionBoard::sellOutMenu(Player & player) {
+	int mode = 0;
+	printFrame();
+	sellOutWord(mode);
+	tailTip(L"～欠款　＄" + to_wstring(abs(player.cash)) + L"元～");
+	while (player.cash < 0)
+	{
+
+		if (_kbhit())
+		{
+			int ch = _getch();
+			if (ch == 224)
+			{
+				ch = _getch();
+
+				if (ch == 80)         // 按下
+				{
+					++mode;
+					mode == int(getSellList().size()) ? mode = 0 : 0;
+				}
+				else if (ch == 72)    // 按上
+				{
+					--mode;
+					mode == -1 ? mode = int(getSellList().size()) - 1 : 0;
+				}
+				sellOutWord(mode);
+			}
+			else if (ch == '\r')
+			{
+				if (mode == 0) {
+					vector<int> numberOfStock = printSellStock();
+					player.cash += GameWorld::bank.soldStock(player, numberOfStock);
+				}
+				else if (mode == 1) {
+					//
+				}
+				printFrame(); // 跳出賣版時，要清空畫面
+				GameWorld::gameBoard.printPlayerAsset(); // 即時更新玩家資產
+				sellOutWord(mode);
+				tailTip(L"～欠款　＄" + to_wstring(abs(player.cash)) + L"元～");
+			}
+		}
+	}
+}
+void ActionBoard::sellOutWord(int selectedIndex)
+{
+	const int gapX = 6, gapY = 6;
+	const int menuX = startX + gapX * 2, menuY = startY + gapY;
+	const int menuW = width - 2 * gapX, menuL = 3;
+	const vector<wstring> & sellList = getSellList();
+	for (int i = 0; i < int(sellList.size()); i++)
+	{
+		printFrame(menuX, menuY + i * (menuL - 1), menuW, menuL);
+		if (selectedIndex == i) Monopoly::setColor(0, 7);
+		else Monopoly::setColor();
+		Monopoly::setCursor(menuX + 4, menuY + i * (menuL - 1) + 1);
+		wcout << sellList[i];
+	}
+	Monopoly::setColor();
+
+}
+// 支付過路費提示
+void ActionBoard::payTollAnim(wstring houseName, int toll) {
+
+	wstring upperLine = L"由於經過　" + houseName;
+	wstring lowerLine = L"因此支付過路費　＄" + to_wstring(toll) + L"元";
+
+
+	int frameWidth = width - 6;
+	int frameHeight = 9;
+	int cursorX = startX + 6;
+	int cursorY = startY + length / 2 - frameHeight / 2;
+
+	printFrame(); // 清空actionBoard
+	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"過路費"); // 印出提示視窗
+	for (int i = 0; i < upperLine.length(); i++) { // 印出提示視窗的字
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 2); // 一個全形字佔據2個x
+		wcout << upperLine[i];
+		Sleep(100);
+	}
+	for (int i = 0; i < lowerLine.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 4);
+		wcout << lowerLine[i];
+		Sleep(100);
+	}
+	wstring tailTip = L"~Ｅｎｔｅｒ　Ｔｏ　Ｃｏｎｔ~";
+	for (int i = 0; i < tailTip.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 6);
+		wcout << tailTip[i];
+
+	}
+	pressEnterKeyToContinue();
+}
 // ===============================================
 
+// ===============================================
+// 骰子階段的動畫、提示視窗
+// ===============================================
+void ActionBoard::winBoard(int mode, Player &player) {
+	int frameWidth = width - 6;
+	int frameHeight = 9;
+	int cursorX = startX + 6;
+	int cursorY = startY + length / 2 - frameHeight / 2;
+
+	printFrame(); // 清空actionBoard
+	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"勝利"); // 印出提示視窗
+
+	wstring upperLine, lowerLine;
+
+
+	if (mode == 0) { // 金錢最多
+		upperLine = L"由於　玩家" + to_wstring(player.id) + L"　擁有最多資產";
+		lowerLine = L"因此　玩家" + to_wstring(player.id) + L"　勝利！！！";
+	}
+	else if (mode == 1) { // 其他家破產
+		upperLine = L"由於　其他家全數破產";
+		lowerLine = L"因此　玩家" + to_wstring(player.id) + L"勝利！！！";
+	}
+
+
+	for (int i = 0; i < upperLine.length(); i++) { // 印出提示視窗的字
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 2); // 一個全形字佔據2個x
+		wcout << upperLine[i];
+		Sleep(100);
+	}
+	for (int i = 0; i < lowerLine.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 4);
+		wcout << lowerLine[i];
+		Sleep(100);
+	}
+	wstring tailTip = L"~Ｅｎｔｅｒ　Ｔｏ　Ｆｉｎｉｓｈ~";
+	for (int i = 0; i < tailTip.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 6);
+		wcout << tailTip[i];
+	}
+	pressEnterKeyToContinue();
+}
+
+void ActionBoard::loseBoard() {
+	int frameWidth = width - 6;
+	int frameHeight = 9;
+	int cursorX = startX + 6;
+	int cursorY = startY + length / 2 - frameHeight / 2;
+
+	printFrame(); // 清空actionBoard
+	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"勝利"); // 印出提示視窗
+
+	wstring upperLine = L"玩家0 破產";
+	wstring lowerLine = L"個人賽挑戰失敗";
+
+	for (int i = 0; i < upperLine.length(); i++) { // 印出提示視窗的字
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 2); // 一個全形字佔據2個x
+		wcout << upperLine[i];
+		Sleep(100);
+	}
+	for (int i = 0; i < lowerLine.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 4);
+		wcout << lowerLine[i];
+		Sleep(100);
+	}
+	wstring tailTip = L"~Ｅｎｔｅｒ　Ｔｏ　Ｆｉｎｉｓｈ~";
+	for (int i = 0; i < tailTip.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 6);
+		wcout << tailTip[i];
+	}
+	pressEnterKeyToContinue();
+}
+// ===============================================
+
+
+// ===============================================
+// Esc Menu
+// ===============================================
+int ActionBoard::getEscOption()
+{
+	int mode = 0;
+	printFrame();       // 刷新actionBoard;
+	printEscMenu(mode); // 更新已選取選項位置
+	while (true) {
+		if (_kbhit())
+		{
+			int ch = _getch();
+			// 按下Enter鍵後
+			if (ch == '\r')
+			{
+				return mode;
+			}
+			// 按下方向鍵後
+			else if (ch == 224)
+			{
+				ch = _getch();
+				switch (ch)
+				{
+				case 72: // 上
+					if (mode == 0) mode = 2;
+					else mode--;
+					break;
+				case 80: // 下
+					if (mode == 2) mode = 0;
+					else mode++;
+					break;
+				};
+				printEscMenu(mode); // 更新已選取選項位置
+			}
+		}
+	}
+}
+void ActionBoard::printEscMenu(int mode)
+{
+	// Menu的X軸,Y軸的距離 (單位寬字元)
+	const int gapX = 6, gapY = 6;
+	// Menu的X,Y軸位置
+	const int menuX = startX + gapX * 2, menuY = startY + gapY;
+	// Menu的長寬 (單位寬字元)
+	const int menuW = width - 2 * gapX, menuL = 3;
+	vector<wstring> list = { L"繼續遊戲",L"儲存遊戲",L"回主選單" };
+	for (int i = 0; i < list.size(); i++)
+	{
+		printFrame(menuX, menuY + i * (menuL - 1), menuW, menuL);
+		if (mode == i) Monopoly::setColor(0, 7);
+		else Monopoly::setColor();
+		Monopoly::setCursor(menuX + 4, menuY + i * (menuL - 1) + 1);
+		wcout << list[i];
+	}
+	Monopoly::setColor();
+}
 
 
 // 遊戲中的選單
@@ -1143,5 +1486,15 @@ const vector<wstring>& ActionBoard::getActionList()
 		L"賣股票",
 		L"擲骰子"
 	});
+	return actionList;
+}
+
+// 賣資產付過路費的選單
+const vector<wstring>& ActionBoard::getSellList()
+{
+	static const vector<wstring> actionList({
+		L"賣股票",
+		L"賣房產",
+		});
 	return actionList;
 }

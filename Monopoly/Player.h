@@ -8,7 +8,7 @@ public:
 	Player();
 	~Player();
 	wstring name;				// 玩家名稱
-	int id;						// 玩家id
+	int id;						// 玩家id，-1：破產時為-1
 	int cash;					// 玩家現金
 	int bankBalance;			// 玩家存款
 	int stopRound;				// 玩家停止移動的剩餘回合數

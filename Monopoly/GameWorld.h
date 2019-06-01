@@ -13,6 +13,8 @@ public:
 	GameWorld();
 	~GameWorld();
 	void gameStart();
+	//void setNewGame();
+	void initGameWorld(int numberOfPlayer);
 
 	// mode 
 	int mode;
@@ -29,20 +31,31 @@ public:
 	static GameBoard gameBoard;       // 負責地圖的顯示
 	static ActionBoard actionBoard;   // 面的顯示
 	static ConsoleBoard consoleBoard; // 負責consol負責玩家操作介e文字的顯示
+	
 	static void getChanceList();
 	static void getDestinyList();
 private:
-	
-	// 選擲骰子之後的動作
+
+	// 擲骰子階段
 	// ============================================
 	void diceStage();
 	void playDiceAni(int diceNum, bool playAni);
 	void playerWalkAni(int distance);
-	void playerLocation();
+	void playerLocation();		// 判斷玩家所在位置與對應動作
 	void drawAChance();			// 走到機會時呼叫
 	void drawADestiny();			// 走到命運時呼叫
+	void bankruptcy();          // 破產時，將房產清
+	
 	vector<vector<wstring>> diceImages;
 	// ============================================
+
+	// 更新路障
+	void updateObstacle();
+
+	// 遊戲結束時要做的判斷
+	// ============================================
+	bool isAllBankrupt();			// 是否n-1家都破產
+	int getRichestPlayer();         // 找最有錢的玩家id
 };
 
 struct RealEstate

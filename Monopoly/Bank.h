@@ -19,6 +19,9 @@ public:
 	static void stockUpate();                         // 更新股票單價
 	int buyStock(Player & player, vector<int>);   // vector存股票購買數量
 	int soldStock(Player & player, vector<int>);
+	
+	void bankruptStock(int playerState); // 破產時，將股票清空
+
 private:
 	static void initialStock();			//用於初始化股票資訊
 };

@@ -4,7 +4,7 @@
 #include<iostream>
 #include<vector>
 #include<string>
-
+#include "Player.h"
 
 using namespace std;
 class ActionBoard
@@ -15,7 +15,6 @@ public:
 	const int startY = 0;
 	const int width = 28;
 	const int length = 33;
-
 	int getMenuOption();
 
 	void printFrame(int xpos, int ypos, int xsize, int ysize, wstring title = L"");  // 印出actionBoard的框框
@@ -34,19 +33,43 @@ public:
 	// 骰子階段的動畫、提示視窗
 	// ===============================================
 	void stopRoundAnim(wstring = L"因暫停回合無法移動", wstring = L"輪到下一家"); // 無法移動提示
+
 	int assignDiceNumber(); // 是否要用遙控骰子提示 // 0：不使用／1-6：使用
 	void printAssignDiceWord(int cursorX, int cursorY, int mode, int diceNumber); // helper function
+
+	void obstacleAnim(); // 遇到路障動畫
+	void startingPointAnim(); // 起點加5000動畫
+
 	void moneyInefficientAnim(int mode); // 現金不足提示
 	bool buyOrNot(int landMode, wstring subTitle); // 購置/升級房產選單
 	void printBuyOrNotWord(int cursorX, int cursorY, bool mode, int landMode, wstring subTitle); // helper function
+
+	void bankruptcyAnim(); // 破產提示
+	void sellOutMenu(Player & player); // 賣資產付過路費選單
+	void sellOutWord(int selectedIndex); // 選單上的字
+	void payTollAnim(wstring houseName, int toll);
 	// ===============================================
 	vector<int> sellRealEstate();
 	
+	// ===============================================
+	// 勝利、失敗動畫視窗
+	// ===============================================
+	void winBoard(int mode, Player &player);
+	void loseBoard();
+	// ===============================================
+
+
+	// ===============================================
+	// Esc Menu
+	// ===============================================
+	int getEscOption();
+	void printEscMenu(int mode);
+	// ===============================================
 	~ActionBoard();
 
 private:
 	const vector<wstring>& getActionList();
-
+	const vector<wstring>& getSellList();
 	// ============================================
 	// 玩家資訊的板子
 	// ============================================

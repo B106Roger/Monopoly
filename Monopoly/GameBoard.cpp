@@ -40,7 +40,10 @@ void GameBoard::printItem(int index)
 	printFrame(boxX, boxY, boxWidth, boxLength);
 	// 印土地名稱
 	Monopoly::setCursor(boxX + 2, boxY + 1);
+	
+	Monopoly::setColor(7, getPlayerColor(ref.ownerId));
 	wcout << ref.name;
+	Monopoly::setColor();
 	// 印玩家位置
 	Monopoly::setCursor(boxX + 2, boxY + 2);
 	for (auto const & ele : GameWorld::playerList)
@@ -137,6 +140,8 @@ int GameBoard::getPlayerColor(int id)
 	case 3:
 		color = 6;
 		break;
+	default:
+		color = 0;
 	}
 	return color;
 }
@@ -160,10 +165,18 @@ void GameBoard::printPlayerAsset()
 		ref.id == GameWorld::playerState ? Monopoly::setColor(15, getPlayerColor(ref.id)) : Monopoly::setColor();
 		Monopoly::setCursor(indexX + 2, indexY + i * (indexLength - 1) + 1);
 		wcout.fill(L'　');
-		wcout << L"Player " << ref.id;
+		if (ref.id != -1) {
+			wcout << L"Player " << ref.id;
 
-		Monopoly::setCursor(indexX + 2 + nameLength * 2, indexY + i * (indexLength - 1) + 1);
-		cout << GameWorld::bank.computePlayerAsset(ref) << endl;
+			Monopoly::setCursor(indexX + 2 + nameLength * 2, indexY + i * (indexLength - 1) + 1);
+			cout << GameWorld::bank.computePlayerAsset(ref) << endl;
+		}
+		else {
+			wcout << L"Player " << i;
+
+			Monopoly::setCursor(indexX + 2 + nameLength * 2, indexY + i * (indexLength - 1) + 1);
+			cout << "破產" << endl;
+		}
 		++i;
 	}
 }

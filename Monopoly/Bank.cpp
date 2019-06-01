@@ -19,11 +19,14 @@ void Bank::stockUpate()
 {
 	for (int i = 0; i < stockList.size(); i++) {
 		stockList[i].previousDollars = stockList[i].currentDollars;
-		bool sign = rand() % 2;
-		if(sign)
-			stockList[i].currentDollars = (1.0 + rand() % 100 / 1000.0) * stockList[i].currentDollars;
-		else 
-			stockList[i].currentDollars = (1.0 + -rand() % 100 / 1000.0) * stockList[i].currentDollars;
+		double percent = (rand() % 401 - 200); // (-200 - +200) / 1000.0
+		if (percent >= 100) percent = 100;
+		else if (percent <= -100) percent = -100;
+		percent /= 1000.0;
+		stockList[i].currentDollars = (1.0 + percent) * stockList[i].currentDollars;
+		
+	
+		
 	}
 }
 
@@ -42,9 +45,9 @@ void Bank::initialStock()
 	stock2.stockId = 1;
 	stockList.push_back(stock2);
 
-	stock3.currentDollars = 50;
+	stock3.currentDollars = 55;
 	stock3.name = L"　　裙創";
-	stock3.previousDollars = 150;
+	stock3.previousDollars = 50;
 	stock3.stockId = 2;
 	stockList.push_back(stock3);
 
@@ -54,15 +57,15 @@ void Bank::initialStock()
 	stock4.stockId = 3;
 	stockList.push_back(stock4);
 
-	stock5.currentDollars = 50;
+	stock5.currentDollars = 45;
 	stock5.name = L"　神盾局";
-	stock5.previousDollars = 150;
+	stock5.previousDollars = 50;
 	stock5.stockId = 4;
 	stockList.push_back(stock5);
 
 	stock6.currentDollars = 87;
 	stock6.name = L"威剛製藥";
-	stock6.previousDollars = 99;
+	stock6.previousDollars = 93;
 	stock6.stockId = 5;
 	stockList.push_back(stock6);
 }
@@ -115,6 +118,12 @@ int Bank::soldStock(Player & player, vector<int>numberOfStock)
 	return total;
 }
 
+void Bank::bankruptStock(int playerState) {
+	for (StockRecord & ref : stockOwnerList[playerState])
+	{
+		ref.number = 0;
+	}
+}
 
 // 計算玩家資產
 int Bank::computePlayerAsset(Player & pl)

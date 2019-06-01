@@ -72,7 +72,10 @@ void Monopoly::monopolyLoop()
 				if (mode == 0)
 				{
 					// 玩家人數選單
+					int numberOfPlayer = 4;
 					clearFrame();
+					gameWorld.initGameWorld(numberOfPlayer);
+					fileReader.readAndSetMap();
 					gameWorld.gameStart(/*playerAmount*/); // 進入遊戲，打算傳入遊玩人數
 				}
 				else if (mode == 1)
@@ -83,7 +86,7 @@ void Monopoly::monopolyLoop()
 					{
 						continue;
 					}
-					fileReader.readAndSetData();   // 讀取遊戲
+					fileReader.readAndSetRecord();   // 讀取遊戲
 					clearFrame();
 					gameWorld.gameStart();
 				}
@@ -98,6 +101,9 @@ void Monopoly::monopolyLoop()
 					// Exit，break
 					break;
 				}
+				clearFrame();
+				printArt();
+				printBoard(boardX, boardY);
 			}
 			// 按下方向鍵後
 			else if (ch == 224)
@@ -114,7 +120,8 @@ void Monopoly::monopolyLoop()
 					else mode++;
 					break;
 				};
-				printWord(wordX, wordY, wordWidth, wordHeight); // 更新已選取選項位置
+				//printWordWide(wordX, wordY, wordWidth, wordHeight); // 更新已選取選項位置
+				printWord(boardX, boardY);
 			}
 		}
 	}
@@ -165,10 +172,11 @@ void Monopoly::printFrame(int xpos, int ypos, int xsize, int ysize, wstring titl
 void Monopoly::printBoard(int xpos, int ypos) {
 	setCursorSize(false, 0);
 	setColor(9, 0);
+	int lineWidth = 2;
 	for (int i = 0; i < boardHeight; i++) {
 		setCursor(xpos, ypos + i);
 		for (int j = 0; j < boardWidth; j++) {
-			if (i == 0 || i == boardHeight - 1 || i % 6 == 0) // 上
+			if (i == 0 || i == boardHeight - 1 || i % lineWidth == 0) // 上
 			{
 				if (j == 0) wcout << L"●";// 左上角
 				else if (j == boardWidth - 1) wcout << L"●";// 右上角
@@ -182,15 +190,34 @@ void Monopoly::printBoard(int xpos, int ypos) {
 		}
 	}
 	setColor();
-	wordX = boardX + 2; // 減邊框
+	/*wordX = boardX + 2; // 減邊框
 	wordY = boardY + 1; // 減邊框
 	wordWidth = boardWidth - 2; // 減邊框長度
 	wordHeight = (boardHeight - (modeAmount + 1)) / modeAmount; // 算出單格長度
-	printWord(wordX, wordY, wordWidth, wordHeight);
+	printWordWide(wordX, wordY, wordWidth, wordHeight);*/
+	printWord(boardX, boardY);
 }
 
-// 印出主選單選項
-void Monopoly::printWord(int xpos, int ypos, int width, int height) {
+// 印出主選單選項(細版)
+void Monopoly::printWord(int xpos, int ypos) {
+	setColor();
+	wstring mainMenu[] = { L"開始遊戲", L"繼續遊戲", L"規則說明", L"遊戲設定", L"離開遊戲" };
+	ypos += 1;
+
+	for (int i = 0; i < 5; i++) {
+		if (mode == i) setColor(0, 15);
+		else setColor();
+		int xShift = xpos + boardWidth / 2 + mainMenu[i].length();
+		Monopoly::setCursor(xShift, ypos + i * 2);
+		wcout << mainMenu[i];
+	}
+
+
+	setColor();
+}
+
+// 印出主選單選項(寬版)
+void Monopoly::printWordWide(int xpos, int ypos, int width, int height) {
 	
 	setColor();
 
