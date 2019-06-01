@@ -75,7 +75,7 @@ void GameWorld::gameStart()
 
 	//}
 	while (!gameFinish)
-	{																
+	{
 		gameBoard.printPlayerAsset(); // 
 		int actionMode = actionBoard.getMenuOption();
 		switch (actionMode)

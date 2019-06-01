@@ -407,23 +407,39 @@ void ActionBoard::pressAnyKeyToContinue() {
 void ActionBoard::printStock()
 {
 	printFrame();
-	Monopoly::setCursor(startX + 8, startY + 4);
-	wcout << setw(6) << L"公司" << setw(6) << L"上次價格" << setw(6) << L"本日價格" << setw(5) << L"脹/跌" << endl;
+	headerTip(L"---------------證券交易所---------------");
+	Monopoly::setCursor(startX + 4, startY + 4);
+	wcout.fill(L'　');
+	wcout << setw(4) << L"公司" << setw(6) << L"上次價格" << setw(6) << L"本日價格" << setw(5) << L"脹／跌"; // 空兩格
 	for (int i = 0; i < Bank::stockList.size(); i++) {
-		Monopoly::setCursor(startX + 8, startY + 5 + 2 * i);
-		wcout << setw(4) << Bank::stockList[i].name << L"|";
-		wcout << setw(9) << Bank::stockList[i].previousDollars << L"|";
-		wcout << setw(9) << Bank::stockList[i].currentDollars << L"|";
+		Monopoly::setCursor(startX + 4, startY + 6 + 2 * i);
+		wcout.width(4);
+		wcout.fill(L'　');
+		wcout << Bank::stockList[i].name;
+		wcout.width(12);
+		wcout.fill(L' ');
+		wcout << to_wstring(Bank::stockList[i].previousDollars);
+		wcout.width(12);
+		wcout.fill(L' ');
+		wcout << to_wstring(Bank::stockList[i].currentDollars);
+
+		wcout << L"　　";
+		wcout << setprecision(2) << fixed;
+		double percent = abs((static_cast<double>(Bank::stockList[i].currentDollars - Bank::stockList[i].previousDollars) / Bank::stockList[i].previousDollars) * 100);
 		if (Bank::stockList[i].currentDollars > Bank::stockList[i].previousDollars) {
-			Monopoly::setColor(2, 0);
-			wcout << setw(5) << L"↑" << endl;
+			Monopoly::setColor(4, 0);
+			if (percent >= 10) wcout << L"漲停板" << L"　↑";
+			else wcout << L"+" << percent << L"%　↑";
 		}
 		else if (Bank::stockList[i].currentDollars < Bank::stockList[i].previousDollars) {
-			Monopoly::setColor(4, 0);
-			wcout << setw(5) << L"↓" << endl;
+			Monopoly::setColor(2, 0);
+			if (percent >= 10.0) wcout << L"跌停板" << L"　↓";
+			else wcout << L"-" << percent << L"%　↓";
 		}
-		else
-			wcout << setw(5) << L"-" << endl;
+		else {
+			wcout << L"－";
+		}
+
 		Monopoly::setColor();
 	}
 	tailTip();
