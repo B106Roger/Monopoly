@@ -35,7 +35,11 @@ public:
 	static void getChanceList();
 	static void getDestinyList();
 private:
-	
+	// 更新路障
+	void updateObstacle();
+
+
+
 	// 選擲骰子之後的動作
 	// ============================================
 	void diceStage();

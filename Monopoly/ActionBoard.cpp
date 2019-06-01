@@ -896,6 +896,38 @@ void ActionBoard::printAssignDiceWord(int cursorX, int cursorY, int mode, int di
 	wcout << L"～Ｅｎｔｅｒ　Ｔｏ　Ｃｈｏｏｓｅ～";
 }
 
+// 遇到路障動畫
+void ActionBoard::obstacleAnim() {
+	int frameWidth = width - 6;
+	int frameHeight = 9;
+	int cursorX = startX + 6;
+	int cursorY = startY + length / 2 - frameHeight / 2;
+
+	wstring upperLine = L"由於遇到路障";
+	wstring lowerLine = L"因此停在此地";
+
+	printFrame(); // 清空actionBoard
+	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"路障"); // 印出提示視窗
+	for (int i = 0; i < upperLine.length(); i++) { // 印出提示視窗的字
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 2); // 一個全形字佔據2個x
+		wcout << upperLine[i];
+		Sleep(100);
+	}
+	for (int i = 0; i < lowerLine.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 4);
+		wcout << lowerLine[i];
+		Sleep(100);
+	}
+	wstring tailTip = L"~Ｅｎｔｅｒ　Ｔｏ　Ｃｏｎｔ~";
+	for (int i = 0; i < tailTip.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 6);
+		wcout << tailTip[i];
+
+	}
+	pressEnterKeyToContinue();
+};
+
+// 起點+500動畫
 void ActionBoard::startingPointAnim() {
 	int frameWidth = width - 6;
 	int frameHeight = 9;
@@ -903,7 +935,7 @@ void ActionBoard::startingPointAnim() {
 	int cursorY = startY + length / 2 - frameHeight / 2;
 
 	wstring upperLine = L"由於經過起點";
-	wstring lowerLine = L"因此獲得　＄５０００元";
+	wstring lowerLine = L"因此獲得　＄５００元";
 
 	printFrame(); // 清空actionBoard
 	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"起點紅利"); // 印出提示視窗

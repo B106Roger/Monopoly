@@ -37,6 +37,7 @@ public:
 	int assignDiceNumber(); // 是否要用遙控骰子提示 // 0：不使用／1-6：使用
 	void printAssignDiceWord(int cursorX, int cursorY, int mode, int diceNumber); // helper function
 
+	void obstacleAnim(); // 遇到路障動畫
 	void startingPointAnim(); // 起點加5000動畫
 
 	void moneyInefficientAnim(int mode); // 現金不足提示
