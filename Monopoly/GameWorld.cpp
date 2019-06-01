@@ -60,7 +60,17 @@ void GameWorld::gameStart()
 	gameBoard.printMap();
 	actionBoard.printFrame();
 	bool gameFinish = false;
-	//int initialPlayer =  playerState;
+	int round = (reamainRound - 1) * int(playerList.size()) + playerState + 1;
+	//while (--round)
+	//{
+	//	bool turnFinish = false;
+	//	while (!turnFinish)
+	//	{
+
+	//		// after throw dice turnFinish = true;
+	//	}
+
+	//}
 	while (!gameFinish)
 	{																
 		gameBoard.printPlayerAsset(); // 
@@ -174,17 +184,33 @@ void GameWorld::gameStart()
 			case 0:        // 繼續遊戲
 				break;
 			case 1:        // 儲存遊戲
-				Monopoly::fileReader.saveFile();
+				Monopoly::fileReader.saveRecord();
 				break;
 			case 2:        // 回到主選單
 				return;
 			}
 		}
-
-		
-
 	}
 }
+
+// 新遊戲設定
+void GameWorld::initGameWorld(int numberOfPlayer)
+{
+	int initialCash = 40000;
+	playerList.clear();
+	bank.stockOwnerList.clear();
+	for (int i = 0; i < numberOfPlayer; i++)
+	{
+		Player p;  //id(-1),cash(0),bankBalance(0),stopRound(0),playerPosition(0),remoteDice(0)
+		p.id = i;
+		p.cash = initialCash;
+		playerList.push_back(p);
+		bank.stockOwnerList.push_back(vector<StockRecord>());
+	}
+	gameMap.clear();
+	
+}
+
 
 // ===================================
 // 骰子階段

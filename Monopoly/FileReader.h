@@ -16,9 +16,10 @@ public:
 
 	const wstring continuePath = L"continue";
 	const wstring mapPath = L"map";
-	void readAndSetData();        // 讀取Monopoly::gameMapFileName 內的檔案到GameWorld
+	void readAndSetRecord();        // 讀取Monopoly::gameRecordFileName 內的檔案到GameWorld
+	void readAndSetMap();         // 讀取Monopoly::gameMapFilaeName 內的檔案到GameWorld
 	void resetAllData();          // reset所有gameWorld的參數
-	void saveFile();              // 儲存檔案
+	void saveRecord();              // 儲存檔案
 	
 	bool getFilename(string foldername);
 private:

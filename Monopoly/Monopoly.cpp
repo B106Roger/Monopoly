@@ -72,7 +72,10 @@ void Monopoly::monopolyLoop()
 				if (mode == 0)
 				{
 					// 玩家人數選單
+					int numberOfPlayer = 4;
 					clearFrame();
+					gameWorld.initGameWorld(numberOfPlayer);
+					fileReader.readAndSetMap();
 					gameWorld.gameStart(/*playerAmount*/); // 進入遊戲，打算傳入遊玩人數
 				}
 				else if (mode == 1)
@@ -83,7 +86,7 @@ void Monopoly::monopolyLoop()
 					{
 						continue;
 					}
-					fileReader.readAndSetData();   // 讀取遊戲
+					fileReader.readAndSetRecord();   // 讀取遊戲
 					clearFrame();
 					gameWorld.gameStart();
 				}

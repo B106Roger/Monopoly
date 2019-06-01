@@ -13,6 +13,8 @@ public:
 	GameWorld();
 	~GameWorld();
 	void gameStart();
+	//void setNewGame();
+	void initGameWorld(int numberOfPlayer);
 
 	// mode 
 	int mode;
