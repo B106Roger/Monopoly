@@ -26,7 +26,7 @@ void FileReader::resetAllData()
 // ============= 印出foldername底下的所有檔案，供使用者選取，並讀檔 =======
 // ========================================================================
 // 圖像介面取得欲讀取之檔名
-bool FileReader::getFilename(string foldername)
+wstring FileReader::getFilename(string foldername)
 {
 	const FS::path absoluteFilename = FS::current_path() / foldername;
 	vector<FS::path> fileList = getAllFile(absoluteFilename);
@@ -56,13 +56,11 @@ bool FileReader::getFilename(string foldername)
 			}
 			else if (ch == '\r')
 			{
-				Monopoly::gameRecordFileName = fileList[index].filename();
-				return true;
+				return fileListSize == 0u ? L"" : fileList[index].filename();
 			}
 			else if (ch == 27)          // 案Esc鍵後離開
 			{
-				Monopoly::gameRecordFileName = L"";
-				return false;
+				return L"";
 			}
 		}
 	}
@@ -77,7 +75,7 @@ void FileReader::displayFolder(const vector<FS::path> & fileList, int index)
 	int maxmumPrintFile = 6;
 	// 決定顯示檔案名稱的index
 	int start = 0, end = fileListSize, displayIndex = 0;
-	for (; start < end; start += maxmumPrintFile)
+	for (; start <= end; start += maxmumPrintFile)
 	{
 		if (start <= index && index < start + maxmumPrintFile)
 		{
@@ -102,6 +100,7 @@ void FileReader::displayFolder(const vector<FS::path> & fileList, int index)
 			wcout << fileList[start].filename();
 		}
 	}
+	Monopoly::setColor();
 }
 
 // 給定資料夾名稱，取得該目錄底下的檔案

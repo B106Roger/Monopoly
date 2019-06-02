@@ -82,14 +82,19 @@ void Monopoly::monopolyLoop()
 				else if (mode == 1)
 				{
 					// Continue，進入選單(another loop)
-					bool success = fileReader.getFilename("continue");
-					if (success == false)
+					wstring tmpGameRecordFileName = fileReader.getFilename("continue");
+					if (tmpGameRecordFileName.size() == 0u)
 					{
 						continue;
 					}
-					fileReader.readAndSetRecord();   // 讀取遊戲
-					clearFrame();
-					gameWorld.gameStart();
+					else
+					{
+						gameRecordFileName = tmpGameRecordFileName;
+						fileReader.readAndSetRecord();   // 讀取遊戲
+						clearFrame();
+						gameWorld.gameStart();
+					}
+					
 				}
 				else if (mode == 2)
 				{
@@ -415,7 +420,16 @@ void Monopoly::setting()
 				}
 				case 1:
 				{
-					// getmusic
+					wstring tmpMusicFileNname = fileReader.getFilename("music");
+					if (musicFileName.size() == 0u)
+					{
+						// 表示讀檔失敗 或沒音樂
+					}
+					else
+					{
+						Monopoly::musicFileName = tmpMusicFileNname;
+						// 撥音樂
+					}
 					break;
 				}
 				case 2:

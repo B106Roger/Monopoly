@@ -25,7 +25,7 @@ public:
 
 	vector<FS::path> getAllFile(const FS::path & ps);                         // 取得某個路徑下所有的檔案
 	void displayFolder(const vector<FS::path> & fileList, int index);         // 顯示某個資料夾下的所有檔案，並讓使用者選擇
-	bool getFilename(string foldername);                                      // 讓使用者選擇要用的檔案
+	wstring getFilename(string foldername);                                      // 讓使用者選擇要用的檔案
 	
 
 	void previewMap(string foldername);

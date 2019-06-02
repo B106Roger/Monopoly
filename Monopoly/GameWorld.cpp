@@ -176,6 +176,7 @@ void GameWorld::initGameWorld(int numberOfPlayer)
 		playerList.push_back(p);
 		bank.stockOwnerList.push_back(vector<StockRecord>());
 	}
+	//bstaclePosition = rand() % 28; 已經在gameStart() 的第三行做了
 	playerState = 0;
 	reamainRound = 20;
 	gameMap.clear();
@@ -388,7 +389,7 @@ void GameWorld::playerLocation() {
 		}
 	}
 	else if (house.ownerId == playerState && house.level < 3) { // 升級：走到自己的地時，而且地產等級小於三
-		int upgrateCost = house.buyCost * house.rate[house.level]; // 升級價格
+		int upgrateCost = int(double(house.buyCost) * house.rate[house.level]); // 升級價格
 
 		if (upgrateCost > player.cash) { // 現金升級不起
 			actionBoard.moneyInefficientAnim(1); // 己地mode = 1
