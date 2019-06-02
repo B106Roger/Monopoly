@@ -155,7 +155,7 @@ void ActionBoard::printPlayerInfo() {
 				else if (ch == 77)    // 按右
 				{
 
-					if (infoMode != 2) {
+					if (infoMode != 3) {
 						infoMode++;
 						printFrame();
 						choosePlayerInfo(infoMode, playerId, indexY, lineHeight, indexX);
@@ -235,7 +235,8 @@ void ActionBoard::printDestiny(int index)
 void ActionBoard::choosePlayerInfo(int infoMode, int playerId, int indexY, int lineHeight, int indexX) {
 	if (infoMode == 0) printPlayerInfoMain(playerId, indexY, lineHeight);
 	else if(infoMode == 1) printPlayerInfoStock(playerId, indexY, lineHeight, indexX);
-	else if(infoMode == 2) printPlayerInfoHouse(playerId, indexY, lineHeight, indexX);
+	else if(infoMode == 2) printPlayerInfoHouse(playerId, indexY, lineHeight, indexX, 0);
+	else if(infoMode == 3) printPlayerInfoHouse(playerId, indexY, lineHeight, indexX, 1);
 }
 void ActionBoard::printPlayerInfoMain(int playerId, int indexY, int lineHeight) {
 
@@ -315,7 +316,7 @@ void ActionBoard::printPlayerInfoStock(int playerId, int indexY, int lineHeight,
 	// 頁底提示按鈕
 	tailTip();
 };
-void ActionBoard::printPlayerInfoHouse(int playerId, int indexY, int lineHeight, int indexX) {
+void ActionBoard::printPlayerInfoHouse(int playerId, int indexY, int lineHeight, int indexX, int page) {
 
 	headerTip(L"----------玩家資訊----------");
 	indexY += lineHeight;
@@ -337,25 +338,26 @@ void ActionBoard::printPlayerInfoHouse(int playerId, int indexY, int lineHeight,
 	Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indexY += lineHeight;// sub-header
 	wcout << L"過路費";
 
+	int houseCount = 0;
 	for (int i = 0; i < GameWorld::gameMap.size(); i++) {
+		
 		if (GameWorld::gameMap[i].ownerId == playerId) {
-
-			wstring name = GameWorld::gameMap[i].name;
-			int blockId = GameWorld::gameMap[i].position;
-			int price = GameWorld::gameMap[i].buyCost;
-			int level = GameWorld::gameMap[i].level;
-			int tolls = GameWorld::gameMap[i].tolls[level];
-			indent = 1; // 要縮排幾格(全形字)
-			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
-			wcout << name;
-			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
-			wcout << blockId;
-			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
-			wcout << price;
-			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
-			wcout << level;
-			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indexY += lineHeight;// sub-header
-			wcout << tolls;
+			houseCount++;
+			if ((page == 0 && houseCount <= 11) || (page == 1 && houseCount > 11)) {
+				RealEstate house = GameWorld::gameMap[i];
+				indent = 1; // 要縮排幾格(全形字)
+				Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
+				wcout << house.name;
+				Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
+				wcout << house.position;
+				Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
+				wcout << house.buyCost;
+				Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
+				wcout << house.level;
+				Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indexY += lineHeight;// sub-header
+				wcout << house.tolls[house.level];
+			}
+			
 		}
 	}
 	// ==============================================================================
@@ -459,23 +461,23 @@ void ActionBoard::printRealEstate(vector<int> ownedHouseId, int index, vector<bo
 	{
 		Monopoly::setColor();
 		// 清空欄位
-		Monopoly::setCursor(startX + 4, startY + 2 + indexY + displayIndex);
+		Monopoly::setCursor(startX + 4, startY + 2 + indexY + displayIndex * 2);
 		wcout << wstring(width - 3, L'　');
 		// index指到的資訊整欄反白
 		index == start ? Monopoly::setColor(0, 15) : Monopoly::setColor();
 		if (start < houseListSize)
 		{
 			int indent = 1; // 要縮排幾格(全形字)
-			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY + displayIndex); indent += 5;
+			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY + displayIndex * 2); indent += 5;
 			wcout << GameWorld::gameMap[ownedHouseId[start]].name;
-			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY + displayIndex); indent += 5;
+			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY + displayIndex * 2); indent += 5;
 			wcout << GameWorld::gameMap[ownedHouseId[start]].position;
-			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY + displayIndex); indent += 5;
+			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY + displayIndex * 2); indent += 5;
 			wcout << GameWorld::gameMap[ownedHouseId[start]].level;
-			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY + displayIndex); indent += 5;
-			wcout << GameWorld::gameMap[ownedHouseId[start]].mortgageRealEstate();
+			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY + displayIndex * 2); indent += 5;
+			wcout << GameWorld::gameMap[ownedHouseId[start]].valuateRealEstate();
 			// 印出是/否，必要時反白
-			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY + displayIndex); indent += 5;
+			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY + displayIndex * 2); indent += 5;
 			if (!sell[displayIndex]) {
 				Monopoly::setColor();
 				wcout << L"是／";
@@ -1250,6 +1252,7 @@ void ActionBoard::sellOutMenu(Player & player) {
 	int mode = 0;
 	printFrame();
 	sellOutWord(mode);
+	headerTip(L"---------------資產清算---------------");
 	tailTip(L"～欠款　＄" + to_wstring(abs(player.cash)) + L"元～");
 	while (player.cash < 0)
 	{
@@ -1280,11 +1283,13 @@ void ActionBoard::sellOutMenu(Player & player) {
 					player.cash += GameWorld::bank.soldStock(player, numberOfStock);
 				}
 				else if (mode == 1) {
-					//
+					vector<int> soldHouseID = sellRealEstate();
+					player.cash += GameWorld::sellHouse(soldHouseID);
 				}
 				printFrame(); // 跳出賣版時，要清空畫面
 				GameWorld::gameBoard.printPlayerAsset(); // 即時更新玩家資產
 				sellOutWord(mode);
+				headerTip(L"---------------資產清算---------------");
 				tailTip(L"～欠款　＄" + to_wstring(abs(player.cash)) + L"元～");
 			}
 		}

@@ -25,6 +25,7 @@ void Monopoly::monopolyInit()
 	gameMapFileName = L"basemap.txt";
 	settingFileName = L"";
 	gameRecordFileName = L"";
+	settingMode = 0;
 	mode = 0;
 }
 
@@ -81,20 +82,27 @@ void Monopoly::monopolyLoop()
 				else if (mode == 1)
 				{
 					// Continue，進入選單(another loop)
-					bool success = fileReader.getFilename("continue");
-					if (success == false)
+					wstring tmpGameRecordFileName = fileReader.getFilename("continue");
+					if (tmpGameRecordFileName.size() == 0u)
 					{
 						continue;
 					}
-					fileReader.readAndSetRecord();   // 讀取遊戲
-					clearFrame();
-					gameWorld.gameStart();
+					else
+					{
+						gameRecordFileName = tmpGameRecordFileName;
+						fileReader.readAndSetRecord();   // 讀取遊戲
+						clearFrame();
+						gameWorld.gameStart();
+					}
+					
 				}
 				else if (mode == 2)
 				{
 					// Rule，規則畫面
 				}
 				else if (mode == 3) {
+					setting();
+					//printSettingBoard(boardX, boardY);
 					// Setting，設定選單(another loop)
 				}
 				else if (mode == 4) {
@@ -127,46 +135,6 @@ void Monopoly::monopolyLoop()
 	}
 }
 
-void Monopoly::printFrame(int xpos, int ypos, int xsize, int ysize, wstring title) {
-	setColor();
-	wstring upper;
-	wstring lower(xsize - 2, L'＝');
-	wstring side(xsize - 2, L'　');
-	lower = L"●" + lower;
-	lower.push_back(L'●');
-	side = L"∥" + side;
-	side.push_back(L'∥');
-	if (int(title.size()) != 0)
-	{
-		int leftspace = (xsize - int(title.size()) - 2) / 2;
-		int rightspace = xsize - int(title.size()) - 2 - leftspace;
-		upper = title;
-		upper = wstring(leftspace, L'＝') + upper + wstring(rightspace, L'＝');
-		upper.insert(0, 1, L'●');
-		upper.push_back(L'●');
-	}
-	else
-	{
-		upper = lower;
-	}
-
-	for (int i = 0; i < ysize; i++)
-	{
-		setCursor(xpos, ypos + i);
-		if (i == 0)
-		{
-			wcout << upper;
-		}
-		else if (i == ysize - 1)
-		{
-			wcout << lower;
-		}
-		else
-		{
-			wcout << side;
-		}
-	}
-}
 
 
 void Monopoly::printBoard(int xpos, int ypos) {
@@ -197,6 +165,8 @@ void Monopoly::printBoard(int xpos, int ypos) {
 	printWordWide(wordX, wordY, wordWidth, wordHeight);*/
 	printWord(boardX, boardY);
 }
+
+
 
 // 印出主選單選項(細版)
 void Monopoly::printWord(int xpos, int ypos) {
@@ -369,8 +339,174 @@ void Monopoly::clearFrame() {
 
 }
 
+// ==============================================
+// 設定
+// ===============================================
+void Monopoly::printSettingWord(int xpos, int ypos) {
+	setColor();
+	wstring mainMenu[] = { L"更換地圖", L"更換音樂", L"更換背景", L"回主選單" };
+	ypos += 1;
+
+	for (int i = 0; i < 4; i++) {
+		if (settingMode == i) setColor(0, 15);
+		else setColor();
+		int xShift = xpos + boardWidth / 2 + mainMenu[i].length();
+		Monopoly::setCursor(xShift, ypos + i * 2);
+		wcout << mainMenu[i];
+	}
+
+
+	setColor();
+}
+
+void Monopoly::printSettingBoard(int xpos, int ypos) {
+	setCursorSize(false, 0);
+	setColor(9, 0);
+	int lineWidth = 2;
+	for (int i = 0; i < boardHeight; i++) {
+		setCursor(xpos, ypos + i);
+		for (int j = 0; j < boardWidth; j++) {
+			if (i == 0 || i == boardHeight - 1 || i % lineWidth == 0) // 上
+			{
+				if (j == 0) wcout << L"●";// 左上角
+				else if (j == boardWidth - 1) wcout << L"●";// 右上角
+				else wcout << L"＝";// 上方
+			}
+			else// 中
+			{
+				if (j == 0 || j == boardWidth - 1) wcout << L"∥";// 中間
+				else wcout << L"　"; // 
+			}
+		}
+	}
+	setColor();
+	printSettingWord(boardX, boardY);
+}
+
+void Monopoly::setting()
+{
+	printSettingBoard(boardX, boardY);
+	settingMode = 0;
+	while (true)
+	{
+		if (_kbhit())
+		{
+			int ch = _getch();
+			if (ch == 224)
+			{
+				ch = _getch();
+				if (ch == 72)          // 上
+				{
+					settingMode--;
+					if (settingMode == -1) settingMode = 3;
+				}
+				else if (ch == 80)    // 下
+				{
+					settingMode++;
+					if (settingMode == 4) settingMode = 0;
+				}
+				printSettingBoard(boardX, boardY);
+			}
+			else if (ch == '\r')
+			{
+				switch (settingMode)
+				{
+				case 0: 
+				{
+					// getmap
+					fileReader.resetAllData();
+					previewMap();
+					break;
+				}
+				case 1:
+				{
+					wstring tmpMusicFileNname = fileReader.getFilename("music");
+					if (musicFileName.size() == 0u)
+					{
+						// 表示讀檔失敗 或沒音樂
+					}
+					else
+					{
+						Monopoly::musicFileName = tmpMusicFileNname;
+						// 撥音樂
+					}
+					break;
+				}
+				case 2:
+				{
+					// change background
+					break;
+				}
+				case 3:
+					break;
+				}
+
+				if (settingMode != 3)
+				{
+					printArt();
+					printSettingBoard(boardX, boardY);
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+	}
+}
+
+void Monopoly::previewMap()
+{
+	clearFrame();
+	fileReader.previewMap(string("map"));
+}
+
+// ===============================================
+
 
 // Console介面的helper function
+
+// 印大外框
+void Monopoly::printFrame(int xpos, int ypos, int xsize, int ysize, wstring title) {
+	setColor();
+	wstring upper;
+	wstring lower(xsize - 2, L'＝');
+	wstring side(xsize - 2, L'　');
+	lower = L"●" + lower;
+	lower.push_back(L'●');
+	side = L"∥" + side;
+	side.push_back(L'∥');
+	if (int(title.size()) != 0)
+	{
+		int leftspace = (xsize - int(title.size()) - 2) / 2;
+		int rightspace = xsize - int(title.size()) - 2 - leftspace;
+		upper = title;
+		upper = wstring(leftspace, L'＝') + upper + wstring(rightspace, L'＝');
+		upper.insert(0, 1, L'●');
+		upper.push_back(L'●');
+	}
+	else
+	{
+		upper = lower;
+	}
+
+	for (int i = 0; i < ysize; i++)
+	{
+		setCursor(xpos, ypos + i);
+		if (i == 0)
+		{
+			wcout << upper;
+		}
+		else if (i == ysize - 1)
+		{
+			wcout << lower;
+		}
+		else
+		{
+			wcout << side;
+		}
+	}
+}
 
 // 設定顏色
 void Monopoly::setColor(int f, int b)
@@ -410,3 +546,4 @@ void Monopoly::setCursorSize(bool visible, DWORD size) // set bool visible = 0 -
 	lpCursor.dwSize = size;
 	SetConsoleCursorInfo(console, &lpCursor);
 }
+

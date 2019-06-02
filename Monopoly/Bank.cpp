@@ -145,17 +145,11 @@ int Bank::computePlayerAsset(Player & pl)
 		{
 			continue;
 		}
-		int estateCost = ref.buyCost;
-		double rate = 0.75;
 		if (ref.ownerId == pl.id)
 		{
-			for (int i = 0; i < ref.level; i++)
-			{
-				estateCost += int(rate * (double)ref.buyCost);
-			}
-			rate += 0.25;
+			total += ref.valuateRealEstate();
 		}
-		total += estateCost;
+		
 	}
 	return total;
 }

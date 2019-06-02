@@ -19,8 +19,13 @@ public:
 	void monopolyLoop();       // 遊戲流程迴圈
 
 	static void printFrame(int xpos, int ypos, int xsize, int ysize, wstring title = L"");// 印大外框
-	void printBoard(int xpos, int ypos);     // 印主選單
-	void printWord(int xpos, int ypos);
+	void printBoard(int xpos, int ypos);            // 印主選單
+	void printSettingBoard(int xpos, int ypos);     // 印主選單
+
+	void setting();                                  // 設定迴圈
+	void printWord(int xpos, int ypos);             // 印設定選單 
+	void printSettingWord(int xpos, int ypos);      // 印設定選單 
+	void previewMap();
 	void printWordWide(int xpos, int ypos, int width, int height);   // 印主選單的字
 
 	void printArt();
@@ -46,6 +51,8 @@ public:
 
 	// 0 GameMode; 1 ContinueMode; 2 RuleMode; 3 SettingMode; 4 ExitMode
 	int mode;
+	// 0 change map; 1 change music; 2 change background; 3 back to menu
+	int settingMode;
 	int modeAmount = 5;
 	static wstring settingFileName;     // 設定檔檔名
 	static wstring gameMapFileName;     // 遊戲地圖檔名-新遊戲開始時所套用的地圖

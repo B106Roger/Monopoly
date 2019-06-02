@@ -12,13 +12,14 @@ public:
 	const int length = 56;
 	const int boxWidth = 7;
 	const int boxLength = 5;
-	void printItem(int index);
-	void printMap();
+	void printItem(int index,int xPos = 0,int yPos = 0,int color = 7);
+	void printMap(int xPos = 0, int yPos = 0);
 	void printFrame(int xpos, int ypos, int xsize, int ysize, wstring title = L"");
 	int getPlayerColor(int playerid);
+	void printRound(int indexX, int indexY);
 	void printPlayerAsset();
-private:
-	
+	void printItemDetail(int index);
+	void clearItemDetail();
 };
 
 //　－－－－－－－－
