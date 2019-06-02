@@ -449,6 +449,15 @@ void GameWorld::bankruptcy() {
 	}
 }
 
+int GameWorld::sellHouse(vector<int> houseID) {
+	int loan = 0;
+	for (int i = 0; i < houseID.size(); i++) {
+		loan += gameMap[houseID[i]].mortgageRealEstate();
+		gameBoard.printItem(gameMap[houseID[i]].position);
+	}
+	return loan;
+}
+
 //=======================================================
 // 遊戲結束判斷
 //=======================================================

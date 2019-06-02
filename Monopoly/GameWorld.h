@@ -32,6 +32,8 @@ public:
 	static ActionBoard actionBoard;   // 面的顯示
 	static ConsoleBoard consoleBoard; // 負責consol負責玩家操作介e文字的顯示
 	
+	static int sellHouse(vector<int> houseID); // 變賣房產時
+
 	static void getChanceList();
 	static void getDestinyList();
 private:
@@ -76,6 +78,14 @@ struct RealEstate
 	vector<int> tolls; // 過路費(一律給現金)
 	int level;         // 物產等級 0 ~ 3
 	vector<double> rate;
+	int valuateRealEstate() {
+		int returnVal = buyCost;
+		for (int i = 0; i < level; i++)
+		{
+			returnVal += int(buyCost * rate[i]);
+		}
+		return int(returnVal * 0.8);
+	}
 	int mortgageRealEstate()
 	{
 		int returnVal = buyCost;
@@ -83,6 +93,8 @@ struct RealEstate
 		{
 			returnVal += int(buyCost * rate[i]);
 		}
+		ownerId = -1;
+		level = 0;
 		return int(returnVal * 0.8);
 	}
 };
