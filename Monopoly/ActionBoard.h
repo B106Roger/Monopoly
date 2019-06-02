@@ -76,7 +76,7 @@ private:
 	void choosePlayerInfo(int infoMode, int playerId, int indexY, int lineHeight, int indexX); // 三選一的code
 	void printPlayerInfoMain(int playerId, int indexY, int lineHeight); // 玩家一般資訊(含標頭、尾)
 	void printPlayerInfoStock(int playerId, int indexY, int lineHeight, int indexX);// 玩家股票資訊(含標頭、尾)
-	void printPlayerInfoHouse(int playerId, int indexY, int lineHeight, int indexX);// 玩家房產資訊(含標頭、尾)
+	void printPlayerInfoHouse(int playerId, int indexY, int lineHeight, int indexX, int page);// 玩家房產資訊(含標頭、尾)
 	// ============================================
 	// 付不起過路費後賣房產
 

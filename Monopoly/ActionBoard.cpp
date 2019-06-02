@@ -155,7 +155,7 @@ void ActionBoard::printPlayerInfo() {
 				else if (ch == 77)    // 按右
 				{
 
-					if (infoMode != 2) {
+					if (infoMode != 3) {
 						infoMode++;
 						printFrame();
 						choosePlayerInfo(infoMode, playerId, indexY, lineHeight, indexX);
@@ -235,7 +235,8 @@ void ActionBoard::printDestiny(int index)
 void ActionBoard::choosePlayerInfo(int infoMode, int playerId, int indexY, int lineHeight, int indexX) {
 	if (infoMode == 0) printPlayerInfoMain(playerId, indexY, lineHeight);
 	else if(infoMode == 1) printPlayerInfoStock(playerId, indexY, lineHeight, indexX);
-	else if(infoMode == 2) printPlayerInfoHouse(playerId, indexY, lineHeight, indexX);
+	else if(infoMode == 2) printPlayerInfoHouse(playerId, indexY, lineHeight, indexX, 0);
+	else if(infoMode == 3) printPlayerInfoHouse(playerId, indexY, lineHeight, indexX, 1);
 }
 void ActionBoard::printPlayerInfoMain(int playerId, int indexY, int lineHeight) {
 
@@ -315,7 +316,7 @@ void ActionBoard::printPlayerInfoStock(int playerId, int indexY, int lineHeight,
 	// 頁底提示按鈕
 	tailTip();
 };
-void ActionBoard::printPlayerInfoHouse(int playerId, int indexY, int lineHeight, int indexX) {
+void ActionBoard::printPlayerInfoHouse(int playerId, int indexY, int lineHeight, int indexX, int page) {
 
 	headerTip(L"----------玩家資訊----------");
 	indexY += lineHeight;
@@ -337,26 +338,26 @@ void ActionBoard::printPlayerInfoHouse(int playerId, int indexY, int lineHeight,
 	Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indexY += lineHeight;// sub-header
 	wcout << L"過路費";
 
-	
+	int houseCount = 0;
 	for (int i = 0; i < GameWorld::gameMap.size(); i++) {
+		
 		if (GameWorld::gameMap[i].ownerId == playerId) {
-
-			wstring name = GameWorld::gameMap[i].name;
-			int blockId = GameWorld::gameMap[i].position;
-			int price = GameWorld::gameMap[i].buyCost;
-			int level = GameWorld::gameMap[i].level;
-			int tolls = GameWorld::gameMap[i].tolls[level];
-			indent = 1; // 要縮排幾格(全形字)
-			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
-			wcout << name;
-			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
-			wcout << blockId;
-			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
-			wcout << price;
-			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
-			wcout << level;
-			Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indexY += lineHeight;// sub-header
-			wcout << tolls;
+			houseCount++;
+			if ((page == 0 && houseCount <= 11) || (page == 1 && houseCount > 11)) {
+				RealEstate house = GameWorld::gameMap[i];
+				indent = 1; // 要縮排幾格(全形字)
+				Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
+				wcout << house.name;
+				Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
+				wcout << house.position;
+				Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
+				wcout << house.buyCost;
+				Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
+				wcout << house.level;
+				Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indexY += lineHeight;// sub-header
+				wcout << house.tolls[house.level];
+			}
+			
 		}
 	}
 	// ==============================================================================
