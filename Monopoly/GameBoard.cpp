@@ -146,6 +146,11 @@ int GameBoard::getPlayerColor(int id)
 	return color;
 }
 
+void GameBoard::printRound(int indexX, int indexY) {
+	Monopoly::setCursor(indexX, indexY -= 2);
+	wcout  << L"剩餘回和數：　" << GameWorld::reamainRound << L"回";
+}
+
 // 印出玩家資產
 void GameBoard::printPlayerAsset()
 {
@@ -154,6 +159,7 @@ void GameBoard::printPlayerAsset()
 	int indexY = startY + (boxLength + 1) * 2;
 	int indexWidth = 15, indexLength = 3;
 	int nameLength = 8;
+	printRound(indexX, indexY);
 	Monopoly::setCursor(indexX, indexY);
 	wcout << wstring((indexWidth - 5)/2, L'－') << L"玩家總資產" << wstring((indexWidth - 5) / 2, L'－');
 	int i = 0;

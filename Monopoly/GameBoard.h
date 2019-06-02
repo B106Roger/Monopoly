@@ -16,6 +16,7 @@ public:
 	void printMap();
 	void printFrame(int xpos, int ypos, int xsize, int ysize, wstring title = L"");
 	int getPlayerColor(int playerid);
+	void printRound(int indexX, int indexY);
 	void printPlayerAsset();
 private:
 	
