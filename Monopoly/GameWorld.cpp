@@ -176,6 +176,8 @@ void GameWorld::initGameWorld(int numberOfPlayer)
 		playerList.push_back(p);
 		bank.stockOwnerList.push_back(vector<StockRecord>());
 	}
+	playerState = 0;
+	reamainRound = 20;
 	gameMap.clear();
 	
 }

@@ -11,7 +11,7 @@ GameBoard::~GameBoard()
 {
 }
 // 印出地圖的第N個位置
-void GameBoard::printItem(int index)
+void GameBoard::printItem(int index,int xPos,int yPos, int color)
 {
 	int y, x;          // 全形為基準的座標
 	if (index <= 7)
@@ -34,17 +34,17 @@ void GameBoard::printItem(int index)
 		x = 0;
 		y = 28 - index;
 	}
-	int boxX = x * 2 * (boxWidth - 1), boxY = y * (boxLength - 1); // 在螢幕上實際的座標(半形為基準)
+	int boxX = x * 2 * (boxWidth - 1) + xPos, boxY = y * (boxLength - 1) + yPos; // 在螢幕上實際的座標(半形為基準)
 	const RealEstate & ref = GameWorld::gameMap[index];
 	// 印出框框
 	printFrame(boxX, boxY, boxWidth, boxLength);
 	// 印土地名稱
 	Monopoly::setCursor(boxX + 2, boxY + 1);
-	
-	Monopoly::setColor(7, getPlayerColor(ref.ownerId));
+	Monopoly::setColor(color, getPlayerColor(ref.ownerId));
 	wcout << ref.name;
-	Monopoly::setColor();
+	
 	// 印玩家位置
+	Monopoly::setColor();
 	Monopoly::setCursor(boxX + 2, boxY + 2);
 	for (auto const & ele : GameWorld::playerList)
 	{
@@ -71,11 +71,11 @@ void GameBoard::printItem(int index)
 }
 
 // 印出整份地圖
-void GameBoard::printMap()
+void GameBoard::printMap(int xPos, int yPos)
 {
 	for (int i = 0; i < 28; i++)
 	{
-		printItem(i);
+		printItem(i,xPos,yPos);
 	}
 }
 
@@ -178,5 +178,67 @@ void GameBoard::printPlayerAsset()
 			cout << "破產" << endl;
 		}
 		++i;
+	}
+}
+
+
+void GameBoard::printItemDetail(int index)
+{
+	int xPos = 62, yPos = 6;
+	RealEstate & realEstate = GameWorld::gameMap[index];
+	int width = 20, length = 19;
+	Monopoly::printFrame(xPos, yPos, width, length);
+
+	xPos += 6; yPos++;
+	Monopoly::setCursor(xPos, yPos);
+	wcout << L"地點名稱: " << realEstate.name;
+	
+
+	wstring locationType;
+	if (realEstate.type == -1)
+		locationType = L"機會";
+	else if (realEstate.type == -2)
+		locationType = L"命運";
+	else if (realEstate.type == 1)
+		locationType = L"房產";
+	else if (realEstate.type == 0)
+		locationType = L"起點";
+	yPos+=2;
+	Monopoly::setCursor(xPos, yPos);
+	wcout << L"物件類型: " << locationType;
+
+	if (realEstate.type == 1)
+	{
+		yPos += 2;
+		Monopoly::setCursor(xPos, yPos);
+		wcout << L"空地價格: " << realEstate.buyCost;
+
+		yPos += 2;
+		Monopoly::setCursor(xPos, yPos);
+		wcout << L"過路費: " << L"0階過路費 " << realEstate.tolls[0];;
+
+		xPos += 8; yPos += 2;
+		Monopoly::setCursor(xPos, yPos);
+		wcout << L"1階過路費 " << realEstate.tolls[1];
+
+		yPos += 2;
+		Monopoly::setCursor(xPos, yPos);
+		wcout << L"2階過路費 " << realEstate.tolls[2];
+
+		yPos += 2;
+		Monopoly::setCursor(xPos, yPos);
+		wcout << L"3階過路費 " << realEstate.tolls[3];
+	}
+}
+
+void GameBoard::clearItemDetail()
+{
+	int xPos = 62, yPos = 6;
+	int width = 20, length = 19;
+	wstring whiteSpace(20, L'　');
+	for (int i = 0; i < length; i++)
+	{
+		Monopoly::setCursor(xPos, yPos + i);
+		wcout << whiteSpace;
 	}
 }
