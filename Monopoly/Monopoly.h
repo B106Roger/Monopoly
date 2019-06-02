@@ -32,6 +32,9 @@ public:
 	void printArtSleep();
 	void clearFrame();
 
+	void printRule();			// 印規則
+	void exitArt();				// 遊戲結束動畫
+
 	int isFirstStart = true;
 	const int startX = 0;     // 視窗左上角x,y視窗
 	const int startY = 0;

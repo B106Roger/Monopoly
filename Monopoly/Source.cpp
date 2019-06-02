@@ -7,7 +7,7 @@ int main()
 {
 	locale::global(locale(""));
 	Monopoly monopoly;
-	system("PAUSE");
+	system("pause>nul");
 	monopoly.monopolyLoop();
 
 	return 0;

@@ -98,6 +98,8 @@ void Monopoly::monopolyLoop()
 				}
 				else if (mode == 2)
 				{
+					printRule();
+					system("pause>nul");
 					// Rule，規則畫面
 				}
 				else if (mode == 3) {
@@ -107,6 +109,7 @@ void Monopoly::monopolyLoop()
 				}
 				else if (mode == 4) {
 					// Exit，break
+					exitArt();
 					break;
 				}
 				clearFrame();
@@ -337,6 +340,106 @@ void Monopoly::clearFrame() {
 		}
 	}
 
+}
+
+void Monopoly::printRule()
+{
+	clearFrame();
+	setCursor(startX + 80, startY + 3);
+	wcout << L"規則說明";
+	wfstream fileRule("rule.txt", ios::in);
+	wstring line;
+	int xPos = startX + 25, yPos = startY + 5;
+	while (fileRule >> line) {
+		setCursor(xPos, yPos);
+		wcout << line;
+		yPos += 2;
+	}
+}
+
+void Monopoly::exitArt()
+{
+	clearFrame();
+	string line;
+	setColor(6, 0);
+	for (int i = 0; i < 10; i++) {
+		fstream file1("exitArt/1.txt", ios::in);
+		fstream file2("exitArt/2.txt", ios::in);
+		fstream file3("exitArt/3.txt", ios::in);
+		fstream file4("exitArt/4.txt", ios::in);
+		fstream file5("exitArt/5.txt", ios::in);
+		fstream file6("exitArt/6.txt", ios::in);
+		fstream file7("exitArt/7.txt", ios::in);
+		fstream file8("exitArt/8.txt", ios::in);
+		setCursorSize(false, 0);
+		int yPos = 3;
+		while (getline(file1, line)) {
+			setCursor(3, yPos);
+			cout << line << endl;
+			yPos++;
+		}
+		yPos = 3;
+		while (getline(file2, line)) {
+			setCursor(3, yPos);
+			cout << line << endl;
+			yPos++;
+		}
+		yPos = 3;
+		while (getline(file3, line)) {
+			setCursor(3, yPos);
+			cout << line << endl;
+			yPos++;
+		}
+		yPos = 3;
+		while (getline(file4, line)) {
+			setCursor(3, yPos);
+			cout << line << endl;
+			yPos++;
+		}
+		yPos = 3;
+		while (getline(file5, line)) {
+			setCursor(3, yPos);
+			cout << line << endl;
+			yPos++;
+		}
+		yPos = 3;
+		while (getline(file6, line)) {
+			setCursor(3, yPos);
+			cout << line << endl;
+			yPos++;
+		}
+		yPos = 3;
+		while (getline(file7, line)) {
+			setCursor(3, yPos);
+			cout << line << endl;
+			yPos++;
+		}
+		yPos = 3;
+		while (getline(file8, line)) {
+			setCursor(3, yPos);
+			cout << line << endl;
+			yPos++;
+		}
+	}
+	clearFrame();
+	setColor();
+	fstream theEnd("exitArt/theEnd.txt", ios::in);
+	setCursor(3, 10);
+	int yPos = 3;
+	while (getline(theEnd, line)) {
+		setCursor(3, yPos);
+		cout << line << endl;
+		yPos++;
+	}
+	Sleep(3000);
+	clearFrame();
+	setCursor(30, 10);
+	wstring end = L"製作團隊：洪偉傑、林奕辰、謝維毅感謝您的遊玩";
+	for (int i = 0; i < end.size(); i++) {
+		wcout << end[i];
+		Sleep(50);
+	}
+	Sleep(3000);
 }
 
 // ==============================================
