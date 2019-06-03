@@ -524,13 +524,17 @@ void Monopoly::setting()
 				case 1:
 				{
 					wstring tmpMusicFileNname = fileReader.getFilename("music");
-					if (musicFileName.size() == 0u)
+					if (tmpMusicFileNname.size() == 0u)
 					{
 						// 表示讀檔失敗 或沒音樂
 					}
 					else
 					{
 						Monopoly::musicFileName = tmpMusicFileNname;
+						string str = "music/";
+						str += WstringToString(Monopoly::musicFileName);
+						 
+						PlaySound(TEXT(str.c_str()), NULL, SND_FILENAME | SND_ASYNC);
 						// 撥音樂
 					}
 					break;
@@ -650,3 +654,14 @@ void Monopoly::setCursorSize(bool visible, DWORD size) // set bool visible = 0 -
 	SetConsoleCursorInfo(console, &lpCursor);
 }
 
+string Monopoly::WstringToString(const wstring str)
+{// wstring转string
+	unsigned len = str.size() * 4;
+	setlocale(LC_CTYPE, "");
+	char *p = new char[len];
+	size_t i;
+	wcstombs_s(&i, p,len, str.c_str(), len);
+	std::string str1(p);
+	delete[] p;
+	return str1;
+}

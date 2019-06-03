@@ -1,4 +1,5 @@
 ﻿#pragma once
+#pragma comment(lib, "winmm.lib")
 #include<Windows.h>
 #include<conio.h>
 #include<string>
@@ -70,5 +71,8 @@ public:
 	static void getCursor(int &x, int &y);
 	static void setCursorSize(bool visible, DWORD size); // visible = 0/1
 
+
+	static string WstringToString(const wstring str);
+	
 };
 
