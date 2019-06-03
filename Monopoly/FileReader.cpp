@@ -1,4 +1,4 @@
-#include"FileReader.h"
+ï»¿#include"FileReader.h"
 #include"Monopoly.h"
 #include"GameWorld.h"
 
@@ -10,7 +10,7 @@ FileReader::~FileReader()
 {
 }
 
-// ­«³]¹CÀ¸°Ñ¼Æ ¥ş³¡³]¬°ªÅ
+// é‡è¨­éŠæˆ²åƒæ•¸ å…¨éƒ¨è¨­ç‚ºç©º
 void FileReader::resetAllData()
 {
 	GameWorld::mapName = L"";
@@ -23,9 +23,9 @@ void FileReader::resetAllData()
 }
 
 // ========================================================================
-// ============= ¦L¥Xfoldername©³¤Uªº©Ò¦³ÀÉ®×¡A¨Ñ¨Ï¥ÎªÌ¿ï¨ú¡A¨ÃÅªÀÉ =======
+// ============= å°å‡ºfoldernameåº•ä¸‹çš„æ‰€æœ‰æª”æ¡ˆï¼Œä¾›ä½¿ç”¨è€…é¸å–ï¼Œä¸¦è®€æª” =======
 // ========================================================================
-// ¹Ï¹³¤¶­±¨ú±o±ıÅª¨ú¤§ÀÉ¦W
+// åœ–åƒä»‹é¢å–å¾—æ¬²è®€å–ä¹‹æª”å
 wstring FileReader::getFilename(string foldername)
 {
 	const FS::path absoluteFilename = FS::current_path() / foldername;
@@ -42,12 +42,12 @@ wstring FileReader::getFilename(string foldername)
 			if (ch == 224)
 			{
 				ch = _getch();
-				if (ch == 80)          // «ö¤U
+				if (ch == 80)          // æŒ‰ä¸‹
 				{
 					++index;
 					index == fileListSize ? (index = 0) : 0;
 				}
-				else if (ch == 72)     // «ö¤W
+				else if (ch == 72)     // æŒ‰ä¸Š
 				{
 					--index;
 					index == -1 ? (index = fileListSize - 1) : 0;
@@ -58,7 +58,7 @@ wstring FileReader::getFilename(string foldername)
 			{
 				return fileListSize == 0u ? L"" : fileList[index].filename();
 			}
-			else if (ch == 27)          // ®×EscÁä«áÂ÷¶}
+			else if (ch == 27)          // æ¡ˆEscéµå¾Œé›¢é–‹
 			{
 				return L"";
 			}
@@ -66,14 +66,14 @@ wstring FileReader::getFilename(string foldername)
 	}
 }
 
-// Åã¥ÜÀÉ®×
+// é¡¯ç¤ºæª”æ¡ˆ
 void FileReader::displayFolder(const vector<FS::path> & fileList, int index)
 {
-	// Åã¥ÜÀÉ®×¦WºÙ¼e«×
+	// é¡¯ç¤ºæª”æ¡ˆåç¨±å¯¬åº¦
 	int width = 20, fileListSize = (int)fileList.size();
-	// ³Ì¦hÅã¥ÜÀÉ®×¦WºÙ
+	// æœ€å¤šé¡¯ç¤ºæª”æ¡ˆåç¨±
 	int maxmumPrintFile = 6;
-	// ¨M©wÅã¥ÜÀÉ®×¦WºÙªºindex
+	// æ±ºå®šé¡¯ç¤ºæª”æ¡ˆåç¨±çš„index
 	int start = 0, end = fileListSize, displayIndex = 0;
 	for (; start <= end; start += maxmumPrintFile)
 	{
@@ -87,12 +87,12 @@ void FileReader::displayFolder(const vector<FS::path> & fileList, int index)
 	for (; start < end; start++, displayIndex++)
 	{
 		Monopoly::setColor();
-		// ¦L¥X¤p®Ø®Ø
+		// å°å‡ºå°æ¡†æ¡†
 		Monopoly::printFrame(startX, startY + 2 * displayIndex, width, 3);
-		// ³]©w´å¼Ğ¦ì¸m ¨Ã²MªÅ¸ÓÄæ¦ì
+		// è¨­å®šæ¸¸æ¨™ä½ç½® ä¸¦æ¸…ç©ºè©²æ¬„ä½
 		Monopoly::setCursor(startX + 4, startY + 2 * displayIndex + 1);
-		wcout << wstring(width - 3, L'¡@');
-		// ¦L¥XÀÉ¦W¡A¥²­n®É¬°ÀÉ¦WµÛ¦â
+		wcout << wstring(width - 3, L'ã€€');
+		// å°å‡ºæª”åï¼Œå¿…è¦æ™‚ç‚ºæª”åè‘—è‰²
 		index == start ? Monopoly::setColor(0, 15) : Monopoly::setColor();
 		Monopoly::setCursor(startX + 4, startY + 2 * displayIndex + 1);
 		if (start < fileListSize)
@@ -103,16 +103,16 @@ void FileReader::displayFolder(const vector<FS::path> & fileList, int index)
 	Monopoly::setColor();
 }
 
-// µ¹©w¸ê®Æ§¨¦WºÙ¡A¨ú±o¸Ó¥Ø¿ı©³¤UªºÀÉ®×
+// çµ¦å®šè³‡æ–™å¤¾åç¨±ï¼Œå–å¾—è©²ç›®éŒ„åº•ä¸‹çš„æª”æ¡ˆ
 vector<FS::path> FileReader::getAllFile(const FS::path & ps)
 {
 	vector<FS::path> fileList;
-	// ¦pªG³o¤£¬O¸ê®Æ§¨´N¸õ¥X
+	// å¦‚æœé€™ä¸æ˜¯è³‡æ–™å¤¾å°±è·³å‡º
 	if (FS::is_regular_file(ps))
 	{
 		return fileList;
 	}
-	// Àò¨ú¸ê®Æ§¨¤U©Ò¦³ªºÀÉ®×©Î¸ê®Æ§¨
+	// ç²å–è³‡æ–™å¤¾ä¸‹æ‰€æœ‰çš„æª”æ¡ˆæˆ–è³‡æ–™å¤¾
 	for (FS::directory_iterator it(ps); it != FS::directory_iterator(); it++)
 	{
 		fileList.push_back(it->path());
@@ -124,12 +124,12 @@ vector<FS::path> FileReader::getAllFile(const FS::path & ps)
 
 
 // ===================================================================
-// ========= Åª¨ú¡BÀx¦s Ä~Äò¹CÀ¸ªºÀÉ®× ===========================================
+// ========= è®€å–ã€å„²å­˜ ç¹¼çºŒéŠæˆ²çš„æª”æ¡ˆ ===========================================
 // ===================================================================
-// Åª¨ú Monopoly::gameRecordFilename ¡A¥²¶·½T»{Monopoly::gameRecordFilename¤£¬°ªÅ
+// è®€å– Monopoly::gameRecordFilename ï¼Œå¿…é ˆç¢ºèªMonopoly::gameRecordFilenameä¸ç‚ºç©º
 void FileReader::readAndSetRecord()
 {
-	// ­«¸mGameWorldªº°Ñ¼Æ
+	// é‡ç½®GameWorldçš„åƒæ•¸
 	resetAllData();
 	wifstream in;
 	wstring fileName = continuePath + L"//" + Monopoly::gameRecordFileName,tmpWstr;
@@ -140,7 +140,7 @@ void FileReader::readAndSetRecord()
 		{
 			int numberOfRealEstate = 28;
 			int numberOfPlayer = 0;
-			// ¨ú±o¦a²£¸ê°T
+			// å–å¾—åœ°ç”¢è³‡è¨Š
 			in >> GameWorld::mapName;
 			in >> GameWorld::reamainRound;
 			in >> numberOfPlayer;
@@ -162,8 +162,8 @@ void FileReader::readAndSetRecord()
 			}
 			in >> tmpWstr;
 			in >> GameWorld::playerState;
-			// ¨ú±oª±®a²{ª÷¦a²£¸ê°T
-			in.get(); //¥h°£\n ¦r¤¸
+			// å–å¾—ç©å®¶ç¾é‡‘åœ°ç”¢è³‡è¨Š
+			in.get(); //å»é™¤\n å­—å…ƒ
 			wstring line;
 			wstringstream ss;
 			for (int i = 0; i < numberOfPlayer; i++)
@@ -184,14 +184,14 @@ void FileReader::readAndSetRecord()
 				GameWorld::playerList.push_back(tmp);
 				GameWorld::bank.stockOwnerList.push_back(vector<StockRecord>());
 			}
-			// ¨ú±oª±®a¦s´ÚªÑ²¼¸ê°T
+			// å–å¾—ç©å®¶å­˜æ¬¾è‚¡ç¥¨è³‡è¨Š
 			wstring bankString;
 
 			
 
 			if (in >> bankString)
 			{
-				in.get();//¥h°£\n ¦r¤¸
+				in.get();//å»é™¤\n å­—å…ƒ
 
 				for (int i = 0; i < numberOfPlayer; i++)
 				{
@@ -294,7 +294,7 @@ void FileReader::saveRecord()
 
 void FileReader::readAndSetMap()
 {
-	// ­«¸mGameWorldªº°Ñ¼Æ
+	// é‡ç½®GameWorldçš„åƒæ•¸
 	wifstream in;
 	wstring fileName = mapPath + L"//" + Monopoly::gameMapFileName, tmpWstr;
 	if (fileName.size() != 0u)
@@ -303,7 +303,7 @@ void FileReader::readAndSetMap()
 		if (in.is_open() == true)
 		{
 			int numberOfRealEstate = 28;
-			// ¨ú±o¦a²£¸ê°T
+			// å–å¾—åœ°ç”¢è³‡è¨Š
 			while (numberOfRealEstate--)
 			{
 				RealEstate tmp;
@@ -331,9 +331,9 @@ void FileReader::previewMap(string foldername)
 {
 	const FS::path absoluteFilename = FS::current_path() / foldername;
 	vector<FS::path> fileList = getAllFile(absoluteFilename);
-	// ¬ö¿ı·í«eªº¦a¹ÏÀÉ®×¦WºÙ
+	// ç´€éŒ„ç•¶å‰çš„åœ°åœ–æª”æ¡ˆåç¨±
 	wstring currenMapFileNmae = Monopoly::gameMapFileName;
-	// Åã¥Ü¥Ø«eªº¦a¹Ï
+	// é¡¯ç¤ºç›®å‰çš„åœ°åœ–
 	GameWorld::gameMap.clear();
 	readAndSetMap();
 	GameWorld::gameBoard.printMap(46, 0);
@@ -349,12 +349,12 @@ void FileReader::previewMap(string foldername)
 			if (ch == 224)
 			{
 				ch = _getch();
-				if (ch == 80)          // «ö¤U
+				if (ch == 80)          // æŒ‰ä¸‹
 				{
 					++fileIndex;  mapIndex = 0;
 					fileIndex == fileListSize ? (fileIndex = 0) : 0;
 				}
-				else if (ch == 72)     // «ö¤W
+				else if (ch == 72)     // æŒ‰ä¸Š
 				{
 					--fileIndex;  mapIndex = 0;
 					fileIndex == -1 ? (fileIndex = fileListSize - 1) : 0;
@@ -371,19 +371,19 @@ void FileReader::previewMap(string foldername)
 				}
 				else
 				{
-					// ±NÂÂªº¦ì¸m ¨ä©Ğ²£¦WºÙ¨ê·s
+					// å°‡èˆŠçš„ä½ç½® å…¶æˆ¿ç”¢åç¨±åˆ·æ–°
 					GameWorld::gameBoard.printItem(mapIndex, 46, 0);
-					if (ch == 75) // ¥ª
+					if (ch == 75) // å·¦
 					{
 						mapIndex--;
 						if (mapIndex == -1) mapIndex = 27;
 					}
-					else if (ch == 77) // ¥k
+					else if (ch == 77) // å³
 					{
 						mapIndex++;
 						if (mapIndex == 28) mapIndex = 0;
 					}
-					// ±N·sªº¦ì¸m ¨ä©Ğ²£¦WºÙ¨ê·s
+					// å°‡æ–°çš„ä½ç½® å…¶æˆ¿ç”¢åç¨±åˆ·æ–°
 					GameWorld::gameBoard.printItem(mapIndex, 46, 0, 4);
 					GameWorld::gameBoard.printItemDetail(mapIndex);
 
@@ -394,7 +394,7 @@ void FileReader::previewMap(string foldername)
 				Monopoly::gameMapFileName = fileList[fileIndex].filename();
 				return ;
 			}
-			else if (ch == 27)          // ®×EscÁä«áÂ÷¶}
+			else if (ch == 27)          // æ¡ˆEscéµå¾Œé›¢é–‹
 			{
 				Monopoly::gameMapFileName = currenMapFileNmae;
 
@@ -418,11 +418,11 @@ void FileReader::previewMap(string foldername)
 void FileReader::displayMapFolder(const vector<FS::path> & fileList, int index)
 {
 	int myStartX = 0, myStartY = 0;
-	// Åã¥ÜÀÉ®×¦WºÙ¼e«×
+	// é¡¯ç¤ºæª”æ¡ˆåç¨±å¯¬åº¦
 	int width = 20, fileListSize = (int)fileList.size(), height = 5;
-	// ³Ì¦hÅã¥ÜÀÉ®×¦WºÙ
+	// æœ€å¤šé¡¯ç¤ºæª”æ¡ˆåç¨±
 	int maxmumPrintFile = 10;
-	// ¨M©wÅã¥ÜÀÉ®×¦WºÙªºindex
+	// æ±ºå®šé¡¯ç¤ºæª”æ¡ˆåç¨±çš„index
 	int start = 0, end = fileListSize, displayIndex = 0;
 	for (; start < end; start += maxmumPrintFile)
 	{
@@ -436,12 +436,12 @@ void FileReader::displayMapFolder(const vector<FS::path> & fileList, int index)
 	for (; start < end; start++, displayIndex++)
 	{
 		Monopoly::setColor();
-		// ¦L¥X¤p®Ø®Ø
+		// å°å‡ºå°æ¡†æ¡†
 		Monopoly::printFrame(myStartX, myStartY + (height - 1) * displayIndex, width, height);
-		// ³]©w´å¼Ğ¦ì¸m ¨Ã²MªÅ¸ÓÄæ¦ì
+		// è¨­å®šæ¸¸æ¨™ä½ç½® ä¸¦æ¸…ç©ºè©²æ¬„ä½
 		Monopoly::setCursor(myStartX + 4, myStartY + (height-1) * displayIndex + (height/2));
-		wcout << wstring(width - 3, L'¡@');
-		// ¦L¥XÀÉ¦W¡A¥²­n®É¬°ÀÉ¦WµÛ¦â
+		wcout << wstring(width - 3, L'ã€€');
+		// å°å‡ºæª”åï¼Œå¿…è¦æ™‚ç‚ºæª”åè‘—è‰²
 		index == start ? Monopoly::setColor(0, 15) : Monopoly::setColor();
 		Monopoly::setCursor(myStartX + 4, myStartY + (height - 1) * displayIndex + (height / 2));
 		if (start < fileListSize)
