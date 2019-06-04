@@ -67,6 +67,7 @@ public:
 	static wstring gameMapFileName;     // 遊戲地圖檔名-新遊戲開始時所套用的地圖
 	static wstring musicFileName;       // 遊戲音樂檔名
 	static wstring gameRecordFileName;  // 遊戲記錄檔名
+	static wstring backgroundFileName;
 	static GameWorld gameWorld;         // 遊戲世界
 	static FileReader fileReader;       // 讀取檔案class 
 	// 以下皆為console視窗設定函數
@@ -78,6 +79,10 @@ public:
 
 
 	static string WstringToString(const wstring str);
-	
+
+	// Plays a specified waveform-audio file using MCI_OPEN and MCI_PLAY. 
+	// Returns when playback begins. Returns 0L on success, otherwise 
+	// returns an MCI error code.
+	static DWORD playWAVEFile(HWND hWndNotify, LPSTR lpszWAVEFileName);
 };
 

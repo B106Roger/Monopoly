@@ -4,12 +4,13 @@ wstring Monopoly::musicFileName;
 wstring Monopoly::gameMapFileName;
 wstring Monopoly::settingFileName;
 wstring Monopoly::gameRecordFileName;
+wstring Monopoly::backgroundFileName = L"fadatsai.txt";
 GameWorld Monopoly::gameWorld;
 FileReader Monopoly::fileReader;
 
 Monopoly::Monopoly()
 {
-	srand(time(NULL));
+	srand(0);
 	setCursorSize(false, 0);
 	monopolyInit();
 	GameWorld::getChanceList();
@@ -54,8 +55,9 @@ void Monopoly::monopolyLoop()
 	
 	// Step1 : 印初始動畫
 	if (isFirstStart) {
-		PlaySound(TEXT("music/startArtMusic.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP | SND_NOSTOP);
-		printArt();
+		PlaySound(TEXT("music/startArtMusic.wav"), NULL, SND_FILENAME | SND_ASYNC);
+		// mciSendString("play music/startArtMusic.wav", NULL, 0, NULL);
+		printArtSleep();
 	}
 	// Step2 : 印選單
 	wstring title = L"";
@@ -270,20 +272,13 @@ void Monopoly::printWordWide(int xpos, int ypos, int width, int height) {
 
 // 印出開頭背景
 void Monopoly::printArt() {
-	fstream inputMonopoly("art/monopoly.txt", ios::in);
-	fstream inputMoney("art/fadatsai.txt", ios::in);
+	string str = "art/";
+	str += WstringToString(Monopoly::backgroundFileName);
+	fstream inputMoney(str, ios::in);
 	setCursorSize(false, 0);
 
 	string line;
 	int yPos = 3;
-
-	setColor(6, 0);
-	while (getline(inputMonopoly, line)) {
-		setCursor(3, yPos);
-		cout << line << endl;
-		yPos++;
-	}
-
 
 	yPos = 3;
 	setColor(6, 0);
@@ -292,8 +287,6 @@ void Monopoly::printArt() {
 		cout << line << endl;
 		yPos++;
 	}
-
-	inputMonopoly.close();
 	inputMoney.close();
 	setColor();
 }
@@ -617,6 +610,15 @@ void Monopoly::setting()
 				case 2:
 				{
 					// change background
+					wstring tmpBkFileNname = fileReader.getFilename("art");
+					if (tmpBkFileNname.size() == 0u)
+					{
+						// 表示讀檔失敗
+					}
+					else
+					{
+						Monopoly::backgroundFileName = tmpBkFileNname;
+					}
 					break;
 				}
 				case 3:
@@ -625,6 +627,7 @@ void Monopoly::setting()
 
 				if (settingMode != 3)
 				{
+					clearFrame();
 					printArt();
 					printSettingBoard(boardX, boardY);
 				}
@@ -742,6 +745,46 @@ string Monopoly::WstringToString(const wstring str)
 }
 
 void Monopoly::playSound(string str) {
+	
 	PlaySound(TEXT(str.c_str()), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 	return;
+}
+
+DWORD Monopoly::playWAVEFile(HWND hWndNotify, LPSTR lpszWAVEFileName)
+{
+	UINT wDeviceID;
+	DWORD dwReturn;
+	MCI_OPEN_PARMS mciOpenParms;
+	MCI_PLAY_PARMS mciPlayParms;
+
+	// Open the device by specifying the device and filename.
+	// MCI will choose a device capable of playing the specified file.
+
+	mciOpenParms.lpstrDeviceType = "waveaudio";
+	mciOpenParms.lpstrElementName = lpszWAVEFileName;
+	if (dwReturn = mciSendCommand(0, MCI_OPEN,
+		MCI_OPEN_TYPE | MCI_OPEN_ELEMENT,
+		(DWORD)(LPVOID)&mciOpenParms))
+	{
+		// Failed to open device. Don't close it; just return error.
+		return (dwReturn);
+	}
+
+	// The device opened successfully; get the device ID.
+	wDeviceID = mciOpenParms.wDeviceID;
+
+	// Begin playback. The window procedure function for the parent 
+	// window will be notified with an MM_MCINOTIFY message when 
+	// playback is complete. At this time, the window procedure closes 
+	// the device.
+
+	mciPlayParms.dwCallback = (DWORD)hWndNotify;
+	if (dwReturn = mciSendCommand(wDeviceID, MCI_PLAY, MCI_NOTIFY,
+		(DWORD)(LPVOID)&mciPlayParms))
+	{
+		mciSendCommand(wDeviceID, MCI_CLOSE, 0, NULL);
+		return (dwReturn);
+	}
+
+	return (0L);
 }
