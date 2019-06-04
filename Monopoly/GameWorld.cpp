@@ -42,7 +42,7 @@ GameWorld::GameWorld()
 	// ===============================
 	// 增加骰子的隨機性
 	// ===============================
-	srand(time(NULL));
+	// srand(time(NULL));
 	// ===============================
 }
 
@@ -235,7 +235,7 @@ void GameWorld::getDestinyList()
 
 void GameWorld::drawAChance()
 {
-	srand(time(NULL));
+	// srand(time(NULL));
 	int index = rand() % chanceList.size();
 	actionBoard.printChance(index);
 	if (chanceList[index].type == 0) {
@@ -251,7 +251,7 @@ void GameWorld::drawAChance()
 
 void GameWorld::drawADestiny()
 {
-	srand(time(NULL));
+	// srand(time(NULL));
 	int index = rand() % destinyList.size();
 	actionBoard.printDestiny(index);
 	if (destinyList[index].type == 0) {

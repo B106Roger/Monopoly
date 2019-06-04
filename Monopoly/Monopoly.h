@@ -78,6 +78,10 @@ public:
 
 
 	static string WstringToString(const wstring str);
-	
+
+	// Plays a specified waveform-audio file using MCI_OPEN and MCI_PLAY. 
+	// Returns when playback begins. Returns 0L on success, otherwise 
+	// returns an MCI error code.
+	static DWORD playWAVEFile(HWND hWndNotify, LPSTR lpszWAVEFileName);
 };
 
