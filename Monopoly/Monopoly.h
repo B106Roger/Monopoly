@@ -6,6 +6,7 @@
 #include<iostream>
 #include<cstdlib>
 #include<ctime>
+#include <thread>
 #include"GameWorld.h"
 #include"FileReader.h"
 using namespace std;
@@ -21,16 +22,20 @@ public:
 
 	static void printFrame(int xpos, int ypos, int xsize, int ysize, wstring title = L"");// 印大外框
 	void printBoard(int xpos, int ypos);            // 印主選單
+	void printPlayerBoard(int xpos, int ypos, int playerMode);		// 印玩家選單
 	void printSettingBoard(int xpos, int ypos);     // 印主選單
 
+	int player();									// 玩家人數迴圈
 	void setting();                                  // 設定迴圈
-	void printWord(int xpos, int ypos);             // 印設定選單 
+	void printWord(int xpos, int ypos);             // 印設定選單
+	void printPlayerWord(int xpos, int ypos, int playerMode);		// 印玩家人數選項
 	void printSettingWord(int xpos, int ypos);      // 印設定選單 
 	void previewMap();
 	void printWordWide(int xpos, int ypos, int width, int height);   // 印主選單的字
 
 	void printArt();
 	void printArtSleep();
+	void playSound(string str);
 	void clearFrame();
 
 	void printRule();			// 印規則

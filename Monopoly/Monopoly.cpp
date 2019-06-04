@@ -54,6 +54,7 @@ void Monopoly::monopolyLoop()
 	
 	// Step1 : 印初始動畫
 	if (isFirstStart) {
+		PlaySound(TEXT("music/startArtMusic.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP | SND_NOSTOP);
 		printArt();
 	}
 	// Step2 : 印選單
@@ -73,21 +74,20 @@ void Monopoly::monopolyLoop()
 				if (mode == 0)
 				{
 					// 玩家人數選單
-					int numberOfPlayer = 4;
-					clearFrame();
-					gameWorld.initGameWorld(numberOfPlayer);
-					fileReader.readAndSetMap();
-					gameWorld.gameStart(/*playerAmount*/); // 進入遊戲，打算傳入遊玩人數
+					int numberOfPlayer = player();
+					if (numberOfPlayer != 0) {
+						clearFrame();
+						gameWorld.initGameWorld(numberOfPlayer);
+						fileReader.readAndSetMap();
+						gameWorld.gameStart(); // 進入遊戲
+					}
+					
 				}
 				else if (mode == 1)
 				{
 					// Continue，進入選單(another loop)
 					wstring tmpGameRecordFileName = fileReader.getFilename("continue");
-					if (tmpGameRecordFileName.size() == 0u)
-					{
-						continue;
-					}
-					else
+					if (tmpGameRecordFileName.size() != 0u)
 					{
 						gameRecordFileName = tmpGameRecordFileName;
 						fileReader.readAndSetRecord();   // 讀取遊戲
@@ -442,6 +442,82 @@ void Monopoly::exitArt()
 	Sleep(3000);
 }
 
+// ===============================================
+// 玩家人數
+// ===============================================
+
+int Monopoly::player() {
+	int playerMode = 0;
+	printPlayerBoard(boardX, boardY, playerMode);
+	while (true)
+	{
+		if (_kbhit())
+		{
+			int ch = _getch();
+			if (ch == 224)
+			{
+				ch = _getch();
+				if (ch == 72)          // 上
+				{
+					playerMode--;
+					if (playerMode == -1) playerMode = 4;
+				}
+				else if (ch == 80)    // 下
+				{
+					playerMode++;
+					if (playerMode == 5) playerMode = 0;
+				}
+				printPlayerBoard(boardX, boardY, playerMode);
+			}
+			else if (ch == '\r')
+			{
+				return playerMode;
+			}
+		}
+	}
+}
+
+
+void Monopoly::printPlayerBoard(int xpos, int ypos, int playerMode) {
+	setCursorSize(false, 0);
+	setColor(9, 0);
+	int lineWidth = 2;
+	for (int i = 0; i < boardHeight; i++) {
+		setCursor(xpos, ypos + i);
+		for (int j = 0; j < boardWidth; j++) {
+			if (i == 0 || i == boardHeight - 1 || i % lineWidth == 0) // 上
+			{
+				if (j == 0) wcout << L"●";// 左上角
+				else if (j == boardWidth - 1) wcout << L"●";// 右上角
+				else wcout << L"＝";// 上方
+			}
+			else// 中
+			{
+				if (j == 0 || j == boardWidth - 1) wcout << L"∥";// 中間
+				else wcout << L"　"; // 
+			}
+		}
+	}
+	setColor();
+	printPlayerWord(boardX, boardY, playerMode);
+}
+void Monopoly::printPlayerWord(int xpos, int ypos, int playerMode) {
+	setColor();
+	wstring mainMenu[] = {L"回主選單", L"單人模式", L"雙人模式", L"參人模式", L"四人模式"};
+	ypos += 1;
+
+	for (int i = 0; i < 5; i++) {
+		if (playerMode == i) setColor(0, 15);
+		else setColor();
+		int xShift = xpos + boardWidth / 2 + mainMenu[i].length();
+		Monopoly::setCursor(xShift, ypos + i * 2);
+		wcout << mainMenu[i];
+	}
+
+
+	setColor();
+}
+
 // ==============================================
 // 設定
 // ===============================================
@@ -533,8 +609,7 @@ void Monopoly::setting()
 						Monopoly::musicFileName = tmpMusicFileNname;
 						string str = "music/";
 						str += WstringToString(Monopoly::musicFileName);
-						 
-						PlaySound(TEXT(str.c_str()), NULL, SND_FILENAME | SND_ASYNC);
+						PlaySound(TEXT(str.c_str()), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 						// 撥音樂
 					}
 					break;
@@ -664,4 +739,9 @@ string Monopoly::WstringToString(const wstring str)
 	std::string str1(p);
 	delete[] p;
 	return str1;
+}
+
+void Monopoly::playSound(string str) {
+	PlaySound(TEXT(str.c_str()), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+	return;
 }
