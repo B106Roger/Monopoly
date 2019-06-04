@@ -67,6 +67,7 @@ public:
 	static wstring gameMapFileName;     // 遊戲地圖檔名-新遊戲開始時所套用的地圖
 	static wstring musicFileName;       // 遊戲音樂檔名
 	static wstring gameRecordFileName;  // 遊戲記錄檔名
+	static wstring backgroundFileName;
 	static GameWorld gameWorld;         // 遊戲世界
 	static FileReader fileReader;       // 讀取檔案class 
 	// 以下皆為console視窗設定函數

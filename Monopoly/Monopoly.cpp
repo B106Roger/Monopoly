@@ -4,6 +4,7 @@ wstring Monopoly::musicFileName;
 wstring Monopoly::gameMapFileName;
 wstring Monopoly::settingFileName;
 wstring Monopoly::gameRecordFileName;
+wstring Monopoly::backgroundFileName = L"fadatsai.txt";
 GameWorld Monopoly::gameWorld;
 FileReader Monopoly::fileReader;
 
@@ -56,7 +57,7 @@ void Monopoly::monopolyLoop()
 	if (isFirstStart) {
 		PlaySound(TEXT("music/startArtMusic.wav"), NULL, SND_FILENAME | SND_ASYNC);
 		// mciSendString("play music/startArtMusic.wav", NULL, 0, NULL);
-		printArt();
+		printArtSleep();
 	}
 	// Step2 : 印選單
 	wstring title = L"";
@@ -271,20 +272,13 @@ void Monopoly::printWordWide(int xpos, int ypos, int width, int height) {
 
 // 印出開頭背景
 void Monopoly::printArt() {
-	fstream inputMonopoly("art/monopoly.txt", ios::in);
-	fstream inputMoney("art/fadatsai.txt", ios::in);
+	string str = "art/";
+	str += WstringToString(Monopoly::backgroundFileName);
+	fstream inputMoney(str, ios::in);
 	setCursorSize(false, 0);
 
 	string line;
 	int yPos = 3;
-
-	setColor(6, 0);
-	while (getline(inputMonopoly, line)) {
-		setCursor(3, yPos);
-		cout << line << endl;
-		yPos++;
-	}
-
 
 	yPos = 3;
 	setColor(6, 0);
@@ -293,8 +287,6 @@ void Monopoly::printArt() {
 		cout << line << endl;
 		yPos++;
 	}
-
-	inputMonopoly.close();
 	inputMoney.close();
 	setColor();
 }
@@ -618,6 +610,15 @@ void Monopoly::setting()
 				case 2:
 				{
 					// change background
+					wstring tmpBkFileNname = fileReader.getFilename("art");
+					if (tmpBkFileNname.size() == 0u)
+					{
+						// 表示讀檔失敗
+					}
+					else
+					{
+						Monopoly::backgroundFileName = tmpBkFileNname;
+					}
 					break;
 				}
 				case 3:
@@ -626,6 +627,7 @@ void Monopoly::setting()
 
 				if (settingMode != 3)
 				{
+					clearFrame();
 					printArt();
 					printSettingBoard(boardX, boardY);
 				}
