@@ -54,7 +54,8 @@ void Monopoly::monopolyLoop()
 	
 	// Step1 : 印初始動畫
 	if (isFirstStart) {
-		printArt();
+		PlaySound(TEXT("startArtMusic.wav"), NULL, SND_FILENAME | SND_ASYNC);
+		printArtSleep();
 	}
 	// Step2 : 印選單
 	wstring title = L"";
@@ -73,11 +74,11 @@ void Monopoly::monopolyLoop()
 				if (mode == 0)
 				{
 					// 玩家人數選單
-					int numberOfPlayer = 4;
+					int numberOfPlayer = getNumberOfPlayer();
 					clearFrame();
 					gameWorld.initGameWorld(numberOfPlayer);
 					fileReader.readAndSetMap();
-					gameWorld.gameStart(/*playerAmount*/); // 進入遊戲，打算傳入遊玩人數
+					gameWorld.gameStart();
 				}
 				else if (mode == 1)
 				{
@@ -441,6 +442,44 @@ void Monopoly::exitArt()
 	}
 	Sleep(3000);
 }
+
+int Monopoly::getNumberOfPlayer()
+{
+	int number = 1;
+	vector<wchar_t> wideNumber = { L'１',L'２',L'３',L'４' };
+	Monopoly::printFrame(boardX, boardY, boardWidth, 5, L"請選擇玩家數量");
+	Monopoly::setCursor(boardX + 8, boardY + 2);
+	wcout << L'←' << wstring(4, L'　') << wideNumber[number - 1] << wstring(4, L'　') << L'→';
+	while (true)
+	{
+		if (_kbhit())
+		{
+			int ch = _getch();
+			if (ch == 224)
+			{
+				ch = _getch();
+				if (ch == 75) // 左
+				{
+					number--;
+					number = (number < 1 ? 1 : number);
+				}
+				else if (ch == 77) // 右
+				{
+					number++;
+					number = (number > 4 ? 4 : number);
+				}
+				Monopoly::setCursor(boardX + 8, boardY + 2);
+				wcout << L'←' << wstring(4, L'　') << wideNumber[number - 1] << wstring(4, L'　') << L'→';
+			}
+			else if (ch == '\r')
+			{
+				return number;
+			}
+		}
+	}
+
+}
+
 
 // ==============================================
 // 設定

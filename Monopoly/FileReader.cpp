@@ -169,7 +169,7 @@ void FileReader::readAndSetRecord()
 			for (int i = 0; i < numberOfPlayer; i++)
 			{
 				Player tmp;
-				int position, level;
+				int position;
 				getline(in, line);
 				ss.clear();
 				ss.str(line);
