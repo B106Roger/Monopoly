@@ -72,7 +72,7 @@ void FileReader::displayFolder(const vector<FS::path> & fileList, int index)
 	// 顯示檔案名稱寬度
 	int width = 20, fileListSize = (int)fileList.size();
 	// 最多顯示檔案名稱
-	int maxmumPrintFile = 6;
+	int maxmumPrintFile = 5;
 	// 決定顯示檔案名稱的index
 	int start = 0, end = fileListSize, displayIndex = 0;
 	for (; start <= end; start += maxmumPrintFile)

@@ -63,6 +63,7 @@ void Monopoly::monopolyLoop()
 						gameWorld.initGameWorld(numberOfPlayer);
 						fileReader.readAndSetMap();
 						gameWorld.gameStart(); // 進入遊戲
+						clearFrame();
 					}
 					
 				}
@@ -76,6 +77,7 @@ void Monopoly::monopolyLoop()
 						fileReader.readAndSetRecord();   // 讀取遊戲
 						clearFrame();
 						gameWorld.gameStart();
+						clearFrame();
 					}
 					
 				}
@@ -95,7 +97,7 @@ void Monopoly::monopolyLoop()
 					exitArt();
 					break;
 				}
-				clearFrame();
+				// if(mode == 2) clearFrame();
 				printArt();
 				printBoard(boardX, boardY);
 			}
@@ -569,6 +571,7 @@ void Monopoly::setting()
 					// getmap
 					fileReader.resetAllData();
 					previewMap();
+					clearFrame();
 					break;
 				}
 				case 1:
@@ -599,6 +602,7 @@ void Monopoly::setting()
 					else
 					{
 						Monopoly::backgroundFileName = tmpBkFileNname;
+						clearFrame();
 					}
 					break;
 				}
@@ -608,7 +612,6 @@ void Monopoly::setting()
 
 				if (settingMode != 3)
 				{
-					clearFrame();
 					printArt();
 					printSettingBoard(boardX, boardY);
 				}
