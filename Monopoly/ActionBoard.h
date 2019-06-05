@@ -30,6 +30,13 @@ public:
 	int printWithdrawDeposit(bool isWithdraw);    // 印出存款提款介面
 
 	// ===============================================
+	// 存款、提款提示
+	// ===============================================
+	void inDebt(); // 不能再借款
+	void noDebt(); // 不用還款
+
+
+	// ===============================================
 	// 骰子階段的動畫、提示視窗
 	// ===============================================
 	void stopRoundAnim(wstring = L"因暫停回合無法移動", wstring = L"輪到下一家"); // 無法移動提示
@@ -48,6 +55,7 @@ public:
 	void sellOutMenu(Player & player); // 賣資產付過路費選單
 	void sellOutWord(int selectedIndex); // 選單上的字
 	void payTollAnim(wstring houseName, int toll);
+	void payDebtAnim(int debt);
 	// ===============================================
 	vector<int> sellRealEstate();
 	

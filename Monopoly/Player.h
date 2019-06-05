@@ -18,5 +18,6 @@ public:
 	int debt;
 	bool withdraw(int dollars);	// 提款
 	bool deposit(int dollars);	// 存款
-
+	void loan(int number);
+	void repayDebt(int number);
 };

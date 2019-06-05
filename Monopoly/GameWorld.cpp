@@ -105,31 +105,25 @@ void GameWorld::gameStart()
 		}
 		case 6:							//借款
 		{
-			if (playerList[playerState].debt == 0) {
-				int number = actionBoard.printLoan(true);
-				playerList[playerState].debt += number;
-				playerList[playerState].bankBalance += number;
+			if (playerList[playerState].debt == 0) { 
+
+				int number = actionBoard.printLoan(true); // [0, infinity)
+				playerList[playerState].loan(number);
+				
 			}
 			else {
-				actionBoard.printFrame();
-				Monopoly::setCursor(110, 5);
-				wcout << L"你尚有債務未還，請先還清你的債務";
-				Sleep(3000);
+				actionBoard.inDebt();
 			}
 			break;
 		}
 		case 7:							//還款
 		{
 			if (playerList[playerState].debt != 0) {
-				int number = actionBoard.printLoan(false);
-				playerList[playerState].debt -= number;
-				playerList[playerState].bankBalance -= number;
+				int number = actionBoard.printLoan(false); // [0, debt)
+				playerList[playerState].repayDebt(number); // cash只能扣到0，若還完債務，repaymentRound = 0
 			}
 			else {
-				actionBoard.printFrame();
-				Monopoly::setCursor(110, 5);
-				wcout << L"你債務已經還清，無須再還款";
-				Sleep(3000);
+				actionBoard.noDebt();
 			}
 			break;
 		}
@@ -308,6 +302,7 @@ void GameWorld::diceStage() {
 			if (diceNumber) { // 1 ~ 6
 				// 顯示骰子
 				playDiceAni(diceNumber, false);
+				playerList[playerState].remoteDice--;
 			}
 			else { // 0
 				// 骰子動畫
@@ -435,9 +430,21 @@ void GameWorld::playerLocation() {
 		actionBoard.payTollAnim(house.name, toll); // 支付提示
 		gameBoard.printPlayerAsset(); // 更新版上資產
 	}
+
+
 	// bank 利息 1.05
+	player.bankBalance *= (1.0 + bank.getInterestRate());
 	// debt 利息 1.20
+	player.debt *= (1.0 + bank.getLandingRate());
 	// debt剩餘還款回合-- if round == 0 cash -= debt
+	if(player.repamentRound > 0) player.repamentRound--;
+	else if(player.repamentRound == 0 && player.debt > 0){
+		player.cash -= player.debt;
+		actionBoard.payDebtAnim(player.debt); // 支付提示
+		player.debt = 0;
+		gameBoard.printPlayerAsset(); // 更新版上資產
+	}
+
 	// 進行破產判斷
 	if (player.cash < 0) {
 
