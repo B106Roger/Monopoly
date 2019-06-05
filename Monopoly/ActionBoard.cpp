@@ -262,7 +262,7 @@ void ActionBoard::printPlayerInfoMain(int playerId, int indexY, int lineHeight) 
 
 	// 金錢
 	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
-	wcout << L"現金、約當現金與債務 : ";
+	wcout << L"現金、約當現金與負債 : ";
 
 	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
 	wcout << L"　玩家現金 : ";
@@ -293,14 +293,6 @@ void ActionBoard::printPlayerInfoMain(int playerId, int indexY, int lineHeight) 
 	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
 	wcout << L"　暫停回合 : ";
 	wcout << GameWorld::playerList[playerId].stopRound;
-
-	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
-	wcout << L"債務 : ";
-	wcout << GameWorld::playerList[playerId].debt;
-
-	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
-	wcout << L"債務到期回合數 : ";
-	wcout << GameWorld::playerList[playerId].repamentRound;
 
 	// 頁底提示按鈕
 	tailTip();
@@ -1464,6 +1456,65 @@ void  ActionBoard::payDebtAnim(int debt) {
 	}
 	pressEnterKeyToContinue();
 }
+
+void ActionBoard::interestAnim(int oriDeposit) {
+	wstring upperLine = L"存款：" + to_wstring(oriDeposit) + L"*" + to_wstring(static_cast<int>(GameWorld::bank.getInterestRate()*100)) + L"%";
+	wstring lowerLine = L"小計：" + to_wstring(static_cast<int>(oriDeposit *(1 + GameWorld::bank.getInterestRate()))) + L"元";
+	int frameWidth = width - 6;
+	int frameHeight = 9;
+	int cursorX = startX + 6;
+	int cursorY = startY + length / 2 - frameHeight / 2;
+
+	printFrame(); // 清空actionBoard
+	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"銀Ⅲ行"); // 印出提示視窗
+	for (int i = 0; i < upperLine.length(); i++) { // 印出提示視窗的字
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 2); // 一個全形字佔據2個x
+		wcout << upperLine[i];
+		Sleep(100);
+	}
+	for (int i = 0; i < lowerLine.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 4);
+		wcout << lowerLine[i];
+		Sleep(100);
+	}
+	wstring tailTip = L"~Ｅｎｔｅｒ　Ｔｏ　Ｃｏｎｔ~";
+	for (int i = 0; i < tailTip.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 6);
+		wcout << tailTip[i];
+
+	}
+	pressEnterKeyToContinue();
+}
+void ActionBoard::landingAnim(int oriDebt) {
+	wstring upperLine = L"欠款：" + to_wstring(oriDebt) + L"*" + to_wstring(static_cast<int>(GameWorld::bank.getLandingRate() * 100)) + L"%";
+	wstring lowerLine = L"小計：" + to_wstring(static_cast<int>(oriDebt *(1 + GameWorld::bank.getLandingRate()))) + L"元";
+	
+
+	int frameWidth = width - 6;
+	int frameHeight = 9;
+	int cursorX = startX + 6;
+	int cursorY = startY + length / 2 - frameHeight / 2;
+
+	printFrame(); // 清空actionBoard
+	printFrame(cursorX, cursorY, frameWidth, frameHeight, L"銀Ⅲ行"); // 印出提示視窗
+	for (int i = 0; i < upperLine.length(); i++) { // 印出提示視窗的字
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 2); // 一個全形字佔據2個x
+		wcout << upperLine[i];
+		Sleep(100);
+	}
+	for (int i = 0; i < lowerLine.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 4);
+		wcout << lowerLine[i];
+		Sleep(100);
+	}
+	wstring tailTip = L"~Ｅｎｔｅｒ　Ｔｏ　Ｃｏｎｔ~";
+	for (int i = 0; i < tailTip.length(); i++) {
+		Monopoly::setCursor(cursorX + 4 + i * 2, cursorY + 6);
+		wcout << tailTip[i];
+
+	}
+	pressEnterKeyToContinue();
+}
 // ===============================================
 
 // ===============================================
@@ -1556,7 +1607,7 @@ int ActionBoard::printLoan(bool isLoan)
 
 	Monopoly::setCursor(indexX + 6, indexY + 2);
 	if(isLoan)
-		wcout << L"存款：" << ref.bankBalance << L"　　　" << L"現金：" << ref.cash;
+		wcout << L"債務：" << ref.debt << L"　　　" << L"現金：" << ref.cash;
 	else
 		wcout << L"存款：" << ref.bankBalance << L"　　　" << L"欠款：" << ref.debt;
 	int sizeOfDigit = 10;
@@ -1596,15 +1647,16 @@ int ActionBoard::printLoan(bool isLoan)
 			else if (ch == '\r')
 			{
 				int returnValue = atoi(number.c_str());
-				if (!isLoan) {		//如果是還款就只需要還債務的金額
-					int debt = GameWorld::playerList[GameWorld::playerState].debt;
-					if (returnValue > debt)
-						return debt;
-					else
-						return returnValue;
+				Player & player = GameWorld::playerList[GameWorld::playerState];
+				if (!isLoan) {	// 還款至多到債務的金額，[0, debt]
+					if (returnValue > player.debt) return player.debt;
+					else return returnValue;
 				}
-				else
-					return returnValue;
+				else { // 借款至多到總資產的一半，[0, 0.5 * asset]
+					if (returnValue > GameWorld::bank.computePlayerAsset(player) / 2) return GameWorld::bank.computePlayerAsset(player) / 2;
+					else return returnValue;
+				}
+					
 			}
 			else if (ch == 27) // Esc 按鈕
 			{
