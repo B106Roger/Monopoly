@@ -308,6 +308,7 @@ void GameWorld::diceStage() {
 			if (diceNumber) { // 1 ~ 6
 				// 顯示骰子
 				playDiceAni(diceNumber, false);
+				playerList[playerState].remoteDice--;
 			}
 			else { // 0
 				// 骰子動畫
