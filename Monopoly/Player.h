@@ -14,6 +14,8 @@ public:
 	int stopRound;				// 玩家停止移動的剩餘回合數
 	int playerPosition;			// 玩家所在地
 	int remoteDice;				// 遙控色子數量// 新遊戲每人免費贈送遙控色子
+	int repamentRound;
+	int debt;
 	bool withdraw(int dollars);	// 提款
 	bool deposit(int dollars);	// 存款
 

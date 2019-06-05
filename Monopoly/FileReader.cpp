@@ -169,7 +169,7 @@ void FileReader::readAndSetRecord()
 			for (int i = 0; i < numberOfPlayer; i++)
 			{
 				Player tmp;
-				int position, level;
+				int position;
 				getline(in, line);
 				ss.clear();
 				ss.str(line);
@@ -195,7 +195,7 @@ void FileReader::readAndSetRecord()
 
 				for (int i = 0; i < numberOfPlayer; i++)
 				{
-					int playerId, balance,stockId;
+					int playerId,stockId;
 					getline(in, line);
 					ss.clear();
 					ss.str(line);
@@ -222,7 +222,7 @@ void FileReader::saveRecord()
 {
 	if (Monopoly::gameRecordFileName.size() == 0u)
 	{
-		//Monopoly::gameRecordFileName = actionBoard.userInputFileName();
+		Monopoly::gameRecordFileName = userInputFileName();
 	}
 	wofstream out;
 	wstring fileanme = continuePath + +L"//" + Monopoly::gameRecordFileName;
@@ -232,6 +232,8 @@ void FileReader::saveRecord()
 		Monopoly::setCursor(0, 0);
 		cout << "fail open file\n";
 	}
+
+	// 輸出地產資訊
 	out << GameWorld::mapName << L" " << GameWorld::reamainRound << " " << GameWorld::playerList.size() << endl;
 	for (const auto &ref : GameWorld::gameMap)
 	{
@@ -252,6 +254,7 @@ void FileReader::saveRecord()
 		out << endl;
 	}
 
+	// 輸出玩家 現金房產
 	out << L"playerstate " << GameWorld::playerState << endl;
 	for (auto & player : GameWorld::playerList)
 	{
@@ -271,6 +274,7 @@ void FileReader::saveRecord()
 		out << endl;
 	}
 
+	// 輸出玩家 存款房產
 	out << L"bank" << endl;
 	for (auto & player : GameWorld::playerList)
 	{
@@ -285,6 +289,55 @@ void FileReader::saveRecord()
 	}
 	out.close();
 
+}
+
+wstring FileReader::userInputFileName()
+{
+	int menuX = 112, menuY = 6, menuWidth = 16;
+	int stringMaxSize = 12;
+	
+	Monopoly::printFrame(menuX, menuY, menuWidth, 5, L"輸入檔名");
+	wstring result;
+	Monopoly::setColor(0, 15);
+	Monopoly::setCursor(menuX + 4, menuY + 2);
+	wcout << left << wstring(12, L'　');
+	while (true)
+	{
+		if (_kbhit())
+		{
+			int ch = _getch();
+			if (ch == 224)
+			{
+				ch = _getch();
+			}
+			else if (ch == '\r')
+			{
+				GameWorld::mapName = result;
+				result += L".txt";
+				return result;
+			}
+			else if (ch == '\b')
+			{
+				if (result.size() > 0u)
+				{
+					result.pop_back();
+					wcout.width(12);
+					wcout.fill(L'　');
+					Monopoly::setCursor(menuX + 4, menuY);
+					wcout << left << result;
+				}
+			}
+			else
+			{
+				if (result.size() < unsigned(stringMaxSize))
+				{
+					result.push_back(wchar_t(ch));
+					Monopoly::setCursor(menuX + 4, menuY + 2);
+					wcout << left << result;
+				}
+			}
+		}
+	}
 }
 // ===================================================================
 

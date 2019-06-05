@@ -63,17 +63,6 @@ void GameWorld::gameStart()
 	bool gameFinish = false;
 	int playerAmount = playerList.size(); // 若4人中有3人破產，playerList.size()仍為4
 	int round = (reamainRound * playerAmount - playerState) + 1;
-	/*(reamainRound - 1) * int(playerList.size()) + playerState + 1;*/
-	//while (--round)
-	//{
-	//	bool turnFinish = false;
-	//	while (!turnFinish)
-	//	{
-
-	//		// after throw dice turnFinish = true;
-	//	}
-
-	//}
 	while (!gameFinish)
 	{
 		gameBoard.printPlayerAsset(); // 
@@ -117,6 +106,9 @@ void GameWorld::gameStart()
 		case 6:                       // 擲骰子
 		{
 			diceStage();
+			
+
+
 
 			// 不太可能發生的code，理論上可以刪了他
 			if (playerAmount == 1 && isAllBankrupt()) {
@@ -172,6 +164,7 @@ void GameWorld::initGameWorld(int numberOfPlayer)
 	{
 		Player p;  //id(-1),cash(0),bankBalance(0),stopRound(0),playerPosition(0),remoteDice(0)
 		p.id = i;
+		p.remoteDice = 1;
 		p.cash = initialCash;
 		playerList.push_back(p);
 		bank.stockOwnerList.push_back(vector<StockRecord>());
@@ -407,14 +400,16 @@ void GameWorld::playerLocation() {
 
 		int toll = house.tolls[house.level]; // 過路費
 		Player &playerGet = playerList[house.ownerId];
-
+		
 
 		player.cash -= toll; // 失去方
 		playerGet.cash += toll; // 獲得方
 		actionBoard.payTollAnim(house.name, toll); // 支付提示
 		gameBoard.printPlayerAsset(); // 更新版上資產
 	}
-	
+	// bank 利息 1.05
+	// debt 利息 1.20
+	// debt剩餘還款回合-- if round == 0 cash -= debt
 	// 進行破產判斷
 	if (player.cash < 0) {
 
