@@ -169,7 +169,7 @@ void FileReader::readAndSetRecord()
 			for (int i = 0; i < numberOfPlayer; i++)
 			{
 				Player tmp;
-				int position, level;
+				int position;
 				getline(in, line);
 				ss.clear();
 				ss.str(line);
@@ -186,7 +186,7 @@ void FileReader::readAndSetRecord()
 			}
 			// 取得玩家存款股票資訊
 			wstring bankString;
-
+			wstring playerInfoString;
 			
 
 			if (in >> bankString)
@@ -195,12 +195,16 @@ void FileReader::readAndSetRecord()
 
 				for (int i = 0; i < numberOfPlayer; i++)
 				{
-					int playerId, balance,stockId;
+					int playerId,stockId;
 					getline(in, line);
 					ss.clear();
 					ss.str(line);
 					ss >> playerId;
 					ss >> GameWorld::playerList[playerId].bankBalance;
+					ss >> GameWorld::playerList[playerId].debt;
+					ss >> GameWorld::playerList[playerId].repamentRound;
+					ss >> GameWorld::playerList[playerId].remoteDice;
+					ss >> GameWorld::playerList[playerId].stopRound;
 					while (ss >> stockId)
 					{
 						StockRecord tmp;
@@ -211,7 +215,23 @@ void FileReader::readAndSetRecord()
 					}
 				}
 			}
+			if (in >> playerInfoString)
+			{
+				in.get();//去除\n 字元
 
+				for (int i = 0; i < numberOfPlayer; i++)
+				{
+					int playerId;
+					getline(in, line);
+					ss.clear();
+					ss.str(line);
+					ss >> playerId;
+					ss >> GameWorld::playerList[playerId].debt;
+					ss >> GameWorld::playerList[playerId].repamentRound;
+					ss >> GameWorld::playerList[playerId].remoteDice;
+					ss >> GameWorld::playerList[playerId].stopRound;
+				}
+			}
 		}
 		else wcout << L"fail open " << fileName;
 	}
@@ -222,7 +242,7 @@ void FileReader::saveRecord()
 {
 	if (Monopoly::gameRecordFileName.size() == 0u)
 	{
-		//Monopoly::gameRecordFileName = actionBoard.userInputFileName();
+		Monopoly::gameRecordFileName = userInputFileName();
 	}
 	wofstream out;
 	wstring fileanme = continuePath + +L"//" + Monopoly::gameRecordFileName;
@@ -232,6 +252,8 @@ void FileReader::saveRecord()
 		Monopoly::setCursor(0, 0);
 		cout << "fail open file\n";
 	}
+
+	// 輸出地產資訊
 	out << GameWorld::mapName << L" " << GameWorld::reamainRound << " " << GameWorld::playerList.size() << endl;
 	for (const auto &ref : GameWorld::gameMap)
 	{
@@ -252,6 +274,7 @@ void FileReader::saveRecord()
 		out << endl;
 	}
 
+	// 輸出玩家 現金房產
 	out << L"playerstate " << GameWorld::playerState << endl;
 	for (auto & player : GameWorld::playerList)
 	{
@@ -271,10 +294,15 @@ void FileReader::saveRecord()
 		out << endl;
 	}
 
+	// 輸出玩家 存款房產
 	out << L"bank" << endl;
 	for (auto & player : GameWorld::playerList)
 	{
 		out << player.id << L" " << to_wstring(player.bankBalance) << L" ";
+
+		out << to_wstring(player.debt) << L" " << to_wstring(player.repamentRound) << L" ";
+		
+		out << to_wstring(player.remoteDice) << L" " << player.stopRound << L" ";
 		for (auto &ref : Bank::stockOwnerList[player.id])
 		{
 			if (ref.number == 0)
@@ -283,8 +311,65 @@ void FileReader::saveRecord()
 		}
 		out << endl;
 	}
+	out << L"playerInfo" << endl;
+	for (auto & player : GameWorld::playerList)
+	{
+		out << player.id << L"　";
+
+		out << to_wstring(player.debt) << L" " << to_wstring(player.repamentRound) << L" ";
+
+		out << to_wstring(player.remoteDice) << L" " << player.stopRound << endl;
+	}
+
 	out.close();
 
+}
+
+wstring FileReader::userInputFileName()
+{
+	int menuX = 112, menuY = 6, menuWidth = 16;
+	int stringMaxSize = 12;
+	
+	Monopoly::printFrame(menuX, menuY, menuWidth, 5, L"輸入檔名");
+	wstring result;
+	Monopoly::setColor(0, 15);
+	Monopoly::setCursor(menuX + 4, menuY + 2);
+	wcout << left << wstring(12, L'　');
+	while (true)
+	{
+		if (_kbhit())
+		{
+			int ch = _getch();
+			if (ch == 224)
+			{
+				ch = _getch();
+			}
+			else if (ch == '\r')
+			{
+				GameWorld::mapName = result;
+				result += L".txt";
+				return result;
+			}
+			else if (ch == '\b')
+			{
+				if (result.size() > 0u)
+				{
+					result.pop_back();
+					Monopoly::setCursor(menuX + 4, menuY + 2);
+					wcout << left << result;
+				}
+			}
+			else
+			{
+				if (result.size() < unsigned(stringMaxSize))
+				{
+					result.push_back(wchar_t(ch));
+					Monopoly::setCursor(menuX + 4, menuY + 2);
+					wcout << left << result;
+				}
+			}
+		}
+	}
 }
 // ===================================================================
 

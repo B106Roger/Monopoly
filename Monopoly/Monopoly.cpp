@@ -34,25 +34,6 @@ void Monopoly::monopolyInit()
 void Monopoly::monopolyLoop()
 {
 	system("CLS");
-	/*mode = 0;
-	monopolyInit();
-	fileReader.readAndSetData();
-	while (mode != 3)
-	{
-		if (mode == 0)
-		{
-			gameWorld.gameStart();
-		}
-		else if (mode == 1)
-		{
-			// Setting code
-		}
-		else if (mode == 2)
-		{
-			// Detail code
-		}
-	}*/
-	
 	// Step1 : 印初始動畫
 	if (isFirstStart) {
 		PlaySound(TEXT("music/startArtMusic.wav"), NULL, SND_FILENAME | SND_ASYNC);

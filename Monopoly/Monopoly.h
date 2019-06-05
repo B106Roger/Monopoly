@@ -48,7 +48,7 @@ public:
 	const int height = 36;
 
 	int boardX = 60;
-	int boardY = 10;
+	int boardY = 25;
 	int boardWidth = 20;
 	int boardHeight = 11;
 
