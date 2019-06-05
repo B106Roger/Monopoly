@@ -436,9 +436,21 @@ void GameWorld::playerLocation() {
 		actionBoard.payTollAnim(house.name, toll); // 支付提示
 		gameBoard.printPlayerAsset(); // 更新版上資產
 	}
+
+
 	// bank 利息 1.05
+	player.bankBalance *= (1.0 + bank.getInterestRate());
 	// debt 利息 1.20
+	player.debt *= (1.0 + bank.getLandingRate());
 	// debt剩餘還款回合-- if round == 0 cash -= debt
+	if(player.repamentRound > 0) player.repamentRound--;
+	else if(player.repamentRound == 0 && player.debt > 0){
+		player.cash -= player.debt;
+		actionBoard.payDebtAnim(player.debt); // 支付提示
+		player.debt = 0;
+		gameBoard.printPlayerAsset(); // 更新版上資產
+	}
+
 	// 進行破產判斷
 	if (player.cash < 0) {
 

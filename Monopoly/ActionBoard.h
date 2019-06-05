@@ -48,6 +48,7 @@ public:
 	void sellOutMenu(Player & player); // 賣資產付過路費選單
 	void sellOutWord(int selectedIndex); // 選單上的字
 	void payTollAnim(wstring houseName, int toll);
+	void payDebtAnim(int debt);
 	// ===============================================
 	vector<int> sellRealEstate();
 	
