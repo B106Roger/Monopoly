@@ -294,14 +294,6 @@ void ActionBoard::printPlayerInfoMain(int playerId, int indexY, int lineHeight) 
 	wcout << L"　暫停回合 : ";
 	wcout << GameWorld::playerList[playerId].stopRound;
 
-	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
-	wcout << L"債務 : ";
-	wcout << GameWorld::playerList[playerId].debt;
-
-	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
-	wcout << L"債務到期回合數 : ";
-	wcout << GameWorld::playerList[playerId].repamentRound;
-
 	// 頁底提示按鈕
 	tailTip();
 };
