@@ -1,4 +1,4 @@
-#include "Player.h"
+ï»¿#include "Player.h"
 #include"Monopoly.h"
 #include"Bank.h"
 
@@ -37,6 +37,25 @@ bool Player::deposit(int dollars)
 	}
 }
 
+void Player::loan(int number) {
+	debt = number;
+	repamentRound = 3;
+	cash += number;
+}
+
+void Player::repayDebt(int number) {
+	if (number > cash) {
+		debt -= cash;
+		cash = 0;
+	}
+	else {
+		debt -= number;
+		cash -= number;
+	}
+
+	if (debt == 0) repamentRound = 0;
+}
+
 Player::~Player()
 {
 }
@@ -46,7 +65,7 @@ Player::~Player()
 //	const int startX = 100;
 //	const int startY = 0;
 //	Monopoly::setCursor(startX + 8, startY + 4);
-//	wcout << setw(6) << L"¤½¥q" << setw(6) << L"»ù®æ" <<setw(4) << L"½æ¥X" << setw(5) << L"«ùªÑ¼Æ" << setw(4) << L"¶R¤J" << endl;
+//	wcout << setw(6) << L"å…¬å¸" << setw(6) << L"åƒ¹æ ¼" <<setw(4) << L"è³£å‡º" << setw(5) << L"æŒè‚¡æ•¸" << setw(4) << L"è²·å…¥" << endl;
 //	for (int i = 0; i < Bank::stockList.size(); i++) {
 //		Monopoly::setCursor(startX + 8, startY + 5 + i);
 //		wcout << setw(4) << Bank::stockList[i].name << L"|";

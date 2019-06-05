@@ -105,31 +105,25 @@ void GameWorld::gameStart()
 		}
 		case 6:							//借款
 		{
-			if (playerList[playerState].debt == 0) {
-				int number = actionBoard.printLoan(true);
-				playerList[playerState].debt += number;
-				playerList[playerState].bankBalance += number;
+			if (playerList[playerState].debt == 0) { 
+
+				int number = actionBoard.printLoan(true); // [0, infinity)
+				playerList[playerState].loan(number);
+				
 			}
 			else {
-				actionBoard.printFrame();
-				Monopoly::setCursor(110, 5);
-				wcout << L"你尚有債務未還，請先還清你的債務";
-				Sleep(3000);
+				actionBoard.inDebt();
 			}
 			break;
 		}
 		case 7:							//還款
 		{
 			if (playerList[playerState].debt != 0) {
-				int number = actionBoard.printLoan(false);
-				playerList[playerState].debt -= number;
-				playerList[playerState].bankBalance -= number;
+				int number = actionBoard.printLoan(false); // [0, debt)
+				playerList[playerState].repayDebt(number); // cash只能扣到0，若還完債務，repaymentRound = 0
 			}
 			else {
-				actionBoard.printFrame();
-				Monopoly::setCursor(110, 5);
-				wcout << L"你債務已經還清，無須再還款";
-				Sleep(3000);
+				actionBoard.noDebt();
 			}
 			break;
 		}
