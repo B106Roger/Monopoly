@@ -87,6 +87,7 @@ void Monopoly::monopolyLoop()
 				{
 					printRule();
 					system("pause>nul");
+					clearFrame();
 					// Rule，規則畫面
 				}
 				else if (mode == 3) {
