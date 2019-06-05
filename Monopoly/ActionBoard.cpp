@@ -244,32 +244,54 @@ void ActionBoard::printPlayerInfoMain(int playerId, int indexY, int lineHeight) 
 	headerTip(L"----------玩家資訊----------");
 	indexY += lineHeight;
 
+	// 基本
 	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
-	wcout << L"玩家ID : ";
+	wcout << L"基本資訊 : ";
+
+	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
+	wcout << L"　玩家ID : ";
 	Monopoly::setColor(GameWorld::gameBoard.getPlayerColor(playerId), 0);
 	wcout << playerId;
 	Monopoly::setColor();
 
 	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
-	wcout << L"玩家圖案 : ";
+	wcout << L"　玩家圖案 : ";
 	Monopoly::setColor(GameWorld::gameBoard.getPlayerColor(playerId), 0);
 	wcout << L"●";
 	Monopoly::setColor();
 
+	// 金錢
 	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
-	wcout << L"玩家現金 : ";
+	wcout << L"現金、約當現金與債務 : ";
+
+	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
+	wcout << L"　玩家現金 : ";
 	wcout << GameWorld::playerList[playerId].cash;
 
 	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
-	wcout << L"玩家存款 : ";
+	wcout << L"　玩家存款 : ";
 	wcout << GameWorld::playerList[playerId].bankBalance;
 
 	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
-	wcout << L"遙控骰子 : ";
+	wcout << L"　玩家欠款 : ";
+	wcout << GameWorld::playerList[playerId].debt;
+
+	if (GameWorld::playerList[playerId].debt != 0) {
+		Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
+		wcout << L"　欠款到期日 : ";
+		wcout << GameWorld::playerList[playerId].repamentRound << L"回後";
+	}
+	
+	// 道具
+	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
+	wcout << L"持有道具 : ";
+
+	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
+	wcout << L"　遙控骰子 : ";
 	wcout << GameWorld::playerList[playerId].remoteDice;
 
 	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;
-	wcout << L"暫停回合 : ";
+	wcout << L"　暫停回合 : ";
 	wcout << GameWorld::playerList[playerId].stopRound;
 
 	Monopoly::setCursor(startX + 4, startY + 2 + indexY); indexY += lineHeight;

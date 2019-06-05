@@ -38,9 +38,11 @@ bool Player::deposit(int dollars)
 }
 
 void Player::loan(int number) {
-	debt = number;
-	repamentRound = 3;
-	cash += number;
+	if (number > 0) {
+		debt = number;
+		repamentRound = 3;
+		cash += number;
+	}
 }
 
 void Player::repayDebt(int number) {

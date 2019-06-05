@@ -109,7 +109,6 @@ void GameWorld::gameStart()
 
 				int number = actionBoard.printLoan(true); // [0, infinity)
 				playerList[playerState].loan(number);
-				
 			}
 			else {
 				actionBoard.inDebt();
