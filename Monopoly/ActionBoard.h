@@ -30,11 +30,11 @@ public:
 	int printWithdrawDeposit(bool isWithdraw);    // 印出存款提款介面
 
 	// ===============================================
-	// 存款、提款提示
+	// 借款、還款提示
 	// ===============================================
 	void inDebt(); // 不能再借款
 	void noDebt(); // 不用還款
-
+	//================================================
 
 	// ===============================================
 	// 骰子階段的動畫、提示視窗
@@ -56,6 +56,8 @@ public:
 	void sellOutWord(int selectedIndex); // 選單上的字
 	void payTollAnim(wstring houseName, int toll);
 	void payDebtAnim(int debt);
+	void interestAnim(int oriDeposit);
+	void landingAnim(int oriDebt);
 	// ===============================================
 	vector<int> sellRealEstate();
 	

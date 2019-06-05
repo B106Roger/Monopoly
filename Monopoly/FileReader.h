@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include<string>
 #include<fstream>
 #include<filesystem>
@@ -13,19 +13,19 @@ public:
 	FileReader();
 	~FileReader();
 	const int startX = 60;
-	const int startY = 10;
+	const int startY = 25;
 
 	const wstring continuePath = L"continue";
 	const wstring mapPath = L"map";
-	void readAndSetRecord();                // Åª¨úMonopoly::gameRecordFileName ¤ºªºÀÉ®×¨ìGameWorld
-	void readAndSetMap();                   // Åª¨úMonopoly::gameMapFilaeName ¤ºªºÀÉ®×¨ìGameWorld
-	void resetAllData();                    // reset©Ò¦³gameWorldªº°Ñ¼Æ ¥ş³¡³]¬°ªÅ
-	void saveRecord();                      // Àx¦sÀÉ®×
+	void readAndSetRecord();                // è®€å–Monopoly::gameRecordFileName å…§çš„æª”æ¡ˆåˆ°GameWorld
+	void readAndSetMap();                   // è®€å–Monopoly::gameMapFilaeName å…§çš„æª”æ¡ˆåˆ°GameWorld
+	void resetAllData();                    // resetæ‰€æœ‰gameWorldçš„åƒæ•¸ å…¨éƒ¨è¨­ç‚ºç©º
+	void saveRecord();                      // å„²å­˜æª”æ¡ˆ
 
 
-	vector<FS::path> getAllFile(const FS::path & ps);                         // ¨ú±o¬Y­Ó¸ô®|¤U©Ò¦³ªºÀÉ®×
-	void displayFolder(const vector<FS::path> & fileList, int index);         // Åã¥Ü¬Y­Ó¸ê®Æ§¨¤Uªº©Ò¦³ÀÉ®×¡A¨ÃÅı¨Ï¥ÎªÌ¿ï¾Ü
-	wstring getFilename(string foldername);                                      // Åı¨Ï¥ÎªÌ¿ï¾Ü­n¥ÎªºÀÉ®×
+	vector<FS::path> getAllFile(const FS::path & ps);                         // å–å¾—æŸå€‹è·¯å¾‘ä¸‹æ‰€æœ‰çš„æª”æ¡ˆ
+	void displayFolder(const vector<FS::path> & fileList, int index);         // é¡¯ç¤ºæŸå€‹è³‡æ–™å¤¾ä¸‹çš„æ‰€æœ‰æª”æ¡ˆï¼Œä¸¦è®“ä½¿ç”¨è€…é¸æ“‡
+	wstring getFilename(string foldername);                                      // è®“ä½¿ç”¨è€…é¸æ“‡è¦ç”¨çš„æª”æ¡ˆ
 	
 
 	void previewMap(string foldername);

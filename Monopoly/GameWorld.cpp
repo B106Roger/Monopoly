@@ -107,7 +107,7 @@ void GameWorld::gameStart()
 		{
 			if (playerList[playerState].debt == 0) { 
 
-				int number = actionBoard.printLoan(true); // [0, infinity)
+				int number = actionBoard.printLoan(true); // [0, 0.5*asset)
 				playerList[playerState].loan(number);
 			}
 			else {
@@ -173,6 +173,7 @@ void GameWorld::gameStart()
 			}
 		}
 	}
+
 }
 
 // 新遊戲設定
@@ -430,14 +431,19 @@ void GameWorld::playerLocation() {
 		gameBoard.printPlayerAsset(); // 更新版上資產
 	}
 
-
 	// bank 利息 1.05
-	player.bankBalance *= (1.0 + bank.getInterestRate());
-	// debt 利息 1.20
-	player.debt *= (1.0 + bank.getLandingRate());
-	// debt剩餘還款回合-- if round == 0 cash -= debt
-	if(player.repamentRound > 0) player.repamentRound--;
-	else if(player.repamentRound == 0 && player.debt > 0){
+	if (player.bankBalance > 0) {
+		actionBoard.interestAnim(player.bankBalance);
+		player.bankBalance *= (1.0 + bank.getInterestRate());
+	}
+
+	// debt剩餘還款回合--
+	if (player.repamentRound > 0) {
+		player.repamentRound--;
+		actionBoard.landingAnim(player.debt);
+		player.debt *= (1.0 + bank.getLandingRate());// debt 利息 1.20
+	}
+	else if(player.repamentRound == 0 && player.debt > 0){// if round == 0 cash -= debt
 		player.cash -= player.debt;
 		actionBoard.payDebtAnim(player.debt); // 支付提示
 		player.debt = 0;
