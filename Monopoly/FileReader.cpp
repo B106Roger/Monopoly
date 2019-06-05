@@ -186,7 +186,7 @@ void FileReader::readAndSetRecord()
 			}
 			// 取得玩家存款股票資訊
 			wstring bankString;
-
+			wstring playerInfoString;
 			
 
 			if (in >> bankString)
@@ -201,6 +201,10 @@ void FileReader::readAndSetRecord()
 					ss.str(line);
 					ss >> playerId;
 					ss >> GameWorld::playerList[playerId].bankBalance;
+					ss >> GameWorld::playerList[playerId].debt;
+					ss >> GameWorld::playerList[playerId].repamentRound;
+					ss >> GameWorld::playerList[playerId].remoteDice;
+					ss >> GameWorld::playerList[playerId].stopRound;
 					while (ss >> stockId)
 					{
 						StockRecord tmp;
@@ -211,7 +215,23 @@ void FileReader::readAndSetRecord()
 					}
 				}
 			}
+			if (in >> playerInfoString)
+			{
+				in.get();//去除\n 字元
 
+				for (int i = 0; i < numberOfPlayer; i++)
+				{
+					int playerId;
+					getline(in, line);
+					ss.clear();
+					ss.str(line);
+					ss >> playerId;
+					ss >> GameWorld::playerList[playerId].debt;
+					ss >> GameWorld::playerList[playerId].repamentRound;
+					ss >> GameWorld::playerList[playerId].remoteDice;
+					ss >> GameWorld::playerList[playerId].stopRound;
+				}
+			}
 		}
 		else wcout << L"fail open " << fileName;
 	}
@@ -279,6 +299,10 @@ void FileReader::saveRecord()
 	for (auto & player : GameWorld::playerList)
 	{
 		out << player.id << L" " << to_wstring(player.bankBalance) << L" ";
+
+		out << to_wstring(player.debt) << L" " << to_wstring(player.repamentRound) << L" ";
+		
+		out << to_wstring(player.remoteDice) << L" " << player.stopRound << L" ";
 		for (auto &ref : Bank::stockOwnerList[player.id])
 		{
 			if (ref.number == 0)
@@ -287,6 +311,16 @@ void FileReader::saveRecord()
 		}
 		out << endl;
 	}
+	out << L"playerInfo" << endl;
+	for (auto & player : GameWorld::playerList)
+	{
+		out << player.id << L"　";
+
+		out << to_wstring(player.debt) << L" " << to_wstring(player.repamentRound) << L" ";
+
+		out << to_wstring(player.remoteDice) << L" " << player.stopRound << endl;
+	}
+
 	out.close();
 
 }
@@ -321,9 +355,7 @@ wstring FileReader::userInputFileName()
 				if (result.size() > 0u)
 				{
 					result.pop_back();
-					wcout.width(12);
-					wcout.fill(L'　');
-					Monopoly::setCursor(menuX + 4, menuY);
+					Monopoly::setCursor(menuX + 4, menuY + 2);
 					wcout << left << result;
 				}
 			}
