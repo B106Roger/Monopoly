@@ -9,6 +9,5 @@ int main()
 	Monopoly monopoly;
 	system("pause>nul");
 	monopoly.monopolyLoop();
-
 	return 0;
 }

@@ -1483,8 +1483,7 @@ int ActionBoard::printLoan(bool isLoan)
 						return returnValue;
 				}
 				else
-					return returnValue;	
-
+					return returnValue;
 			}
 			else if (ch == 27) // Esc 按鈕
 			{
