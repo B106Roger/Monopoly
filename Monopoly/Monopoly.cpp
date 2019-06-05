@@ -63,6 +63,7 @@ void Monopoly::monopolyLoop()
 						gameWorld.initGameWorld(numberOfPlayer);
 						fileReader.readAndSetMap();
 						gameWorld.gameStart(); // 進入遊戲
+						gameRecordFileName = L"";
 						clearFrame();
 					}
 					
@@ -77,6 +78,7 @@ void Monopoly::monopolyLoop()
 						fileReader.readAndSetRecord();   // 讀取遊戲
 						clearFrame();
 						gameWorld.gameStart();
+						gameRecordFileName = L"";
 						clearFrame();
 					}
 					

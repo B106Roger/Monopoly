@@ -173,6 +173,7 @@ void GameWorld::gameStart()
 			}
 		}
 	}
+
 }
 
 // 新遊戲設定
