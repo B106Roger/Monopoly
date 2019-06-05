@@ -354,6 +354,7 @@ wstring FileReader::userInputFileName()
 			{
 				if (result.size() > 0u)
 				{
+					wcout << "\b \b";
 					result.pop_back();
 					Monopoly::setCursor(menuX + 4, menuY + 2);
 					wcout << left << result;
