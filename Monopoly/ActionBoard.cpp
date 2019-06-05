@@ -349,7 +349,7 @@ void ActionBoard::printPlayerInfoHouse(int playerId, int indexY, int lineHeight,
 	wcout << L"玩家房產 : ";
 
 	int indent = 1; // 要縮排幾格(全形字)
-	Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
+	Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 6;// sub-header
 	wcout << L"房產名稱";
 	Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
 	wcout << L"房產地段";
@@ -368,7 +368,7 @@ void ActionBoard::printPlayerInfoHouse(int playerId, int indexY, int lineHeight,
 			if ((page == 0 && houseCount <= 11) || (page == 1 && houseCount > 11)) {
 				RealEstate house = GameWorld::gameMap[i];
 				indent = 1; // 要縮排幾格(全形字)
-				Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
+				Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 6;// sub-header
 				wcout << house.name;
 				Monopoly::setCursor(startX + 4 + indexX * indent, startY + 2 + indexY); indent += 5;// sub-header
 				wcout << house.position;
