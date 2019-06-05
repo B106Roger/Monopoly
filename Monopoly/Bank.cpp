@@ -4,7 +4,7 @@ vector<Stock> Bank::stockList;
 vector<vector<StockRecord>> Bank::stockOwnerList;
 
 Bank::Bank()
-	:interestRate(0.05), landingRate(0.2)
+	:interestRate(0.05), landingRate(0.07)
 {
 	initialStock();
 }

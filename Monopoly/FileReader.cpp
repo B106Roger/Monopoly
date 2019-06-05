@@ -200,12 +200,8 @@ void FileReader::readAndSetRecord()
 					ss.clear();
 					ss.str(line);
 					ss >> playerId;
-					ss >> GameWorld::playerList[playerId].bankBalance;
-					ss >> GameWorld::playerList[playerId].debt;
-					ss >> GameWorld::playerList[playerId].repamentRound;
-					ss >> GameWorld::playerList[playerId].remoteDice;
-					ss >> GameWorld::playerList[playerId].stopRound;
-					while (ss >> stockId)
+					ss >> GameWorld::playerList[i].bankBalance;
+					while (ss >> stockId && playerId != -1)
 					{
 						StockRecord tmp;
 						tmp.player_id = playerId;
@@ -226,10 +222,10 @@ void FileReader::readAndSetRecord()
 					ss.clear();
 					ss.str(line);
 					ss >> playerId;
-					ss >> GameWorld::playerList[playerId].debt;
-					ss >> GameWorld::playerList[playerId].repamentRound;
-					ss >> GameWorld::playerList[playerId].remoteDice;
-					ss >> GameWorld::playerList[playerId].stopRound;
+					ss >> GameWorld::playerList[i].debt;
+					ss >> GameWorld::playerList[i].repamentRound;
+					ss >> GameWorld::playerList[i].remoteDice;
+					ss >> GameWorld::playerList[i].stopRound;
 				}
 			}
 		}
@@ -296,28 +292,29 @@ void FileReader::saveRecord()
 
 	// 輸出玩家 存款房產
 	out << L"bank" << endl;
+	int offset = 0;
 	for (auto & player : GameWorld::playerList)
 	{
+		// 玩家id + 玩家存款
 		out << player.id << L" " << to_wstring(player.bankBalance) << L" ";
-
-		out << to_wstring(player.debt) << L" " << to_wstring(player.repamentRound) << L" ";
-		
-		out << to_wstring(player.remoteDice) << L" " << player.stopRound << L" ";
-		for (auto &ref : Bank::stockOwnerList[player.id])
+		// 玩家股票
+		for (auto &ref : Bank::stockOwnerList[offset])
 		{
 			if (ref.number == 0)
 				continue;
 			out << ref.stockId << L" " << to_wstring(ref.number) << L" ";
 		}
 		out << endl;
+		offset++;
 	}
 	out << L"playerInfo" << endl;
 	for (auto & player : GameWorld::playerList)
 	{
+		// 玩家id
 		out << player.id << L"　";
-
+		// 玩家欠款 + 剩餘返還回和數
 		out << to_wstring(player.debt) << L" " << to_wstring(player.repamentRound) << L" ";
-
+		// 遙控色子數量 + 玩家暫停回合
 		out << to_wstring(player.remoteDice) << L" " << player.stopRound << endl;
 	}
 
