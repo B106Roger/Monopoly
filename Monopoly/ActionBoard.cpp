@@ -1558,7 +1558,7 @@ int ActionBoard::printLoan(bool isLoan)
 	if(isLoan)
 		wcout << L"存款：" << ref.bankBalance << L"　　　" << L"現金：" << ref.cash;
 	else
-		wcout << L"存款：" << ref.bankBalance << L"　　　" << L"欠款：" << ref.debt;
+		wcout << L"現金：" << ref.cash << L"　　　" << L"欠款：" << ref.debt;
 	int sizeOfDigit = 10;
 
 	Monopoly::setColor(0, 15);
