@@ -57,7 +57,8 @@ public:
 	void winBoard(int mode, Player &player);
 	void loseBoard();
 	// ===============================================
-
+	// 借款、還款
+	int printLoan(bool isLoan);
 
 	// ===============================================
 	// Esc Menu

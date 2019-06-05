@@ -1418,6 +1418,81 @@ void ActionBoard::loseBoard() {
 	}
 	pressEnterKeyToContinue();
 }
+int ActionBoard::printLoan(bool isLoan)
+{
+	int gapX = 4;                                          // 單位(寬字元)
+	int indexX = startX + gapX * 2, indexY = startY + 3;   // indexX座標 單位(窄字元)，因此gapX要乘2
+	int indexWidth = width - 2 * gapX;
+	const Player & ref = GameWorld::playerList[GameWorld::playerState];
+	printFrame();
+	if (isLoan == true)
+	{
+		printFrame(indexX, indexY, indexWidth, 7, L"銀行借款");
+	}
+	else
+	{
+		printFrame(indexX, indexY, indexWidth, 7, L"銀行還款");
+	}
+
+	Monopoly::setCursor(indexX + 6, indexY + 2);
+
+		wcout << L"存款：" << ref.bankBalance << L"　　　" << L"現金：" << ref.cash;
+
+	int sizeOfDigit = 10;
+
+	Monopoly::setColor(0, 15);
+	Monopoly::setCursor(indexX + 6, indexY + 4);
+	cout << string(sizeOfDigit, ' ');
+
+	Monopoly::setCursor(indexX + 6, indexY + 4);
+	string number;
+
+	while (true)
+	{
+		if (_kbhit())
+		{
+			int ch = _getch();
+			if (isdigit(char(ch)))
+			{
+				if (int(number.size()) < sizeOfDigit)
+				{
+					cout << (char)ch;
+					number.push_back(char(ch));
+				}
+			}
+			else if (ch == 224)
+			{
+				_getch();
+			}
+			else if (ch == '\b')
+			{
+				if (int(number.size()) != 0)
+				{
+					cout << "\b \b";
+					number.pop_back();
+				}
+			}
+			else if (ch == '\r')
+			{
+				int returnValue = atoi(number.c_str());
+				if (!isLoan) {		//如果是還款就只需要還債務的金額
+					int debt = GameWorld::playerList[GameWorld::playerState].debt;
+					if (returnValue > debt)
+						return debt;
+					else
+						return returnValue;
+				}
+				else
+					return returnValue;	
+
+			}
+			else if (ch == 27) // Esc 按鈕
+			{
+				return 0;
+			}
+		}
+	}
+}
 // ===============================================
 
 
@@ -1489,6 +1564,8 @@ const vector<wstring>& ActionBoard::getActionList()
 		L"股票開盤",
 		L"買股票",
 		L"賣股票",
+		L"借款",
+		L"還款",
 		L"擲骰子"
 	});
 	return actionList;

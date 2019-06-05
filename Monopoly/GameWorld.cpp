@@ -103,12 +103,40 @@ void GameWorld::gameStart()
 			playerList[playerState].bankBalance += bank.soldStock(playerList[playerState], numberOfStock);
 			break;
 		}
-		case 6:                       // 擲骰子
+		case 6:							//借款
+		{
+			if (playerList[playerState].debt == 0) {
+				int number = actionBoard.printLoan(true);
+				playerList[playerState].debt += number;
+				playerList[playerState].bankBalance += number;
+			}
+			else {
+				actionBoard.printFrame();
+				Monopoly::setCursor(110, 5);
+				wcout << L"你尚有債務未還，請先還清你的債務";
+				Sleep(3000);
+			}
+			break;
+		}
+		case 7:							//還款
+		{
+			if (playerList[playerState].debt != 0) {
+				int number = actionBoard.printLoan(false);
+				playerList[playerState].debt -= number;
+				playerList[playerState].bankBalance -= number;
+			}
+			else {
+				actionBoard.printFrame();
+				Monopoly::setCursor(110, 5);
+				wcout << L"你債務已經還清，無須再還款";
+				Sleep(3000);
+			}
+			break;
+		}
+		case 8:                       // 擲骰子
 		{
 			diceStage();
 			
-
-
 
 			// 不太可能發生的code，理論上可以刪了他
 			if (playerAmount == 1 && isAllBankrupt()) {
